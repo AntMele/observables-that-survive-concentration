@@ -74,4 +74,4 @@ The final accuracy, combined accuracy/work, inverse-polynomial subexponential, p
 
 ---
 
-**Related:** [Simulation result guide](../results/classical-simulation.md) · [All assumptions](assumptions.md) · [Reproduce the checks](../verification/README.md)
+**Related:** [Simulation result guide](../results/03-classical-simulation.md) · [All assumptions](assumptions.md) · [Reproduce the checks](../verification/README.md)
