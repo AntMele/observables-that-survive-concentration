@@ -2,107 +2,38 @@
 
 [Home](../../README.md) / [Reader guide](../README.md) / Assumption review
 
-Start with the [OTOC(1) guide](../results/endpoint-fluctuations.md),
-[OTOC1.lean](../../Fluctuations/OTOC1.lean), and its
-[earlier independent scope review](endpoint.md). That review covers
-the fluctuation and mean results and predates the simulation extension.
-For the latter, start with [Simulation.lean](../../Fluctuations/Simulation.lean)
-and the [simulation guide](../results/classical-simulation.md). The general spatial result
-remains in [SpatialHaarFinal.lean](../../Fluctuations/SpatialHaarFinal.lean).
-Review mathematical assumptions separately from successful compilation.
+Review the results in the paper's order: general fixed-order fluctuations,
+the sharper one-dimensional OTOC₁ analysis, then its simulation application.
+Review mathematical hypotheses separately from successful compilation.
+
+| Paper route | Main declarations and guide |
+| --- | --- |
+| §II `thm:informalOTOCk` → Appendix VI `thm:fixed-k-transition-window-fluctuation-bound` (VI.14) | [General variance guide](../results/01-general-otoc-variance.md), [Main.lean](../../Fluctuations/Main.lean), and [SpatialHaarFinal.lean](../../Fluctuations/SpatialHaarFinal.lean) |
+| §III A `thm:main-otoc1-variance-front-window` → Appendix VII `thm:endpoint-otoc1-variance-front-window` | [One-dimensional OTOC₁ guide](../results/02-otoc1-fluctuations.md), [OTOC1.lean](../../Fluctuations/OTOC1.lean), and [independent endpoint review](endpoint.md) |
+| §III B `subsubsec:classical-simulation-main` → Appendix VIII `thm:endpoint-sim-otoc1-runtime` | [Simulation guide](../results/03-classical-simulation.md), [Simulation.lean](../../Fluctuations/Simulation.lean), and [independent simulation review](simulation.md) |
+
+The global Haar mean proposition `prop:haar-otock-small` is a supporting
+ingredient of the general theorem. The endpoint review covers the fluctuation
+and mean results and predates the separately reviewed simulation extension.
 
 ## Main statements
 
 | Declaration | Assumptions that remain |
 | --- | --- |
-| `otoc1_subexponential_simulation` | Actual open Haar U(4) brickwork, `n = 6(s+1)`, `d = 10(s+1)`, infinite-temperature normalized trace, and `epsilon, delta` in `(0,1)`. The bias, sampler law and joint success bound are proved. |
-| `otoc1_subexponential_simulation_inversePolynomial` | Fixed positive natural exponents `a,b`, with `epsilon = n^-a`, `delta = n^-b`: joint accuracy at every size and `log(work)/n -> 0` for the same physical sampler. Exact arithmetic and finite-distribution sampling are the operation model. |
-| `otoc1_endpoint_variance_lower` | Concrete open 1D brickwork circuit, fixed front width `C ≥ 0`, explicit largeness and front-window inequalities, and `trace ρ = 1` |
-| `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` | Same hypotheses; the first theorem specifies a gate in the actual central eye. Conditional means, eye count and influence bounds are proved. |
-| `brickworkEndpointOTOC_conditional_mean` | Trace normalization and an interior even gate with a later odd layer; the exact actual Haar conditional formula is proved. |
-| `brickworkEndpointOTOC_haar_mean` | Trace normalization; all even sizes and depths, including boundary cases |
+| `theorem_VI_14_family` | General probability model with a supplied common local constant, mean change, and polynomial width |
 | `spatialHaarCircuit_variance_window` | A parallel architecture of disjoint two-site patches, observable support, correct active/inactive classification, half-unit endpoint mean change, and transition width |
 | `spatialHaarCircuit_allOrders_of_globalHaar_control` | Same geometry, Hermitian traceless involutions, trace normalization, early cone separation, explicit dimension threshold, late moment error at most $1/4$, and width; Haar smallness is proved |
 | `spatialHaarCircuit_firstOrder_of_globalHaar_control` | First-order specialization with traceless involutions and at least two qubits; no Hermiticity premise is required |
 | `spatialHaarCircuit_of_globalHaar_control` | Reusable intermediate theorem that intentionally accepts a Haar quarter-bound |
 | `haarLocalOTOC_explicit_reverseVariance_identity` | Linear gate insertions preserving identity; arbitrary finite ambient matrices. The exact local coefficient is proved, not supplied. |
 | `haarLocalOTOC_explicit_conditional_reverseVariance` | Independent Haar block and continuous earlier circuit; proves the actual conditional inequality |
-| `theorem_VI_14_family` | General probability model with a supplied common local constant, mean change, and polynomial width |
-
-## Endpoint circuit correspondence
-
-The endpoint observable is exactly $\mathrm{Tr}[\rho(U^\dagger Z_1UZ_n)^2]$.
-`BrickworkSite r` has $n=2(r+1)$ sites; `T` periods give $d=2T$ layers and
-$T(2r+1)$ independent Haar U(4) coordinates. The chronological recursion is
-$U_{j+1}=U_jG_j$, matching the manuscript's $L_1\cdots L_d$ convention.
-The final theorem uses `r=c+1` and the explicit threshold
-$\sqrt n\ge12(C+2)$. Its positive constant depends only on `C`.
-
-Inspect `PauliCircuitBridge` and `PauliFrozenCircuit`: the Pauli expansion is
-an operator identity, mixed Haar moments are derived, and the frozen-gate
-covariance retains off-diagonal terms until a later full odd layer removes
-them. `EndpointLumpability` proves endpoint closure for arbitrary correlated
-weights. It does not assume that the fixed gate restores the full shock law.
-The final even layer, the other gates in the fixed matching, and the exact
-$-16/15$ conditional coefficient are included.
-
-`CoordinateAverages` identifies the actual integral over all other gate
-coordinates with conditional expectation. `GateInfluence` derives the
-variance-sum inequality from the product law. No conditional-mean,
-independence, propagation, gate-count, or design-convergence premise remains
-in the final endpoint theorem. The cardinality upper bound concerns the
-constructed gate set, not all potentially influential gates.
-
-## Simulation correspondence and cost model
-
-The simulation target is the actual normalized matrix trace
-$F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$, so it specializes
-to the maximally mixed state. Its probability guarantee averages over both
-the realized Haar circuit and the conditional algorithmic randomness. It is
-not a worst-case guarantee for every fixed gate realization.
-
-The local replacement proof uses the squared Pauli mass touching a gate,
-from either the forward butterfly or the backward probe. The proved endpoint
-tail bound controls the enlarged eye's discarded gates. A telescoping
-product-average argument gives the bias estimate, and the exact choices of
-`R,N` allocate at most `delta/2` to each error. The final probability is
-measured under the actual composition-product law `mu ⊗ₘ kappa`; it is not
-an informal sum of conditional failure probabilities.
-
-Inspect the full-covariance sampler invariant. Averaged gates sample an
-input pair and an output pair from the Haar Pauli kernel, while retaining
-the conditional coherent vector on the spectator sites. Subsequent retained
-gates therefore receive the necessary off-diagonal moments. Zero-probability
-branches have a normalized fallback; support statements concern branches
-with nonzero weight. The exponentially large finite ensemble is a semantic
-law, not an array that the implementation constructs.
-
-[SimulationPhysicalLaw.lean](../../Fluctuations/SimulationPhysicalLaw.lean) identifies
-the output PMF of the outside-first implementation with the chronological
-mixed-circuit law for every realized input. Its `simulationPhysicalSamplerKernel`
-is the actual Markov kernel used in the final joint probability statement.
-This connects correctness and resource bounds for the same sampler.
-
-The physical outside-first ordering is justified by disjoint gate
-commutation. The support and cost modules track those same gate lists:
-there are at most `2W+2` coherent sites at a layer end and `2W+4` during a
-local update. Each actual call has at least two sites, and
-`16 * 4^(m-2) = 4^m` is proved. Costs count local matrix multiplication,
-marginals, branch normalization, and the final finite draw on this dense
-vector, including transfer-matrix construction.
-
-`otoc1_subexponential_simulation_inversePolynomial` combines the accuracy
-guarantee at every size with the limit `log(work)/n -> 0` for the same
-physical sampler, using fixed positive natural exponents.
-`SimulationAsymptotics.lean` supplies the explicit majorant and limit;
-the parameter-dependent bound in `R,N` is available separately.
-
-The counter covers sampling and readout arithmetic, including local
-transfer-matrix construction. Indexing, reads of stored coefficients, and
-preprocessing to construct the schedule or compute its parameters are not
-counted. Exact scalar arithmetic (real or complex) and exact finite sampling are assumed as in the
-paper. The formalization does not supply an extracted numerical executable,
-a finite-precision analysis, or a bit-complexity bound.
+| `globalHaarOTOCMean_norm_le_all_dimensions` | Positive order, Hermitian traceless involutions, and a trace-one matrix. The actual Haar mean bound is proved in every nonzero dimension; it supplies the general theorem's Haar smallness under the stated dimension threshold. |
+| `otoc1_endpoint_variance_lower` | Concrete open 1D brickwork circuit, fixed front width `C ≥ 0`, explicit largeness and front-window inequalities, and `trace ρ = 1` |
+| `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` | Same hypotheses; the first theorem specifies a gate in the actual central eye. Conditional means, eye count and influence bounds are proved. |
+| `brickworkEndpointOTOC_conditional_mean` | Trace normalization and an interior even gate with a later odd layer; the exact actual Haar conditional formula is proved. |
+| `brickworkEndpointOTOC_haar_mean` | Trace normalization; all even sizes and depths, including boundary cases |
+| `otoc1_subexponential_simulation` | Actual open Haar U(4) brickwork, `n = 6(s+1)`, `d = 10(s+1)`, infinite-temperature normalized trace, and `epsilon, delta` in `(0,1)`. The bias, sampler law and joint success bound are proved. |
+| `otoc1_subexponential_simulation_inversePolynomial` | Fixed positive natural exponents `a,b`, with `epsilon = n^-a`, `delta = n^-b`: joint accuracy at every size and `log(work)/n -> 0` for the same physical sampler. Exact arithmetic and finite-distribution sampling are the operation model. |
 
 ## General spatial geometry and physical meaning
 
@@ -180,6 +111,81 @@ estimate and the full outer variance-influence envelope remain outside the
 formalized results. The simulation uses separate endpoint touching-tail and
 local-replacement bounds; these do not prove those omitted Gaussian
 statements. Computational quantum advantage is also a separate claim.
+
+## Endpoint circuit correspondence
+
+The endpoint observable is exactly $\mathrm{Tr}[\rho(U^\dagger Z_1UZ_n)^2]$.
+`BrickworkSite r` has $n=2(r+1)$ sites; `T` periods give $d=2T$ layers and
+$T(2r+1)$ independent Haar U(4) coordinates. The chronological recursion is
+$U_{j+1}=U_jG_j$, matching the manuscript's $L_1\cdots L_d$ convention.
+The final theorem uses `r=c+1` and the explicit threshold
+$\sqrt n\ge12(C+2)$. Its positive constant depends only on `C`.
+
+Inspect `PauliCircuitBridge` and `PauliFrozenCircuit`: the Pauli expansion is
+an operator identity, mixed Haar moments are derived, and the frozen-gate
+covariance retains off-diagonal terms until a later full odd layer removes
+them. `EndpointLumpability` proves endpoint closure for arbitrary correlated
+weights. It does not assume that the fixed gate restores the full shock law.
+The final even layer, the other gates in the fixed matching, and the exact
+$-16/15$ conditional coefficient are included.
+
+`CoordinateAverages` identifies the actual integral over all other gate
+coordinates with conditional expectation. `GateInfluence` derives the
+variance-sum inequality from the product law. No conditional-mean,
+independence, propagation, gate-count, or design-convergence premise remains
+in the final endpoint theorem. The cardinality upper bound concerns the
+constructed gate set, not all potentially influential gates.
+
+## Simulation correspondence and cost model
+
+The simulation target is the actual normalized matrix trace
+$F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$, so it specializes
+to the maximally mixed state. Its probability guarantee averages over both
+the realized Haar circuit and the conditional algorithmic randomness. It is
+not a worst-case guarantee for every fixed gate realization.
+
+The local replacement proof uses the squared Pauli mass touching a gate,
+from either the forward butterfly or the backward probe. The proved endpoint
+tail bound controls the enlarged eye's discarded gates. A telescoping
+product-average argument gives the bias estimate, and the exact choices of
+`R,N` allocate at most `delta/2` to each error. The final probability is
+measured under the actual composition-product law `mu ⊗ₘ kappa`; it is not
+an informal sum of conditional failure probabilities.
+
+Inspect the full-covariance sampler invariant. Averaged gates sample an
+input pair and an output pair from the Haar Pauli kernel, while retaining
+the conditional coherent vector on the spectator sites. Subsequent retained
+gates therefore receive the necessary off-diagonal moments. Zero-probability
+branches have a normalized fallback; support statements concern branches
+with nonzero weight. The exponentially large finite ensemble is a semantic
+law, not an array that the implementation constructs.
+
+[SimulationPhysicalLaw.lean](../../Fluctuations/SimulationPhysicalLaw.lean) identifies
+the output PMF of the outside-first implementation with the chronological
+mixed-circuit law for every realized input. Its `simulationPhysicalSamplerKernel`
+is the actual Markov kernel used in the final joint probability statement.
+This connects correctness and resource bounds for the same sampler.
+
+The physical outside-first ordering is justified by disjoint gate
+commutation. The support and cost modules track those same gate lists:
+there are at most `2W+2` coherent sites at a layer end and `2W+4` during a
+local update. Each actual call has at least two sites, and
+`16 * 4^(m-2) = 4^m` is proved. Costs count local matrix multiplication,
+marginals, branch normalization, and the final finite draw on this dense
+vector, including transfer-matrix construction.
+
+`otoc1_subexponential_simulation_inversePolynomial` combines the accuracy
+guarantee at every size with the limit `log(work)/n -> 0` for the same
+physical sampler, using fixed positive natural exponents.
+`SimulationAsymptotics.lean` supplies the explicit majorant and limit;
+the parameter-dependent bound in `R,N` is available separately.
+
+The counter covers sampling and readout arithmetic, including local
+transfer-matrix construction. Indexing, reads of stored coefficients, and
+preprocessing to construct the schedule or compute its parameters are not
+counted. Exact scalar arithmetic (real or complex) and exact finite sampling are assumed as in the
+paper. The formalization does not supply an extracted numerical executable,
+a finite-precision analysis, or a bit-complexity bound.
 
 ## Verification
 
