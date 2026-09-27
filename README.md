@@ -22,25 +22,25 @@ arbitrary probability spaces.
 
 ## The result
 
-Let $F_d$ be the depth-$d$ observable, let $W=b-a>0$ be the transition width,
+Let $F_d$ be the observable at depth $d$, let $W=b-a>0$ be the transition width,
 and suppose the endpoint means differ by at least $\Delta\geq0$. Under the
 local reverse-variance condition with the same $\eta>0$ at every depth, there
 is a depth $a<d_*\leq b$ such that
 
-$$
-\operatorname{Var}(F_{d_*+r})\;\geq\;
+```math
+\mathrm{Var}(F_{d_*+r})\;\geq\;
 \eta\left(\frac{\eta}{1+\eta}\right)^r\frac{\Delta^2}{W^2}
 \qquad(r\in\mathbb N).
-$$
+```
 
 For the paper's mean gap $\Delta=1/2$ and width bound $W\leq p(n)$, every
 depth in an interval of $R+1$ consecutive depths satisfies
 
-$$
-\operatorname{Var}(F_d)\;\geq\;\frac{c(\eta,R)}{p(n)^2},
+```math
+\mathrm{Var}(F_d)\;\geq\;\frac{c(\eta,R)}{p(n)^2},
 \qquad c(\eta,R)=\frac{\eta}{4}
 \left(\frac{\eta}{1+\eta}\right)^R>0.
-$$
+```
 
 Here **$R$ is fixed as $n$ grows**, and **$\eta$ is uniform in depth and system
 size**. The interval lies in $\{a+1,\ldots,b+R\}$. Variance means
