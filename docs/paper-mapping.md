@@ -37,7 +37,7 @@ simulation extension below.
 
 ## Classical simulation of the infinite-temperature endpoint OTOC
 
-The simulation uses $F_\infty=2^{-n}\operatorname{Tr}[(U^\dagger Z_1UZ_n)^2]$
+The simulation uses $F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$
 at $n=6(s+1)$ and $d=10(s+1)$. The final accuracy theorem is about the
 joint law of the Haar circuit and the estimator's independent samples.
 It has no supplied bias, local perturbation, or mean-change assumption.
