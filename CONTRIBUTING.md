@@ -1,7 +1,9 @@
 # Contributing
 
-Start with the [OTOC(1) guide](docs/otoc1.md), [paper mapping](docs/paper-mapping.md),
-and [review notes](REVIEW.md). The main entry points are
+[Home](README.md) / [Reader guide](docs/README.md) / Contributing
+
+Start with the [endpoint fluctuation guide](docs/results/endpoint-fluctuations.md), [paper mapping](docs/reference/paper-map.md),
+and [review guide](REVIEW.md). The main entry points are
 [OTOC1.lean](Fluctuations/OTOC1.lean) for the concrete endpoint theorem,
 [Simulation.lean](Fluctuations/Simulation.lean) for classical simulation,
 [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean) for the spatial
@@ -39,10 +41,10 @@ tail estimates, full-covariance sampler law, compressed update formulas, and
 support bounds are proved ingredients. Keep the infinite-temperature and
 critical-depth scope explicit. Explain the scalar-arithmetic cost convention
 and distinguish the counted loops from preprocessing and bit complexity.
-See the [simulation guide](docs/simulation.md) and
-[independent review](docs/simulation-review.md).
+See the [simulation guide](docs/results/classical-simulation.md) and
+[independent review](docs/reviews/simulation.md).
 
-Follow the [reproduction guide](docs/reproduce.md). Before submitting proof
+Follow the [reproduction guide](docs/verification/README.md). Before submitting proof
 changes, run from the repository root:
 
 ```sh
@@ -64,3 +66,7 @@ Keep inactive gates in the full circuit history even when they cancel from a
 single local observable. A successful build checks the formal proof;
 mathematical review must also establish correspondence with the intended claim
 in the paper.
+
+---
+
+**Related:** [Review guide](REVIEW.md) · [Assumptions and correspondence](docs/reviews/assumptions.md) · [Reproduce the checks](docs/verification/README.md)
