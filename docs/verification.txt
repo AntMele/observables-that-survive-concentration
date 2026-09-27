@@ -1,0 +1,101 @@
+Verification completed: 2026-09-27
+Command: ./scripts/check-local.sh
+Exit status: 0
+Lean: 4.24.0, arm64-apple-darwin23.6.0
+Lean commit: 797c613eb9b6d4ec95db23e3e00af9ac6657f24b
+mathlib: v4.24.0
+mathlib commit: f897ebcf72cd16f89ab4577d0c826cd14afaafc7
+mathlib working tree: clean
+
+Each project module was compiled from source by Lean. This run used the existing
+read-only Lean/mathlib installation described in README.md. No custom axioms,
+proof holes, or native_decide were used in the project proof sources.
+The audit below prints the definitions, final statements, and axiom dependencies.
+
+Updated packaging check: scripts/check-local.sh with enforced axiom allowlist also passed.
+
+def Fluctuations.complexVariance.{u_1} : {Ω : Type u_1} →
+  {m₀ : MeasurableSpace Ω} → MeasureTheory.Measure Ω → (Ω → ℂ) → ℝ :=
+fun {Ω} {m₀} μ F => ∫ (ω : Ω), ‖F ω - ∫ (ω : Ω), F ω ∂μ‖ ^ 2 ∂μ
+def Fluctuations.LocalReverseVariance.{u_1} : {Ω : Type u_1} →
+  {m₀ : MeasurableSpace Ω} → MeasureTheory.Measure Ω → MeasurableSpace Ω → ℝ → (Ω → ℂ) → (Ω → ℂ) → Prop :=
+fun {Ω} {m₀} μ m η F G => ∀ᵐ (ω : Ω) ∂μ, η * ‖μ[G|m] ω - F ω‖ ^ 2 ≤ μ[fun ω => ‖G ω - μ[G|m] ω‖ ^ 2|m] ω
+@Fluctuations.transition_window : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
+  [MeasureTheory.IsProbabilityMeasure μ] (F : ℕ → Ω → ℂ) (G : ℕ → MeasurableSpace Ω),
+  (∀ (d : ℕ), G d ≤ mΩ) →
+    (∀ (d : ℕ), MeasureTheory.MemLp (F d) 2 μ) →
+      ∀ {η Δ : ℝ},
+        0 < η →
+          0 ≤ Δ →
+            (∀ (d : ℕ), Fluctuations.LocalReverseVariance μ (G d) η (F d) (F (d + 1))) →
+              ∀ {a b : ℕ},
+                a < b →
+                  Δ ≤ ‖∫ (ω : Ω), F b ω ∂μ - ∫ (ω : Ω), F a ω ∂μ‖ →
+                    ∃ d,
+                      a < d ∧
+                        d ≤ b ∧
+                          ∀ (r : ℕ),
+                            η * (η / (1 + η)) ^ r * Δ ^ 2 / ↑(b - a) ^ 2 ≤ Fluctuations.complexVariance μ (F (d + r))
+@Fluctuations.theorem_VI_14 : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
+  [MeasureTheory.IsProbabilityMeasure μ] (F : ℕ → Ω → ℂ) (G : ℕ → MeasurableSpace Ω),
+  (∀ (d : ℕ), G d ≤ mΩ) →
+    (∀ (d : ℕ), MeasureTheory.MemLp (F d) 2 μ) →
+      ∀ {η : ℝ},
+        0 < η →
+          (∀ (d : ℕ), Fluctuations.LocalReverseVariance μ (G d) η (F d) (F (d + 1))) →
+            ∀ {a b : ℕ},
+              a < b →
+                1 / 2 ≤ ‖∫ (ω : Ω), F b ω ∂μ - ∫ (ω : Ω), F a ω ∂μ‖ →
+                  ∀ (R : ℕ) {P : ℝ},
+                    ↑(b - a) ≤ P →
+                      ∃ d,
+                        a < d ∧
+                          d ≤ b ∧
+                            ∀ r ≤ R, η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤ Fluctuations.complexVariance μ (F (d + r))
+@Fluctuations.theorem_VI_14_interval : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
+  [MeasureTheory.IsProbabilityMeasure μ] (F : ℕ → Ω → ℂ) (G : ℕ → MeasurableSpace Ω),
+  (∀ (d : ℕ), G d ≤ mΩ) →
+    (∀ (d : ℕ), MeasureTheory.MemLp (F d) 2 μ) →
+      ∀ {η : ℝ},
+        0 < η →
+          (∀ (d : ℕ), Fluctuations.LocalReverseVariance μ (G d) η (F d) (F (d + 1))) →
+            ∀ {a b : ℕ},
+              a < b →
+                1 / 2 ≤ ‖∫ (ω : Ω), F b ω ∂μ - ∫ (ω : Ω), F a ω ∂μ‖ →
+                  ∀ (R : ℕ) {P : ℝ},
+                    ↑(b - a) ≤ P →
+                      ∃ d,
+                        have I := Finset.Icc d (d + R);
+                        I.card = R + 1 ∧
+                          I ⊆ Finset.Icc (a + 1) (b + R) ∧
+                            ∀ t ∈ I, η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤ Fluctuations.complexVariance μ (F t)
+@Fluctuations.theorem_VI_14_family : ∀ {Ω : ℕ → Type u_1} [mΩ : (n : ℕ) → MeasurableSpace (Ω n)]
+  (μ : (n : ℕ) → MeasureTheory.Measure (Ω n)) [∀ (n : ℕ), MeasureTheory.IsProbabilityMeasure (μ n)]
+  (F : (n : ℕ) → ℕ → Ω n → ℂ) (G : (n : ℕ) → ℕ → MeasurableSpace (Ω n)) (a b : ℕ → ℕ) (p : Polynomial ℝ) {η : ℝ},
+  0 < η →
+    ∀ (R n₀ : ℕ),
+      (∀ (n : ℕ), n₀ ≤ n → ∀ (d : ℕ), G n d ≤ mΩ n) →
+        (∀ (n : ℕ), n₀ ≤ n → ∀ (d : ℕ), MeasureTheory.MemLp (F n d) 2 (μ n)) →
+          (∀ (n : ℕ), n₀ ≤ n → ∀ (d : ℕ), Fluctuations.LocalReverseVariance (μ n) (G n d) η (F n d) (F n (d + 1))) →
+            (∀ (n : ℕ), n₀ ≤ n → a n < b n) →
+              (∀ (n : ℕ), n₀ ≤ n → 1 / 2 ≤ ‖∫ (ω : Ω n), F n (b n) ω ∂μ n - ∫ (ω : Ω n), F n (a n) ω ∂μ n‖) →
+                (∀ (n : ℕ), n₀ ≤ n → ↑(b n - a n) ≤ Polynomial.eval (↑n) p) →
+                  ∃ c,
+                    0 < c ∧
+                      ∀ (n : ℕ),
+                        n₀ ≤ n →
+                          ∃ d,
+                            a n < d ∧
+                              d ≤ b n ∧
+                                ∀ r ≤ R,
+                                  c / Polynomial.eval (↑n) p ^ 2 ≤ Fluctuations.complexVariance (μ n) (F n (d + r))
+'Fluctuations.complex_total_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.norm_mean_sq_le_secondMoment' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.slope_to_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.forward_persistence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.exists_large_increment' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.transition_window' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.theorem_VI_14_interval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.theorem_VI_14_family' depends on axioms: [propext, Classical.choice, Quot.sound]
+Axiom audit passed for all 9 declarations: only propext, Classical.choice, and Quot.sound are allowed.
