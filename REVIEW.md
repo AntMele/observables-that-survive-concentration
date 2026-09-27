@@ -1,67 +1,70 @@
 # Reviewing the formalization
 
-[Repository overview](README.md) · [Mathematical guide](docs/guide.md) ·
-[Paper-to-code map](docs/paper-mapping.md)
+[Overview](README.md) · [Guide](docs/guide.md) · [Paper map](docs/paper-mapping.md)
 
-The entry point is [`Fluctuations/Main.lean`](Fluctuations/Main.lean). This
-checklist is for readers comparing the formal statements with the paper,
-as well as contributors reviewing a change.
+Review the formal statement and its physical interpretation as separate checks.
+Start with [HaarCircuit.lean](Fluctuations/HaarCircuit.lean) for the concrete Haar
+model, or [Main.lean](Fluctuations/Main.lean) for the general probability theorem.
 
-## The four final results
+## Results and assumption boundaries
 
-| Declaration | Statement |
+| Declaration | Main boundary |
 | --- | --- |
-| `transition_window` | Arbitrary nonnegative mean gap `Δ`; selects one depth and proves the quantitative bound for every later offset. |
-| `theorem_VI_14` | Mean gap `1/2`; uniform lower bound for offsets `r ≤ R`, with any upper bound `P` on the transition width. |
-| `theorem_VI_14_interval` | Explicit interval of `R+1` consecutive depths, its location, and the variance lower bound at every depth in it. |
-| `theorem_VI_14_family` | An actual polynomial bounds the window widths; one positive lower-bound constant is chosen before quantifying over system size `n`. |
+| `haarCircuit_theorem_VI_14` | Fixed $m$ independent Haar SU(4) gates per step, actual matrix OTOCs, unital star-algebra embeddings; mean gap and width assumed. |
+| `haarLocalOTOC_conditional_reverseVariance` | Proves the local conditional inequality for an independent Haar block and continuous earlier circuit. |
+| `transition_window` | Arbitrary nonnegative mean gap; local reverse variance and standard probability/integrability structure supplied. |
+| `theorem_VI_14` and `theorem_VI_14_interval` | The general uniform bound, plus explicit interval cardinality and location. |
+| `theorem_VI_14_family` | General polynomial-family statement with one positive constant chosen before system size. |
 
-## Assumptions to inspect
+## Review the Haar construction
 
-- `complexVariance` is `E[‖F - E[F]‖²]`, matching complex-valued OTOCs.
-- `LocalReverseVariance` uses mathlib's conditional expectation. It states
-  `η ‖E[F_(d+1) | G_d] - F_d‖² ≤ E[‖F_(d+1) - E[F_(d+1) | G_d]‖² | G_d]`
-  almost everywhere.
-- `η` is positive and uniform in depth. In the family result it is also
-  independent of `n`.
-- The endpoint mean gap is assumed. The Haar/design/light-cone derivation of
-  that gap is outside this formalization.
-- Square-integrability and the inclusion of each conditioning sigma-algebra
-  in the ambient sigma-algebra are explicit.
-- The physical OTOC formula, circuit construction, and proofs that a particular
-  ensemble satisfies the two substantive inputs are not formalized here.
+- [HaarSU4.lean](Fluctuations/HaarSU4.lean) uses actual $4\times4$ special
+  unitary matrices and normalized product Haar measure. Independence is proved.
+- [QubitEmbedding.lean](Fluctuations/QubitEmbedding.lean) proves the genuine
+  tensor-with-identity insertion is a unital complex star-algebra homomorphism.
+- [LocalPolynomial.lean](Fluctuations/LocalPolynomial.lean) proves actual OTOC
+  trace membership in the raw entry/conjugate space of total degree $4mk$.
+  Check that the space contains no ambient dimension, embedding, or $\rho,B,V,M$
+  parameter; these appear only in coefficients.
+- [FiniteDimensionalVariance.lean](Fluctuations/FiniteDimensionalVariance.lean)
+  uses compactness and full support to obtain a common positive constant.
+- [HaarLocalVariance.lean](Fluctuations/HaarLocalVariance.lean) supplies the local
+  and conditional inequalities; unitality identifies the all-identity block
+  with the previous observable.
+- [HaarProcess.lean](Fluctuations/HaarProcess.lean) and
+  [HaarCircuit.lean](Fluctuations/HaarCircuit.lean) sample fresh blocks independently
+  and use $U_{d+1}=W_dU_d$. Check the ordering and adjoints against the paper.
 
-Both slope-to-variance and forward persistence are proved from these inputs.
-They are only premises of the intermediate deterministic sequence lemma, not
-of the final probabilistic theorems.
+The final Haar constant is quantified before dimension, embeddings, state and
+observable matrices, and depth. It depends on $m,k$, so holding these fixed is
+essential for a system-size-independent conclusion. The proof gives no numerical
+value and does not certify $4^{-8km}$.
 
-## Reproduce the check
+## Review the variance conclusion
 
-Install Lean through Elan, then run from the repository root:
+Complex variance is $\mathbb E|F-\mathbb EF|^2$. Check the endpoint definitions,
+the gap $1/2$, positive transition width, width bound, and the requested range
+$0\leq r\leq R$. The prefactor is uniform in system size for fixed $m,k,R$ in
+the Haar model; the general theorem instead requires a supplied common $\eta$.
+Both slope-to-variance and forward persistence are proved.
+
+A physical application must still justify how its architecture reduces to the
+modeled fixed-size block and establish the endpoint mean gap and width.
+Light-cone reduction, design convergence, and computational quantum advantage
+are not consequences of the Lean result alone.
+
+## Verification evidence
+
+Follow the [reproduction guide](docs/reproduce.md), then run:
 
 ```sh
 lake exe cache get
 bash scripts/check.sh
 ```
 
-For installation, expected output, and recorded CI evidence, see the
-[reproduction guide](docs/reproduce.md).
-
-`lean-toolchain` selects Lean 4.24.0. `lake-manifest.json` pins mathlib and its
-transitive dependencies. The script builds the project, prints the final
-statements, and rejects any audited axiom outside `propext`, `Classical.choice`,
-and `Quot.sound`. GitHub Actions performs the same check.
-
-The original local verification output is saved in
-[`docs/verification.txt`](docs/verification.txt). A fresh successful CI run is
-the check of the current repository revision.
-
-## Useful review questions
-
-1. Do the formal assumptions match the intended local reverse-variance and mean
-   gap inputs of the physical argument?
-2. Does the chosen conditioning information represent the depth-`d` circuit?
-3. Is a common positive `η` available over the depths and system sizes needed?
-4. Do the endpoint definitions agree with `a = d_lc` and `b = d_mc`?
-5. Are changes to the manuscript's theorem numbering or constants reflected in
-   the paper mapping?
+The build and audit should succeed for the revision being reviewed. All listed
+axiom reports must use only `propext`, `Classical.choice`, and `Quot.sound`.
+Check [scripts/Audit.lean](scripts/Audit.lean) for the selected declarations and
+[docs/verification.txt](docs/verification.txt) for the recorded output.
+The earlier successful CI run of the abstract-only version does not verify the
+new Haar extension; use a fresh check and record its revision.
