@@ -4,7 +4,7 @@
 
 **Lean 4 companion to the paper** · Statements, proofs, and reproducible verification
 
-[![Lean verification](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml/badge.svg)](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
+[CI workflow & live status](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml) ·
 [![Lean 4.24.0](https://img.shields.io/badge/Lean-4.24.0-blue)](lean-toolchain)
 [![mathlib v4.24.0](https://img.shields.io/badge/mathlib-v4.24.0-blue)](lakefile.toml)
 
