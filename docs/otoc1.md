@@ -7,7 +7,9 @@ paper's **macroscopic origin of OTOC fluctuations** theorem: the variance
 lower bound throughout a diffusive front window, and the many individual
 gate contributions that produce it. The actual finite-circuit Haar mean is
 proved in [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean).
-See the [independent scope review](otoc1-review.md) for the checked assumptions.
+See the [earlier independent scope review](otoc1-review.md) for these
+fluctuation and mean results. It predates the subsequent
+[classical simulation extension](simulation.md).
 
 ## The precise mathematical statement
 
@@ -126,12 +128,39 @@ The actual pre-light-cone mean is also proved equal to $1$. The image formula
 is an alternative exact expression; its algebraic regrouping into the
 manuscript's compressed $\Psi_d$ display is not formalized.
 
+## Classical simulation at infinite temperature
+
+[Simulation.lean](../Fluctuations/Simulation.lean) additionally formalizes
+the paper's classical estimator at $n=6(s+1)$ and $d=10(s+1)=5n/3$.
+Here the state is fixed to $I/2^n$, giving the normalized trace
+$F_\infty=2^{-n}\operatorname{Tr}[(U^\dagger Z_1UZ_n)^2]$.
+The algorithm retains an enlarged eye of realized gates and samples the
+conditional Pauli distribution while storing a single compressed coherent
+vector. Its success probability is at least $1-\delta$ at additive error
+$\varepsilon$, over both the Haar circuit and the algorithmic randomness.
+
+The error estimate, exact sampler law, and support and operation counts are
+proved. The chosen radius and sample count give subexponential arithmetic
+cost. For $\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive
+natural exponents, `otoc1_subexponential_simulation_inversePolynomial`
+combines accuracy at every size with $\log(\mathrm{work})/n\to0$ for the
+same sampler. The exact scalar-arithmetic count (real or complex) covers sampling and readout,
+including transfer-matrix construction, with exact finite-distribution draws.
+It excludes indexing, stored-coefficient reads, and schedule and parameter
+preprocessing; an extracted numerical executable and finite-precision or
+bit-complexity analyses are not supplied. Read the
+[simulation guide](simulation.md) for the precise theorem and operation
+model. The simulation guarantee is specifically infinite-temperature; the
+fluctuation theorem on this page holds for every trace-one state.
+
 ## Scope of the endpoint formalization
 
-The Gaussian approximation with error $5/\sqrt n$, the full spatial
-Gaussian influence envelope outside the central eye, and the classical
-simulation runtime theorem are separate results and are not claimed by
-this formalization. The stronger endpoint fluctuation theorem above does
-not depend on those results. The higher-order spatial theorem and its
-design-convergence input remain documented separately in the
-[general mathematical guide](guide.md).
+The Gaussian mean approximation with error $5/\sqrt n$ and the full spatial
+Gaussian variance-influence envelope outside the central eye remain
+separate unformalized statements. The simulation uses its own proved
+endpoint touching-tail and local-replacement estimates, which are different
+from that full influence-envelope claim. The literal $\Psi_d$ regrouping
+also remains outside the formalization, as described above.
+
+The higher-order spatial theorem and its design-convergence input remain
+documented separately in the [general mathematical guide](guide.md).
