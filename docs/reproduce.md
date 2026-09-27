@@ -88,16 +88,22 @@ the paper remains a separate mathematical check.
 
 ## Recorded verification and current status
 
+The [Haar-extension GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
+passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`, including the
+concrete circuit theorem and the enforced 24-declaration axiom audit. Its
+verification job took **4 minutes 55 seconds**; the full run took
+**5 minutes 14 seconds**. This is evidence for that exact source revision.
+
 The current [local verification record](verification.txt) reports a successful
 full source rebuild on **2026-09-27**, using `bash scripts/check-local.sh`, with
 no warnings or errors. All twelve library modules and the top-level import
 compiled, and the enforced 24-declaration axiom audit passed. This record covers
 the Haar extension, including `haarCircuit_theorem_VI_14`.
 
-The earlier [GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
+For historical reference, the earlier [GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
 passed for commit `4d4a4d4a1ec88d9c3618e887b54ca2be8c10e175` in
-3 minutes 28 seconds. **That CI run covers the earlier abstract-only version,
-not the new Haar extension.** Check the
+3 minutes 28 seconds. That earlier run covers the abstract-only version.
+Check the
 [workflow results](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
 for the revision you are reviewing, or run the commands above. A saved report
 or an earlier green badge is not evidence for later source changes.
