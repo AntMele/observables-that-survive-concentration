@@ -5,7 +5,9 @@
 
 This guide builds the library and checks the transitive axiom dependencies
 of the listed principal results. Start with the [OTOC(1) guide](otoc1.md)
-and [OTOC1.lean](../Fluctuations/OTOC1.lean) for the endpoint theorem.
+and [OTOC1.lean](../Fluctuations/OTOC1.lean) for the endpoint variance theorem.
+For classical simulation, start with the [simulation guide](simulation.md)
+and [Simulation.lean](../Fluctuations/Simulation.lean).
 The [paper mapping](paper-mapping.md) distinguishes this unconditional
 brickwork result from the general spatial theorem, whose design-convergence
 and transition-width bounds remain external inputs.
@@ -78,7 +80,11 @@ Haar integration and its all-dimension bound. The endpoint coverage includes
 actual U(4) Pauli moments, tensor embeddings, product conditioning, the
 frozen-gate covariance reset, universal endpoint propagation, the conditional
 mean, actual finite-depth mean, and the final variance and many-gate influence
-results. Inspect the committed list for the exact declarations being checked.
+results. The simulation audit additionally covers the exact coherent sampler,
+compressed update formulas, physical output-law equality, forward/backward
+touching tails, actual conditional-mean bias, joint probability kernel,
+concentration, generated arithmetic counts, and combined accuracy/subexponential
+statement. Inspect the committed list for the exact declarations being checked.
 
 Each report includes the declaration's transitive axiom dependencies, including
 those reached through supporting lemmas. The
