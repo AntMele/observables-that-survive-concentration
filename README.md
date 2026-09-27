@@ -62,7 +62,7 @@ and full outer variance-influence envelope remain outside the proved results.
 The simulation theorem concerns the infinite-temperature observable
 
 ```math
-F_\infty(U_d)=2^{-n}\operatorname{Tr}[(U_d^\dagger Z_1U_dZ_n)^2],
+F_\infty(U_d)=2^{-n}\mathrm{Tr}[(U_d^\dagger Z_1U_dZ_n)^2],
 \qquad n=6(s+1),\quad d=10(s+1)=5n/3.
 ```
 
@@ -97,7 +97,7 @@ For $\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive natural
 exponents, `otoc1_subexponential_simulation_inversePolynomial` proves both
 the accuracy guarantee at every size and $\log(\mathrm{work})/n\to0$ for
 the same sampler. A concrete
-$\operatorname{poly}(n)\,2^{O(\sqrt{n\log n})}$ majorant is also proved.
+$\mathrm{poly}(n)\,2^{O(\sqrt{n\log n})}$ majorant is also proved.
 The model assumes exact scalar arithmetic (real or complex) and exact sampling from explicitly
 computed finite distributions, as in the manuscript. The counter includes
 transfer-matrix construction and the sampling and readout arithmetic; it
