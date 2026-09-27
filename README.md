@@ -1,97 +1,107 @@
 # Towards verifiable quantum advantage with random circuits: Observables that survive concentration
 
-[![Lean verification](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml/badge.svg?branch=main)](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
+[![Lean verification](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml/badge.svg)](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
 
-**Lean 4 companion to the variance lower bound in Theorem VI.14.**
+Lean 4 companion to the paper's variance lower bound, Theorem VI.14 in the
+inspected manuscript. The project proves the probability argument, the exact
+Haar SU(4) local coefficient, and the geometric certificates for concrete
+finite-qubit circuits. It also proves the actual global-Haar mean bound at
+every positive order and dimension, and gives an explicit size threshold for
+the variance theorem. Design convergence and the transition-width bound
+remain external inputs.
 
-The strongest result treats full Haar-gate layers with a fixed number of active
-gates and arbitrarily many inactive gates. It proves the local reverse-variance
-bound, cancels inactive gates under explicit commutation certificates, and
-derives the required half-unit mean gap from early-time commutation and two
-quarter-unit mean estimates. The observable is the actual matrix
-out-of-time-order correlator (OTOC).
+Start with the [mathematical guide](docs/guide.md), then the
+[paper-to-code map](docs/paper-mapping.md). The strongest assembled spatial
+result is in [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean).
+[REVIEW.md](REVIEW.md) lists the assumptions to inspect.
 
-The general probability theorem remains available for other ensembles, with
-mean change and local reverse variance supplied as hypotheses.
+## The spatial Haar result
 
-## Start here
+Each parallel layer consists of independent Haar SU(4) gates on disjoint pairs
+of qubits. The matrices act on the full basis `Site → Fin 2`; the embedding
+inserts the actual gate on its two sites and the identity elsewhere.
 
-For a first reading alongside the paper, follow the
-[paper-to-code map](docs/paper-mapping.md), the
-[local reverse-variance argument](docs/guide.md#why-local-reverse-variance-follows),
-and the [full-layer circuit theorem](Fluctuations/ActiveHaarCircuit.lean).
-Then check the [scope limits](docs/guide.md#what-still-connects-this-model-to-the-paper)
-and [reproduce the verification](docs/reproduce.md).
-
-| If you want to… | Read |
-| --- | --- |
-| Understand the mathematics | [Guide](docs/guide.md) |
-| Inspect the strongest circuit theorem | [ActiveHaarCircuit.lean](Fluctuations/ActiveHaarCircuit.lean) |
-| Use the theorem for another ensemble | [Main.lean](Fluctuations/Main.lean) |
-| Compare with the manuscript | [Paper-to-code map](docs/paper-mapping.md) and [review checklist](REVIEW.md) |
-| Check or extend the proof | [Reproduction](docs/reproduce.md) and [contributing](CONTRIBUTING.md) |
-
-## The full-layer result
-
-Fix the OTOC order $k$ and $m$ active gates per layer. Each layer also contains
-$q$ inactive gates, where $q$ may grow with system size. All new gates are
-independent normalized Haar SU(4) gates inserted by unital complex star-algebra
-homomorphisms. Write the layer as $W_d=J_dA_d$, with inactive block $J_d$ and
-active block $A_d$, and set $U_{d+1}=W_dU_d$.
-The counts $m,q$ are fixed across depths of a given process; the embeddings
-may change with depth.
-
-Every inactive gate must commute with $B$. This explicit certificate gives
-$J_d^\dagger BJ_d=B$, so only the fresh active gates enter the local OTOC.
-Inactive gates remain in the full circuit history and may matter at later depths.
-The observable is
+Let $B$ have support $S$, with $s=|S|$, and write
 
 ```math
-F_d=\mathrm{Tr}\!\left[\rho\left(U_d^\dagger B U_d M\right)^{2k}\right].
+F_d=\operatorname{Tr}\!\left[\rho\left(U_d^\dagger B U_dM\right)^{2k}\right],
+\qquad \eta=4^{-8ks},\qquad \kappa=\frac{\eta}{1+\eta}.
 ```
 
-`activeHaarCircuit_theorem_of_moment_control` uses **one $\eta(m,k)>0$,
-independent of $q$, global dimension, embeddings, and observable matrices**. Its inputs
-are the inactive-gate certificate, $a<b$, a width bound $b-a\leq P$, and:
+A gate is active if its patch meets $S$. Lean proves that there are at most
+$s$ active gates, that the inactive gates cancel from the fresh conjugation of
+$B$, and that the local reverse-variance inequality holds with this explicit
+$\eta$. All gates remain in the circuit history.
 
-- $\mathrm{Tr}(\rho)=1$, $B^2=M^2=I$;
-- at depth $a$, $U_a^\dagger BU_a$ commutes with $M$ for every history;
-- a reference mean $h$ satisfies $|\mathbb EF_b-h|\leq1/4$ and $|h|\leq1/4$.
-
-Lean derives $\mathbb EF_a=1$ and $|\mathbb EF_b-\mathbb EF_a|\geq1/2$.
-For any chosen $R\in\mathbb N$, some $a<d_*\leq b$ then satisfies
+Given $a<b$, $b-a\le P$, and a half-unit change of the mean, Lean proves that
+for every fixed $R$, some $a<d_*\le b$ satisfies
 
 ```math
-\mathrm{Var}(F_{d_*+r})\geq
-\frac{\eta}{4P^2}\left(\frac{\eta}{1+\eta}\right)^R
-\qquad(0\leq r\leq R).
+\operatorname{Var}(F_{d_*+r})\ge
+\frac{\eta\kappa^R}{4P^2}
+\qquad (0\le r\le R).
 ```
 
-Variance means $\mathbb E|F-\mathbb EF|^2$. With $P=p(n)$ and fixed **$m,k,R$**,
-the prefactor is independent of system size and the number of inactive gates.
-The theorem `activeHaarCircuit_theorem_VI_14` gives the same conclusion when the
-half-unit gap is supplied directly. [HaarCircuit.lean](Fluctuations/HaarCircuit.lean)
-contains the earlier model with only active gates; [Main.lean](Fluctuations/Main.lean)
-contains the general probability, interval, and polynomial-family results.
+This is `spatialHaarCircuit_variance_window`. For fixed $s,k,R$ and polynomial
+$P$, the numerator is independent of system size and the number of inactive
+gates. The assembled Haar history currently uses fixed active and inactive
+counts across depths of each process; patches may change with depth. The
+separate deterministic geometry results also allow variable gate counts.
 
-## Scope
+## What is proved and what remains
 
-| Proved in Lean | Inputs or remaining work |
+| Ingredient | Status |
 | --- | --- |
-| Actual SU(4), normalized product Haar sampling, matrix OTOCs, and a uniform local variance constant | The embeddings and the active/inactive decomposition |
-| Inactive-unitary cancellation; regrouping interleaved lists under cross-commutation; commutation on separate tensor factors | Graph-based support propagation, a light-cone construction, and a bound on the active-gate count |
-| Early OTOC equals one for commuting involutions; a half-gap follows from the two mean estimates | The early commutation certificate, moment-control error, reference-mean estimate, and width bound |
-| Full-layer variance bound with a constant independent of $q$ and global dimension | The sharper numerical Haar constant $4^{-8km}$ and computational quantum advantage |
+| Actual SU(4), independent normalized Haar gates, physical two-site embeddings | Proved |
+| Disjoint support implies commutation; deterministic backward cone and early OTOC identity | Proved |
+| Active count at most $\lvert S\rvert$; constant-depth support and active-block bounds | Proved |
+| Exact local coefficient $4^{-8km}$ for $m$ gates, including conditional variance | Proved |
+| Slope-to-variance, persistence, consecutive window, abstract polynomial-family bound | Proved |
+| Actual global U($D$) Haar measure and OTOC mean, with Haar symmetry identities | Defined and proved in [GlobalHaarMean.lean](Fluctuations/GlobalHaarMean.lean) |
+| State independence for every Hermitian, traceless involution probe, at all orders | Proved in [GlobalHaarPauliMean.lean](Fluctuations/GlobalHaarPauliMean.lean) |
+| Actual Haar integration formula, inverse-Gram coefficients, and Pauli trace contractions | Proved |
+| All-orders estimate $\lvert h\rvert\le 2((2k)!)^3/D^2$ in every dimension | Proved in [GlobalHaarMeanAllDimensions.lean](Fluctuations/GlobalHaarMeanAllDimensions.lean) |
+| Exact first-order mean $h=-1/(D^2-1)$ | Proved in [GlobalHaarFirstOrderValue.lean](Fluctuations/GlobalHaarFirstOrderValue.lean) |
+| Design convergence and polynomial mixing depth | External input |
 
-The reference mean can be chosen to be a Haar mean, but the theorem does not
-calculate that mean or prove convergence to it. The [guide](docs/guide.md)
-explains exactly how the algebraic certificates and statistical inputs enter.
-Identifying an arbitrary architecture's gate coordinates with the grouped
-product sampling law also remains an application step.
+`spatialHaarCircuit_allOrders_of_globalHaar_control` uses the **actual
+normalized global-Haar mean** of the same observable. For Hermitian, traceless
+involutions $B,M$ and $\operatorname{Tr}\rho=1$, it proves the Haar
+quarter-bound whenever
 
-## Run the verification
+```math
+D=2^n,\qquad k\ge1,\qquad D^2\ge8((2k)!)^3.
+```
 
-With [Lean/Elan](https://lean-lang.org/install/), Git, Bash, and Python 3 installed:
+Geometry gives the early mean $1$. The remaining analytic input is the
+late observable-specific moment error $|\mathbb EF_b-h|\le1/4$, supplied
+by design convergence; together these give the half-unit gap. The architecture,
+observable support, cone separation, and transition-width bound are explicit
+hypotheses. The first-order wrapper needs only $n\ge2$ for Haar smallness.
+
+The inverse-square Haar estimate holds in every nonzero dimension. The
+displayed threshold is needed only to make it at most $1/4$.
+
+The formalized local ensemble is SU(4). The phase-invariance/Haar-law bridge to
+the manuscript's U(4) convention is a remaining correspondence step. Specific
+graph-distance speeds, the sharper one-dimensional fluctuation theorem, and
+computational quantum advantage are not established here.
+
+## Read the proof
+
+| Purpose | Source |
+| --- | --- |
+| Final spatial variance theorem | [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean); first order: [SpatialHaarFirstOrder.lean](Fluctuations/SpatialHaarFirstOrder.lean) |
+| Concrete support, patch insertion, and cones | [TensorSupport.lean](Fluctuations/TensorSupport.lean), [PatchEmbedding.lean](Fluctuations/PatchEmbedding.lean), [CircuitGeometry.lean](Fluctuations/CircuitGeometry.lean), [SpatialHaarGeometry.lean](Fluctuations/SpatialHaarGeometry.lean) |
+| Explicit Haar coefficient | [HaarEvaluationBound.lean](Fluctuations/HaarEvaluationBound.lean), [BalancedHaarFeatures.lean](Fluctuations/BalancedHaarFeatures.lean), [ExplicitHaarVariance.lean](Fluctuations/ExplicitHaarVariance.lean) |
+| Numerical full-layer theorem | [ExplicitHaarCircuit.lean](Fluctuations/ExplicitHaarCircuit.lean) |
+| Actual global-Haar reference and state independence | [GlobalHaarMean.lean](Fluctuations/GlobalHaarMean.lean), [GlobalHaarPauliMean.lean](Fluctuations/GlobalHaarPauliMean.lean) |
+| Complete Haar mean bound | [GlobalHaarMeanBound.lean](Fluctuations/GlobalHaarMeanBound.lean), [HaarWeingartenProjection.lean](Fluctuations/HaarWeingartenProjection.lean), [WeingartenGramBounds.lean](Fluctuations/WeingartenGramBounds.lean) |
+| General ensembles and polynomial families | [Main.lean](Fluctuations/Main.lean) |
+
+## Verify
+
+Lean **4.24.0** and mathlib **v4.24.0** are pinned.
 
 ```sh
 git clone https://github.com/AntMele/observables-that-survive-concentration.git
@@ -100,29 +110,13 @@ lake exe cache get
 bash scripts/check.sh
 ```
 
-Lean **4.24.0** and mathlib **v4.24.0** are pinned. The check builds the library
-and audits all listed declarations and their transitive dependencies against
-`propext`, `Classical.choice`, and `Quot.sound`. The full local check passed for
-the new extension: all 15 library modules and the top-level import compiled,
-and all 42 audited declarations passed with no warnings or errors. The
-[earlier Haar-model CI run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
-passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`.
-That run predates the active/inactive-layer and mean-change extensions. See the
-[reproduction guide](docs/reproduce.md) for verification status and instructions
-to check the current source.
+The script builds the imported library and enforces a declaration-by-declaration
+axiom allowlist: only `propext`, `Classical.choice`, and `Quot.sound`. Explicit
+mathematical hypotheses must still be reviewed. See [reproduction instructions](docs/reproduce.md)
+and the [verification record](docs/verification.txt) for the checked source.
+A successful older CI run does not certify later edits.
 
-## Source route
-
-- [ActiveHaarCircuit.lean](Fluctuations/ActiveHaarCircuit.lean): full-layer theorem, with either a supplied gap or the moment-control inputs.
-- [SpatialSupport.lean](Fluctuations/SpatialSupport.lean): cancellation, interleaved products, and tensor-factor commutation.
-- [MeanChange.lean](Fluctuations/MeanChange.lean): commuting-involution OTOCs and the quantitative mean-gap argument.
-- [HaarSU4.lean](Fluctuations/HaarSU4.lean): the actual gate group, measure, independence, and coordinates.
-- [LocalPolynomial.lean](Fluctuations/LocalPolynomial.lean): finite feature spaces and matrix OTOC membership.
-- [FiniteDimensionalVariance.lean](Fluctuations/FiniteDimensionalVariance.lean): reverse variance on a finite-dimensional continuous-function space under a full-support probability law.
-- [HaarLocalVariance.lean](Fluctuations/HaarLocalVariance.lean): a uniform Haar constant and the local and conditional inequalities.
-- [QubitEmbedding.lean](Fluctuations/QubitEmbedding.lean): $A\mapsto A\otimes I$ as a unital star-algebra homomorphism.
-- [ProductVariance.lean](Fluctuations/ProductVariance.lean), [HaarProcess.lean](Fluctuations/HaarProcess.lean), and [HaarCircuit.lean](Fluctuations/HaarCircuit.lean): conditioning, independent histories, and the concrete circuit theorem.
-- [Probability.lean](Fluctuations/Probability.lean), [WeightedVariance.lean](Fluctuations/WeightedVariance.lean), [Window.lean](Fluctuations/Window.lean), and [Main.lean](Fluctuations/Main.lean): the general fluctuation argument.
-
-When citing the formalization, record the repository revision and the paper
-version. The [paper map](docs/paper-mapping.md) records the manuscript fingerprints.
+When citing this companion, record the repository revision, theorem declaration,
+and paper version. [Manuscript fingerprints](docs/paper-mapping.md#manuscript-provenance)
+identify the inspected draft. The early shared gist is a historical snapshot
+and does not contain the subsequent extensions.
