@@ -1,14 +1,14 @@
-# Reviewing the formalization
+# Assumptions and paper correspondence
 
-[Overview](README.md) · [Guide](docs/guide.md) · [Paper map](docs/paper-mapping.md)
+[Home](../../README.md) / [Reader guide](../README.md) / Assumption review
 
-Start with the [OTOC(1) guide](docs/otoc1.md),
-[OTOC1.lean](Fluctuations/OTOC1.lean), and its
-[earlier independent scope review](docs/otoc1-review.md). That review covers
+Start with the [OTOC(1) guide](../results/endpoint-fluctuations.md),
+[OTOC1.lean](../../Fluctuations/OTOC1.lean), and its
+[earlier independent scope review](endpoint.md). That review covers
 the fluctuation and mean results and predates the simulation extension.
-For the latter, start with [Simulation.lean](Fluctuations/Simulation.lean)
-and the [simulation guide](docs/simulation.md). The general spatial result
-remains in [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean).
+For the latter, start with [Simulation.lean](../../Fluctuations/Simulation.lean)
+and the [simulation guide](../results/classical-simulation.md). The general spatial result
+remains in [SpatialHaarFinal.lean](../../Fluctuations/SpatialHaarFinal.lean).
 Review mathematical assumptions separately from successful compilation.
 
 ## Main statements
@@ -77,7 +77,7 @@ branches have a normalized fallback; support statements concern branches
 with nonzero weight. The exponentially large finite ensemble is a semantic
 law, not an array that the implementation constructs.
 
-[SimulationPhysicalLaw.lean](Fluctuations/SimulationPhysicalLaw.lean) identifies
+[SimulationPhysicalLaw.lean](../../Fluctuations/SimulationPhysicalLaw.lean) identifies
 the output PMF of the outside-first implementation with the chronological
 mixed-circuit law for every realized input. Its `simulationPhysicalSamplerKernel`
 is the actual Markov kernel used in the final joint probability statement.
@@ -188,6 +188,9 @@ checks the listed endpoint variance, influence, conditional-mean, actual
 mean and simulation results, the general spatial/Haar results, and their
 transitive dependencies; only
 `propext`, `Classical.choice`, and `Quot.sound` are allowed. It rejects missing
-reports and additional axioms. See [the reproduction guide](docs/reproduce.md).
+reports and additional axioms. See [the reproduction guide](../verification/README.md).
 Match the checked revision to the source being reviewed.
 
+---
+
+**Related:** [Paper map](../reference/paper-map.md) · [Endpoint review](endpoint.md) · [Simulation review](simulation.md) · [Reproduce the checks](../verification/README.md)
