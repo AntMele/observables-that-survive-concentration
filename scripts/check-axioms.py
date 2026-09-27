@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Require all nine audited declarations and only Lean's standard axioms.
+"""Require every audited declaration and only Lean's standard axioms.
 
-The two scientific assumptions are theorem parameters, not extra axioms.
+The general-ensemble theorem has explicit scientific hypotheses; the Haar
+extension proves local reverse variance. Neither adds global axioms.
 In particular, sorryAx and any user-defined axiom fail this check.
 """
 
@@ -20,6 +21,21 @@ EXPECTED = {
     "Fluctuations.theorem_VI_14",
     "Fluctuations.theorem_VI_14_interval",
     "Fluctuations.theorem_VI_14_family",
+    "Fluctuations.finiteDimensional_reverseVariance",
+    "Fluctuations.su4Haar_independent",
+    "Fluctuations.matrixBlockOTOC_mem",
+    "Fluctuations.matrixBlockOTOC_apply",
+    "Fluctuations.qubitEmbedding",
+    "Fluctuations.qubitEmbedding_injective",
+    "Fluctuations.starAlgHom_su4_mem_unitary",
+    "Fluctuations.product_condExp",
+    "Fluctuations.product_localReverseVariance",
+    "Fluctuations.haarLocalConstant_pos",
+    "Fluctuations.haarLocalOTOC_reverseVariance_identity",
+    "Fluctuations.haarLocalOTOC_conditional_reverseVariance",
+    "Fluctuations.history_transition_window",
+    "Fluctuations.history_theorem_VI_14",
+    "Fluctuations.haarCircuit_theorem_VI_14",
 }
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 REPORT = re.compile(
