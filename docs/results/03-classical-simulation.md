@@ -1,6 +1,13 @@
-# Classical simulation of the endpoint OTOC
+# 3. Classical simulation of the endpoint OTOC
 
-[Home](../../README.md) / [Reader guide](../README.md) / Classical simulation
+[Home](../../README.md) / [Reader guide](../README.md) / 3. Classical simulation
+
+**Paper:** main text §III B → SM §VIII.
+
+After the [general fluctuation theorem](01-general-otoc-variance.md) and its
+[one-dimensional refinement](02-otoc1-fluctuations.md), the paper applies
+the endpoint structure to classical simulation. Gates outside an enlarged
+eye are averaged; the retained region controls the arithmetic cost.
 
 This page explains the formalization of the paper's theorem
 `thm:endpoint-sim-otoc1-runtime`. The assembled statements are
@@ -161,4 +168,6 @@ final theorem is the place to inspect the remaining scientific assumptions.
 
 ---
 
-**Next:** [Independent simulation review](../reviews/simulation.md) · [Endpoint fluctuations](endpoint-fluctuations.md) · [Reproduce the checks](../verification/README.md)
+**Previous:** [2. One-dimensional OTOC₁](02-otoc1-fluctuations.md) · **Next:** [Reproduce the checks →](../verification/README.md)
+
+[Independent simulation review](../reviews/simulation.md) · [Return to the manuscript route](../README.md)
