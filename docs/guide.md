@@ -12,11 +12,11 @@ The theorem concerns a process $F_d:\Omega\to\mathbb C$ on a probability space
 $(\Omega,\mu)$. Each $F_d$ is square-integrable. For each depth, $\mathcal G_d$
 is a sub-sigma-algebra of the ambient measurable space. Write
 
-$$
+```math
 m_d=\mathbb E[F_d],\qquad
 V_d=\mathbb E\lvert F_d-m_d\rvert^2,\qquad
 M_d=\mathbb E[F_{d+1}\mid\mathcal G_d].
-$$
+```
 
 | Mathematical object | Lean expression |
 | --- | --- |
@@ -34,17 +34,17 @@ nonnegative mean squared complex norm; it is not $\mathbb E(F-\mathbb EF)^2$.
 
 **Mean change.** For natural depths $a<b$ and a real $\Delta\geq0$,
 
-$$
+```math
 \lvert m_b-m_a\rvert\geq\Delta.
-$$
+```
 
 **Local reverse variance.** A single real $\eta>0$ satisfies, at every depth
 and almost everywhere,
 
-$$
+```math
 \mathbb E\!\left[\lvert F_{d+1}-M_d\rvert^2\mid\mathcal G_d\right]
 \;\geq\;\eta\lvert M_d-F_d\rvert^2.
-$$
+```
 
 The condition uses mathlib's conditional expectation. It is an argument of the
 theorem, not a new global axiom. Square-integrability, probability normalization,
@@ -88,16 +88,16 @@ flowchart TD
 
 4. **Iterate.** The same selected depth works for every $r\in\mathbb N$:
 
-   $$
+   ```math
    V_{d_*+r}\geq\eta\kappa^r\frac{\Delta^2}{(b-a)^2}.
-   $$
+   ```
 
 5. **Obtain the paper's bound.** Set $\Delta=1/2$, fix $R\in\mathbb N$, and
    use $b-a\leq P$. Because $\kappa^r\geq\kappa^R$ for $r\leq R$,
 
-   $$
+   ```math
    V_{d_*+r}\geq\frac{\eta\kappa^R}{4P^2}\qquad(0\leq r\leq R).
-   $$
+   ```
 
    The interval $\{d_*,\ldots,d_*+R\}$ contains exactly $R+1$ depths and
    is contained in $\{a+1,\ldots,b+R\}$.
@@ -118,9 +118,9 @@ two intermediate bounds as inputs; `Main.lean` supplies their proofs.
 In the family result, the probability space may depend on $n$. For a fixed
 $R$ and an $n$-independent $\eta>0$, the proof chooses
 
-$$
+```math
 c(\eta,R)=\frac{\eta}{4}\left(\frac{\eta}{1+\eta}\right)^R
-$$
+```
 
 **before** quantifying over $n\geq n_0$. It then obtains a suitable depth for
 each $n$. The polynomial is an actual `Polynomial ℝ`, with evaluation
