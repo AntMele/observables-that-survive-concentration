@@ -2,16 +2,20 @@
 
 [![Lean verification](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml/badge.svg)](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
 
-Lean 4 companion proving the paper's first-order endpoint OTOC fluctuation
-theorem for actual one-dimensional Haar U(4) circuits: an
-$\Omega(n^{-1/2})$ variance lower bound throughout the diffusive front window,
-with a concrete set of $\Theta(n^{3/2})$ gates each contributing
-$\Omega(n^{-2})$ through its conditional mean. The exact finite-circuit Haar
-mean and one-gate conditional formula are also proved.
+Lean 4 companion to the paper's endpoint OTOC fluctuation and classical
+simulation results for actual one-dimensional Haar U(4) circuits. It proves
+an $\Omega(n^{-1/2})$ variance lower bound throughout the diffusive front
+window, a concrete set of $\Theta(n^{3/2})$ contributing gates, and an
+accurate classical estimator with subexponential arithmetic cost at critical
+depth. The exact finite-circuit Haar mean and one-gate conditional formula
+are also proved.
 
-Start with the [OTOC(1) guide](docs/otoc1.md) and
-[OTOC1.lean](Fluctuations/OTOC1.lean). The
-[independent review](docs/otoc1-review.md) records the precise scope.
+Start with the [fluctuation guide](docs/otoc1.md) and
+[OTOC1.lean](Fluctuations/OTOC1.lean), or the
+[classical simulation guide](docs/simulation.md) and
+[Simulation.lean](Fluctuations/Simulation.lean). The
+[earlier independent review](docs/otoc1-review.md) covers the fluctuation and
+mean results; it predates the simulation extension.
 
 The project also retains the general spatial variance-window theorem VI.14,
 the exact local coefficient $4^{-8km}$, and the actual global-Haar mean bound
@@ -51,8 +55,60 @@ matrix satisfies its trace-one condition.
 the actual circuit mean through the exact finite endpoint walk and a
 binomial-image formula, including zero depth and the two-qubit boundary case.
 The manuscript's literal $\Psi$ regrouping, Gaussian mean-front approximation,
-full outer influence envelope, and simulation-runtime theorem remain outside
-the proved results.
+and full outer variance-influence envelope remain outside the proved results.
+
+## Classical simulation at critical depth
+
+The simulation theorem concerns the infinite-temperature observable
+
+```math
+F_\infty(U_d)=2^{-n}\operatorname{Tr}[(U_d^\dagger Z_1U_dZ_n)^2],
+\qquad n=6(s+1),\quad d=10(s+1)=5n/3.
+```
+
+For $\varepsilon,\delta\in(0,1)$, choose
+
+```math
+R=10\sqrt{\log\frac{400n^2}{3\varepsilon\delta}},
+\qquad N=\left\lceil\frac8{\varepsilon^2}\log\frac4\delta\right\rceil.
+```
+
+`otoc1_subexponential_simulation` in
+[Simulation.lean](Fluctuations/Simulation.lean) proves
+
+```math
+\Pr[|\widetilde F-F_\infty(U_d)|\le\varepsilon]\ge1-\delta.
+```
+
+The probability is over both the Haar circuit and the algorithm's samples.
+The algorithm retains the realized gates in the enlarged eye, averages the
+other gates, and samples the resulting conditional Pauli distribution using
+one coherent vector. The local perturbation estimate, averaging error,
+exact sampler law, and concentration bound are proved; no bias, local
+reverse-variance, or mean-change estimate is supplied to the final theorem.
+
+For the counted sampling and readout loops, the explicit arithmetic bound is
+
+```math
+180002(N+1)n^2\,4^{\,2\lceil2R\sqrt n+1\rceil+4}.
+```
+
+For $\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive natural
+exponents, `otoc1_subexponential_simulation_inversePolynomial` proves both
+the accuracy guarantee at every size and $\log(\mathrm{work})/n\to0$ for
+the same sampler. A concrete
+$\operatorname{poly}(n)\,2^{O(\sqrt{n\log n})}$ majorant is also proved.
+The model assumes exact scalar arithmetic (real or complex) and exact sampling from explicitly
+computed finite distributions, as in the manuscript. The counter includes
+transfer-matrix construction and the sampling and readout arithmetic; it
+excludes indexing, stored-coefficient reads, and preprocessing that constructs
+the schedule or computes its parameters. This is a formal algorithm and cost
+analysis, without an extracted numerical executable or a bit-complexity or
+finite-precision-stability claim. See the
+[simulation guide](docs/simulation.md) for the operation counts and scope.
+
+The fluctuation theorem above holds for every trace-one state; this
+simulation theorem uses the maximally mixed state $I/2^n$.
 
 ## The general spatial Haar result
 
@@ -92,6 +148,7 @@ separate deterministic geometry results also allow variable gate counts.
 | Ingredient | Status |
 | --- | --- |
 | Actual 1D Haar U(4) endpoint variance, many-gate influence, and exact conditional mean | Proved in [OTOC1.lean](Fluctuations/OTOC1.lean) and [BrickworkEndpointOTOC.lean](Fluctuations/BrickworkEndpointOTOC.lean) |
+| Infinite-temperature endpoint simulation at critical depth: actual joint success probability and subexponential arithmetic cost | Proved in [Simulation.lean](Fluctuations/Simulation.lean), [SimulationAsymptotics.lean](Fluctuations/SimulationAsymptotics.lean) |
 | Actual finite-circuit endpoint Haar mean and binomial-image expression | Proved in [BrickworkEndpointMean.lean](Fluctuations/BrickworkEndpointMean.lean) |
 | Actual SU(4), independent normalized Haar gates, physical two-site embeddings | Proved |
 | Disjoint support implies commutation; deterministic backward cone and early OTOC identity | Proved |
@@ -133,6 +190,7 @@ graph-distance speeds and computational quantum advantage are not established.
 
 | Purpose | Source |
 | --- | --- |
+| Classical simulation: target, sampler, error and runtime | [Simulation.lean](Fluctuations/Simulation.lean), explained in [docs/simulation.md](docs/simulation.md) |
 | Endpoint variance and many-gate influence | [OTOC1.lean](Fluctuations/OTOC1.lean), explained in [docs/otoc1.md](docs/otoc1.md) |
 | Actual endpoint conditional mean and finite-depth mean | [BrickworkEndpointOTOC.lean](Fluctuations/BrickworkEndpointOTOC.lean), [BrickworkEndpointMean.lean](Fluctuations/BrickworkEndpointMean.lean) |
 | Final spatial variance theorem | [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean); first order: [SpatialHaarFirstOrder.lean](Fluctuations/SpatialHaarFirstOrder.lean) |
