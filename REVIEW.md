@@ -66,5 +66,8 @@ The build and audit should succeed for the revision being reviewed. All listed
 axiom reports must use only `propext`, `Classical.choice`, and `Quot.sound`.
 Check [scripts/Audit.lean](scripts/Audit.lean) for the selected declarations and
 [docs/verification.txt](docs/verification.txt) for the recorded output.
-The earlier successful CI run of the abstract-only version does not verify the
-new Haar extension; use a fresh check and record its revision.
+The [Haar-extension CI run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
+passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`; its verification
+job took 4 minutes 55 seconds (5 minutes 14 seconds for the full run).
+This is evidence for that revision. For later source changes, use a fresh check
+and record the revision reviewed.
