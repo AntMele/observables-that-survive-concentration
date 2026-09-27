@@ -1,15 +1,15 @@
-# First-order endpoint OTOC: from the paper to Lean
+# Endpoint OTOC fluctuations
 
-[Overview](../README.md) · [Paper map](paper-mapping.md) · [Reproduce the checks](reproduce.md)
+[Home](../../README.md) / [Reader guide](../README.md) / Endpoint fluctuations
 
-The entry point is [OTOC1.lean](../Fluctuations/OTOC1.lean). It formalizes the
+The entry point is [OTOC1.lean](../../Fluctuations/OTOC1.lean). It formalizes the
 paper's **macroscopic origin of OTOC fluctuations** theorem: the variance
 lower bound throughout a diffusive front window, and the many individual
 gate contributions that produce it. The actual finite-circuit Haar mean is
-proved in [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean).
-See the [earlier independent scope review](otoc1-review.md) for these
+proved in [BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean).
+See the [earlier independent scope review](../reviews/endpoint.md) for these
 fluctuation and mean results. It predates the subsequent
-[classical simulation extension](simulation.md).
+[classical simulation extension](classical-simulation.md).
 
 ## The precise mathematical statement
 
@@ -79,15 +79,15 @@ the influence of gates outside that set.
 
 | Step | What is proved | Source |
 | --- | --- | --- |
-| Physical observable | Actual tensor embeddings, chronological matrix product, and endpoint OTOC | [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) |
-| Local Haar integration | Full mixed Pauli covariance, uniform nonidentity mixing, $\mathbb EA=4/5$, $\sigma_A^2>0$ | [PauliLocalHaar.lean](../Fluctuations/PauliLocalHaar.lean), [LocalPauliBalance.lean](../Fluctuations/LocalPauliBalance.lean) |
-| Quantum to classical | Actual Haar integrals and fixed-gate conditional integrals equal their derived Pauli recurrences | [PauliCircuitBridge.lean](../Fluctuations/PauliCircuitBridge.lean), [PauliFrozenCircuit.lean](../Fluctuations/PauliFrozenCircuit.lean) |
-| Endpoint walk | Forward shock law and universal endpoint evolution, including correlated distributions after a fixed gate | [PauliBrickwork.lean](../Fluctuations/PauliBrickwork.lean), [EndpointLumpability.lean](../Fluctuations/EndpointLumpability.lean) |
-| Conditional mean | Exact $-(16/15)PF(A-4/5)$ deviation from the full mean, with the entire physical schedule included | [PauliBrickworkConditional.lean](../Fluctuations/PauliBrickworkConditional.lean), [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) |
-| Propagation | Exact finite-walk ballot formulas and positive binomial lower bounds derived from Stirling | [EndpointPropagation.lean](../Fluctuations/EndpointPropagation.lean), [BinomialLocalBounds.lean](../Fluctuations/BinomialLocalBounds.lean), [EndpointFrontLower.lean](../Fluctuations/EndpointFrontLower.lean) |
-| Count and sum | Actual eye cardinality and the independent-coordinate variance sum | [EndpointPhysicalEye.lean](../Fluctuations/EndpointPhysicalEye.lean), [CoordinateAverages.lean](../Fluctuations/CoordinateAverages.lean) |
-| Actual mean | Exact quantum Haar mean equals the finite endpoint-chain and binomial-image expressions | [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) |
-| Final theorem | Explicit uniform variance and individual-influence lower bounds | [OTOC1.lean](../Fluctuations/OTOC1.lean) |
+| Physical observable | Actual tensor embeddings, chronological matrix product, and endpoint OTOC | [BrickworkEndpointOTOC.lean](../../Fluctuations/BrickworkEndpointOTOC.lean) |
+| Local Haar integration | Full mixed Pauli covariance, uniform nonidentity mixing, $\mathbb EA=4/5$, $\sigma_A^2>0$ | [PauliLocalHaar.lean](../../Fluctuations/PauliLocalHaar.lean), [LocalPauliBalance.lean](../../Fluctuations/LocalPauliBalance.lean) |
+| Quantum to classical | Actual Haar integrals and fixed-gate conditional integrals equal their derived Pauli recurrences | [PauliCircuitBridge.lean](../../Fluctuations/PauliCircuitBridge.lean), [PauliFrozenCircuit.lean](../../Fluctuations/PauliFrozenCircuit.lean) |
+| Endpoint walk | Forward shock law and universal endpoint evolution, including correlated distributions after a fixed gate | [PauliBrickwork.lean](../../Fluctuations/PauliBrickwork.lean), [EndpointLumpability.lean](../../Fluctuations/EndpointLumpability.lean) |
+| Conditional mean | Exact $-(16/15)PF(A-4/5)$ deviation from the full mean, with the entire physical schedule included | [PauliBrickworkConditional.lean](../../Fluctuations/PauliBrickworkConditional.lean), [BrickworkEndpointOTOC.lean](../../Fluctuations/BrickworkEndpointOTOC.lean) |
+| Propagation | Exact finite-walk ballot formulas and positive binomial lower bounds derived from Stirling | [EndpointPropagation.lean](../../Fluctuations/EndpointPropagation.lean), [BinomialLocalBounds.lean](../../Fluctuations/BinomialLocalBounds.lean), [EndpointFrontLower.lean](../../Fluctuations/EndpointFrontLower.lean) |
+| Count and sum | Actual eye cardinality and the independent-coordinate variance sum | [EndpointPhysicalEye.lean](../../Fluctuations/EndpointPhysicalEye.lean), [CoordinateAverages.lean](../../Fluctuations/CoordinateAverages.lean) |
+| Actual mean | Exact quantum Haar mean equals the finite endpoint-chain and binomial-image expressions | [BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean) |
+| Final theorem | Explicit uniform variance and individual-influence lower bounds | [OTOC1.lean](../../Fluctuations/OTOC1.lean) |
 
 The conditional quantum proof retains off-diagonal Pauli moments created
 by the fixed gate. A later complete odd Haar layer removes them. The
@@ -109,7 +109,7 @@ after every selected gate.
 
 ## The actual finite-circuit mean
 
-[BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean)
+[BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean)
 identifies the quantum Haar integral with the finite reflecting endpoint walk.
 For $n=2(r+1)$ and positive even depth $d=2T$,
 
@@ -123,14 +123,14 @@ qubits, every positive even depth has mean $-1/15$. These are actual
 quantum-circuit identities, uniform over trace-one $\rho$.
 
 `brickworkEndpointOTOC_haar_mean_images` expands the mean into an exact
-finite binomial-image sum, using [EndpointMean.lean](../Fluctuations/EndpointMean.lean).
+finite binomial-image sum, using [EndpointMean.lean](../../Fluctuations/EndpointMean.lean).
 The actual pre-light-cone mean is also proved equal to $1$. The image formula
 is an alternative exact expression; its algebraic regrouping into the
 manuscript's compressed $\Psi_d$ display is not formalized.
 
 ## Classical simulation at infinite temperature
 
-[Simulation.lean](../Fluctuations/Simulation.lean) additionally formalizes
+[Simulation.lean](../../Fluctuations/Simulation.lean) additionally formalizes
 the paper's classical estimator at $n=6(s+1)$ and $d=10(s+1)=5n/3$.
 Here the state is fixed to $I/2^n$, giving the normalized trace
 $F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$.
@@ -149,7 +149,7 @@ including transfer-matrix construction, with exact finite-distribution draws.
 It excludes indexing, stored-coefficient reads, and schedule and parameter
 preprocessing; an extracted numerical executable and finite-precision or
 bit-complexity analyses are not supplied. Read the
-[simulation guide](simulation.md) for the precise theorem and operation
+[simulation guide](classical-simulation.md) for the precise theorem and operation
 model. The simulation guarantee is specifically infinite-temperature; the
 fluctuation theorem on this page holds for every trace-one state.
 
@@ -163,4 +163,8 @@ from that full influence-envelope claim. The literal $\Psi_d$ regrouping
 also remains outside the formalization, as described above.
 
 The higher-order spatial theorem and its design-convergence input remain
-documented separately in the [general mathematical guide](guide.md).
+documented separately in the [general mathematical guide](spatial-variance.md).
+
+---
+
+**Next:** [Classical simulation](classical-simulation.md) · [Independent endpoint review](../reviews/endpoint.md) · [Paper map](../reference/paper-map.md)
