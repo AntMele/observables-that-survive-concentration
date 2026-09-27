@@ -2,13 +2,21 @@
 
 [Home](README.md) / [Reader guide](docs/README.md) / Contributing
 
-Start with the [endpoint fluctuation guide](docs/results/endpoint-fluctuations.md), [paper mapping](docs/reference/paper-map.md),
-and [review guide](REVIEW.md). The main entry points are
-[OTOC1.lean](Fluctuations/OTOC1.lean) for the concrete endpoint theorem,
-[Simulation.lean](Fluctuations/Simulation.lean) for classical simulation,
-[SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean) for the spatial
-Haar model and
-[Main.lean](Fluctuations/Main.lean) for the general probability theorem.
+Start with the [general OTOC(k) variance theorem](docs/results/01-general-otoc-variance.md),
+then follow the manuscript to the one-dimensional OTOC₁ results and classical
+simulation. Use the [paper-to-proof map](docs/reference/paper-map.md) to match
+a manuscript statement, and the [review guide](REVIEW.md) to check its scope.
+
+| Manuscript chapter | Guide | Main Lean entry points |
+| :--- | :--- | :--- |
+| **I. General OTOC(k) variance** | [Variance window · Theorem VI.14](docs/results/01-general-otoc-variance.md) | [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean), [Main.lean](Fluctuations/Main.lean) |
+| **II. One-dimensional OTOC₁** | [Exact mean, fluctuations, and influential gates](docs/results/02-otoc1-fluctuations.md) | [BrickworkEndpointMean.lean](Fluctuations/BrickworkEndpointMean.lean), [OTOC1.lean](Fluctuations/OTOC1.lean) |
+| **III. Classical simulation** | [Accuracy and subexponential work](docs/results/03-classical-simulation.md) | [Simulation.lean](Fluctuations/Simulation.lean) |
+
+The [global Haar mean estimates](docs/reference/haar-mean.md), local reverse
+variance, and spatial support bounds belong to Chapter I’s proof route.
+The [complete source index](Fluctuations/README.md) groups all supporting
+modules within these three chapters.
 
 For a theorem change, explain the mathematical statement before and after the
 change. Identify any changes to assumptions, constants, quantifier order,
@@ -41,7 +49,7 @@ tail estimates, full-covariance sampler law, compressed update formulas, and
 support bounds are proved ingredients. Keep the infinite-temperature and
 critical-depth scope explicit. Explain the scalar-arithmetic cost convention
 and distinguish the counted loops from preprocessing and bit complexity.
-See the [simulation guide](docs/results/classical-simulation.md) and
+See the [simulation guide](docs/results/03-classical-simulation.md) and
 [independent review](docs/reviews/simulation.md).
 
 Follow the [reproduction guide](docs/verification/README.md). Before submitting proof
