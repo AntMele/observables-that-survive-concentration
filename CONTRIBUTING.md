@@ -3,6 +3,7 @@
 Start with the [OTOC(1) guide](docs/otoc1.md), [paper mapping](docs/paper-mapping.md),
 and [review notes](REVIEW.md). The main entry points are
 [OTOC1.lean](Fluctuations/OTOC1.lean) for the concrete endpoint theorem,
+[Simulation.lean](Fluctuations/Simulation.lean) for classical simulation,
 [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean) for the spatial
 Haar model and
 [Main.lean](Fluctuations/Main.lean) for the general probability theorem.
@@ -30,6 +31,16 @@ For the endpoint theorem, keep the actual U(4) product measure, chronological
 circuit, endpoint operators, trace normalization, and explicit front window
 visible. Its conditional-mean identity, propagation, positive local variance,
 and gate count are proved ingredients; do not replace them with assumptions.
+
+For simulation changes, preserve the same actual circuit, retained eye, and
+sampler across accuracy and cost statements. The final probability is joint
+over the Haar input and the conditional sampler kernel. The physical bias,
+tail estimates, full-covariance sampler law, compressed update formulas, and
+support bounds are proved ingredients. Keep the infinite-temperature and
+critical-depth scope explicit. Explain the scalar-arithmetic cost convention
+and distinguish the counted loops from preprocessing and bit complexity.
+See the [simulation guide](docs/simulation.md) and
+[independent review](docs/simulation-review.md).
 
 Follow the [reproduction guide](docs/reproduce.md). Before submitting proof
 changes, run from the repository root:
