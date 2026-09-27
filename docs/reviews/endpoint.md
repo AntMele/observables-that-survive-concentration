@@ -29,4 +29,4 @@ Validation: the final variance, gate-influence, gate-count, conditional-mean, me
 
 ---
 
-**Related:** [Endpoint result guide](../results/endpoint-fluctuations.md) · [Simulation review](simulation.md) · [All assumptions](assumptions.md)
+**Related:** [Endpoint result guide](../results/02-otoc1-fluctuations.md) · [Simulation review](simulation.md) · [All assumptions](assumptions.md)
