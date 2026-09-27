@@ -97,7 +97,7 @@ For $\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive natural
 exponents, `otoc1_subexponential_simulation_inversePolynomial` proves both
 the accuracy guarantee at every size and $\log(\mathrm{work})/n\to0$ for
 the same sampler. A concrete
-$\mathrm{poly}(n)\,2^{O(\sqrt{n\log n})}$ majorant is also proved.
+$\mathrm{poly}(n)2^{O(\sqrt{n\log n})}$ majorant is also proved.
 The model assumes exact scalar arithmetic (real or complex) and exact sampling from explicitly
 computed finite distributions, as in the manuscript. The counter includes
 transfer-matrix construction and the sampling and readout arithmetic; it
