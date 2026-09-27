@@ -1,6 +1,8 @@
-# Independent review of the classical endpoint OTOC simulation
+# Independent review · Classical simulation
 
-This review compares the statements in [`Simulation.lean`](../Fluctuations/Simulation.lean) with the manuscript theorem `thm:endpoint-sim-otoc1-runtime` and its conditional-sampling algorithm. The mathematical scope agrees: an infinite-temperature first-order endpoint OTOC, independent Haar U(4) gates, an open one-dimensional brickwork circuit, and the critical depth. The probability includes both the random input circuit and the sampler's randomness.
+[Home](../../README.md) / [Reader guide](../README.md) / Simulation review
+
+This review compares the statements in [`Simulation.lean`](../../Fluctuations/Simulation.lean) with the manuscript theorem `thm:endpoint-sim-otoc1-runtime` and its conditional-sampling algorithm. The mathematical scope agrees: an infinite-temperature first-order endpoint OTOC, independent Haar U(4) gates, an open one-dimensional brickwork circuit, and the critical depth. The probability includes both the random input circuit and the sampler's randomness.
 
 ## The verified statement in English
 
@@ -34,7 +36,7 @@ The second final theorem, `otoc1_subexponential_simulation_inversePolynomial`, f
 \lim_{s\to\infty}\frac{\log(\mathrm{work}(s))}{6(s+1)}=0.
 ```
 
-This is an explicit subexponential assertion about the generated schedule's arithmetic counter. The separate explicit envelope in [`SimulationAsymptotics.lean`](../Fluctuations/SimulationAsymptotics.lean) is a polynomial times an exponential of a constant times `√(n log n)`. The general ceiling-dependent bound above also implies the manuscript's displayed dependence on `ε` and `δ`; the final theorem uses that explicit bound rather than big-O notation.
+This is an explicit subexponential assertion about the generated schedule's arithmetic counter. The separate explicit envelope in [`SimulationAsymptotics.lean`](../../Fluctuations/SimulationAsymptotics.lean) is a polynomial times an exponential of a constant times `√(n log n)`. The general ceiling-dependent bound above also implies the manuscript's displayed dependence on `ε` and `δ`; the final theorem uses that explicit bound rather than big-O notation.
 
 ## Correspondence checks
 
@@ -64,8 +66,12 @@ The separate one-time construction of the eye and evaluation of the parameter fo
 
 ## Validation status
 
-The final simulation module has compiled locally. The tail, Haar-expectation, causal-zero, outside-eye, and full-bias theorem audit reports only Lean's standard `propext`, `Classical.choice`, and `Quot.sound` axioms. For the repository-wide build and validation record, see [`verification.txt`](verification.txt). This independent review records the statements and theorem audits rather than duplicating that build status.
+The final simulation module has compiled locally. The tail, Haar-expectation, causal-zero, outside-eye, and full-bias theorem audit reports only Lean's standard `propext`, `Classical.choice`, and `Quot.sound` axioms. For the repository-wide build and validation record, see [verification record](../verification/record.txt). This independent review records the statements and theorem audits rather than duplicating that build status.
 
-The independent source review of [`SimulationCompressedOperations.lean`](../Fluctuations/SimulationCompressedOperations.lean), [`SimulationGeometrySampler.lean`](../Fluctuations/SimulationGeometrySampler.lean), and [`SimulationGeometryCost.lean`](../Fluctuations/SimulationGeometryCost.lean) found no discrepancy in the compressed-operation correspondence. The fixed update, input marginals, branch weights, and positive-marginal normalized branch all inflate to the exact full-space formulas. Adding classical sites is an explicit indexing-and-zero operation. The spectator cardinal is exactly `4^(m−2)`, with two distinct included gate sites, and the final squared array gives the correct categorical output. Zero-marginal fallbacks have zero branch probability and are not charged as realizable trajectories.
+The independent source review of [`SimulationCompressedOperations.lean`](../../Fluctuations/SimulationCompressedOperations.lean), [`SimulationGeometrySampler.lean`](../../Fluctuations/SimulationGeometrySampler.lean), and [`SimulationGeometryCost.lean`](../../Fluctuations/SimulationGeometryCost.lean) found no discrepancy in the compressed-operation correspondence. The fixed update, input marginals, branch weights, and positive-marginal normalized branch all inflate to the exact full-space formulas. Adding classical sites is an explicit indexing-and-zero operation. The spectator cardinal is exactly `4^(m−2)`, with two distinct included gate sites, and the final squared array gives the correct categorical output. Zero-marginal fallbacks have zero branch probability and are not charged as realizable trajectories.
 
 The final accuracy, combined accuracy/work, inverse-polynomial subexponential, physical-law, support-width, and cost declarations were also independently loaded and audited. All reported only `propext`, `Classical.choice`, and `Quot.sound`. The ten principal compressed-operation identities were also independently loaded and audited, with the same three standard axioms and no additional assumptions. No correspondence defect was found in the reviewed statements or operation formulas.
+
+---
+
+**Related:** [Simulation result guide](../results/classical-simulation.md) · [All assumptions](assumptions.md) · [Reproduce the checks](../verification/README.md)
