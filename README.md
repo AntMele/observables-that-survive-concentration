@@ -2,20 +2,59 @@
 
 [![Lean verification](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml/badge.svg)](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
 
-Lean 4 companion to the paper's variance lower bound, Theorem VI.14 in the
-inspected manuscript. The project proves the probability argument, the exact
-Haar SU(4) local coefficient, and the geometric certificates for concrete
-finite-qubit circuits. It also proves the actual global-Haar mean bound at
-every positive order and dimension, and gives an explicit size threshold for
-the variance theorem. Design convergence and the transition-width bound
-remain external inputs.
+Lean 4 companion proving the paper's first-order endpoint OTOC fluctuation
+theorem for actual one-dimensional Haar U(4) circuits: an
+$\Omega(n^{-1/2})$ variance lower bound throughout the diffusive front window,
+with a concrete set of $\Theta(n^{3/2})$ gates each contributing
+$\Omega(n^{-2})$ through its conditional mean. The exact finite-circuit Haar
+mean and one-gate conditional formula are also proved.
 
-Start with the [mathematical guide](docs/guide.md), then the
-[paper-to-code map](docs/paper-mapping.md). The strongest assembled spatial
-result is in [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean).
-[REVIEW.md](REVIEW.md) lists the assumptions to inspect.
+Start with the [OTOC(1) guide](docs/otoc1.md) and
+[OTOC1.lean](Fluctuations/OTOC1.lean). The
+[independent review](docs/otoc1-review.md) records the precise scope.
 
-## The spatial Haar result
+The project also retains the general spatial variance-window theorem VI.14,
+the exact local coefficient $4^{-8km}$, and the actual global-Haar mean bound
+at every positive order and dimension. See the
+[general mathematical guide](docs/guide.md),
+[SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean), and
+[paper-to-code map](docs/paper-mapping.md). Design convergence and transition
+width remain inputs of that general spatial theorem.
+
+## The first-order endpoint result
+
+For even $n,d$, independent Haar U(4) gates on the open brickwork chain, and
+$X_\rho=\mathrm{Tr}[\rho(U_d^\dagger Z_1U_dZ_n)^2]$, assume
+
+```math
+|d-5n/3|\le C\sqrt n,\qquad \sqrt n\ge12(C+2),\qquad
+C\ge0,\qquad \mathrm{Tr}\rho=1.
+```
+
+[OTOC1.lean](Fluctuations/OTOC1.lean) proves, with a proved positive constant
+$b_C$ independent of $n,d,\rho$,
+
+```math
+\mathrm{Var}(X_\rho)\ge\frac{b_C}{24\sqrt n},\qquad
+\frac{n\sqrt n}{24}\le|\mathcal S|\le\frac{2n\sqrt n}{3},\qquad
+\mathrm{Var}_{G_z}(\mathbb E[X_\rho\mid G_z])\ge\frac{b_C}{n^2}
+\quad(z\in\mathcal S).
+```
+
+The set $\mathcal S$ consists of actual physical gates in the central eye.
+The conditional mean, propagation factors, local Haar variance, gate count,
+and independent-coordinate variance sum are proved. This endpoint theorem
+has no design-convergence, mean-change, or mixing hypothesis. Every density
+matrix satisfies its trace-one condition.
+
+[BrickworkEndpointMean.lean](Fluctuations/BrickworkEndpointMean.lean) proves
+the actual circuit mean through the exact finite endpoint walk and a
+binomial-image formula, including zero depth and the two-qubit boundary case.
+The manuscript's literal $\Psi$ regrouping, Gaussian mean-front approximation,
+full outer influence envelope, and simulation-runtime theorem remain outside
+the proved results.
+
+## The general spatial Haar result
 
 Each parallel layer consists of independent Haar SU(4) gates on disjoint pairs
 of qubits. The matrices act on the full basis `Site → Fin 2`; the embedding
@@ -24,7 +63,7 @@ inserts the actual gate on its two sites and the identity elsewhere.
 Let $B$ have support $S$, with $s=|S|$, and write
 
 ```math
-F_d=\operatorname{Tr}\!\left[\rho\left(U_d^\dagger B U_dM\right)^{2k}\right],
+F_d=\mathrm{Tr}\!\left[\rho\left(U_d^\dagger B U_dM\right)^{2k}\right],
 \qquad \eta=4^{-8ks},\qquad \kappa=\frac{\eta}{1+\eta}.
 ```
 
@@ -37,7 +76,7 @@ Given $a<b$, $b-a\le P$, and a half-unit change of the mean, Lean proves that
 for every fixed $R$, some $a<d_*\le b$ satisfies
 
 ```math
-\operatorname{Var}(F_{d_*+r})\ge
+\mathrm{Var}(F_{d_*+r})\ge
 \frac{\eta\kappa^R}{4P^2}
 \qquad (0\le r\le R).
 ```
@@ -52,6 +91,8 @@ separate deterministic geometry results also allow variable gate counts.
 
 | Ingredient | Status |
 | --- | --- |
+| Actual 1D Haar U(4) endpoint variance, many-gate influence, and exact conditional mean | Proved in [OTOC1.lean](Fluctuations/OTOC1.lean) and [BrickworkEndpointOTOC.lean](Fluctuations/BrickworkEndpointOTOC.lean) |
+| Actual finite-circuit endpoint Haar mean and binomial-image expression | Proved in [BrickworkEndpointMean.lean](Fluctuations/BrickworkEndpointMean.lean) |
 | Actual SU(4), independent normalized Haar gates, physical two-site embeddings | Proved |
 | Disjoint support implies commutation; deterministic backward cone and early OTOC identity | Proved |
 | Active count at most $\lvert S\rvert$; constant-depth support and active-block bounds | Proved |
@@ -66,7 +107,7 @@ separate deterministic geometry results also allow variable gate counts.
 
 `spatialHaarCircuit_allOrders_of_globalHaar_control` uses the **actual
 normalized global-Haar mean** of the same observable. For Hermitian, traceless
-involutions $B,M$ and $\operatorname{Tr}\rho=1$, it proves the Haar
+involutions $B,M$ and $\mathrm{Tr}\rho=1$, it proves the Haar
 quarter-bound whenever
 
 ```math
@@ -82,15 +123,18 @@ hypotheses. The first-order wrapper needs only $n\ge2$ for Haar smallness.
 The inverse-square Haar estimate holds in every nonzero dimension. The
 displayed threshold is needed only to make it at most $1/4$.
 
-The formalized local ensemble is SU(4). The phase-invariance/Haar-law bridge to
-the manuscript's U(4) convention is a remaining correspondence step. Specific
-graph-distance speeds, the sharper one-dimensional fluctuation theorem, and
-computational quantum advantage are not established here.
+The general spatial pipeline uses SU(4); its phase-invariance/Haar-law bridge
+to the manuscript's U(4) convention remains a correspondence step. The
+one-dimensional endpoint pipeline uses genuine U(4) directly and has neither
+this gap nor the fixed active/inactive-count restriction. General
+graph-distance speeds and computational quantum advantage are not established.
 
 ## Read the proof
 
 | Purpose | Source |
 | --- | --- |
+| Endpoint variance and many-gate influence | [OTOC1.lean](Fluctuations/OTOC1.lean), explained in [docs/otoc1.md](docs/otoc1.md) |
+| Actual endpoint conditional mean and finite-depth mean | [BrickworkEndpointOTOC.lean](Fluctuations/BrickworkEndpointOTOC.lean), [BrickworkEndpointMean.lean](Fluctuations/BrickworkEndpointMean.lean) |
 | Final spatial variance theorem | [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean); first order: [SpatialHaarFirstOrder.lean](Fluctuations/SpatialHaarFirstOrder.lean) |
 | Concrete support, patch insertion, and cones | [TensorSupport.lean](Fluctuations/TensorSupport.lean), [PatchEmbedding.lean](Fluctuations/PatchEmbedding.lean), [CircuitGeometry.lean](Fluctuations/CircuitGeometry.lean), [SpatialHaarGeometry.lean](Fluctuations/SpatialHaarGeometry.lean) |
 | Explicit Haar coefficient | [HaarEvaluationBound.lean](Fluctuations/HaarEvaluationBound.lean), [BalancedHaarFeatures.lean](Fluctuations/BalancedHaarFeatures.lean), [ExplicitHaarVariance.lean](Fluctuations/ExplicitHaarVariance.lean) |
@@ -110,7 +154,8 @@ lake exe cache get
 bash scripts/check.sh
 ```
 
-The script builds the imported library and enforces a declaration-by-declaration
+The scripts build the library, with all local modules compiled in dependency
+order by the offline helper, and enforce a declaration-by-declaration
 axiom allowlist: only `propext`, `Classical.choice`, and `Quot.sound`. Explicit
 mathematical hypotheses must still be reviewed. See [reproduction instructions](docs/reproduce.md)
 and the [verification record](docs/verification.txt) for the checked source.
