@@ -1,59 +1,32 @@
-# Mathematical guide
+# General variance window · Theorem VI.14
 
-[Overview](../README.md) · [Paper map](paper-mapping.md) · [Reproduction](reproduce.md)
+[Home](../../README.md) / [Reader guide](../README.md) / General variance window
 
-Start with the [OTOC(1) guide](otoc1.md) and
-[OTOC1.lean](../Fluctuations/OTOC1.lean) for the completed one-dimensional
-endpoint theorem. It proves an $\Omega(n^{-1/2})$ variance lower bound for
-actual independent Haar U(4) gates throughout $|d-5n/3|\le C\sqrt n$, and
-constructs $\Theta(n^{3/2})$ physical gates with individual conditional
-variance $\Omega(n^{-2})$. The constants are uniform over every trace-one
-input matrix and depend only on the fixed window width `C`.
+This guide explains the paper's general variance-window theorem, Theorem VI.14
+in the inspected draft (`thm:fixed-k-transition-window-fluctuation-bound`).
+The final entry point is
+[SpatialHaarFinal.lean](../../Fluctuations/SpatialHaarFinal.lean).
+It derives a consecutive window of variance lower bounds from early spatial
+separation, late control of the mean, and a bound on the transition width.
 
-The proof derives the actual quantum-to-Pauli correspondence, full mixed
-Haar covariances, one-gate conditional mean, arbitrary-distribution endpoint
-propagation, and summation of independent gate influences. It requires no
-design-convergence or supplied mean-change hypothesis.
-[BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean)
-identifies the actual quantum mean with the exact finite endpoint chain and
-its binomial-image formula. The literal $\Psi$ regrouping and Gaussian
-mean-front approximation are separate unproved statements.
+The formalization uses actual spatial Haar SU(4) circuits and proves the
+physical support and commutation statements, active-gate count, local
+coefficient $4^{-8km}$, and smallness of the actual global-Haar mean.
+Design convergence and the transition-width bound remain external inputs.
+The circuit architecture, observable conditions, cone separation, and explicit
+dimension threshold are visible hypotheses of the final theorem.
 
-The [classical simulation guide](simulation.md) describes a second endpoint
-result: an accurate estimator of the infinite-temperature OTOC at
-$n=6(s+1)$ and $d=10(s+1)$. Its target is the normalized trace, whereas the
-fluctuation result above allows every trace-one input matrix.
-[Simulation.lean](../Fluctuations/Simulation.lean) gives the actual joint
-success probability at the paper's specified radius and sample count.
-The sampler's full-covariance invariant, the error from averaging outside
-the eye, and the arithmetic cost are proved. No mean-change, local
-reverse-variance, or supplied averaging-error assumption remains in that
-final theorem.
-
-The generated outside-first schedule has arithmetic cost at most
-$180002(N+1)n^2 4^{2\lceil2R\sqrt n+1\rceil+4}$. For
-$\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive natural
-exponents, `otoc1_subexponential_simulation_inversePolynomial` combines
-accuracy at every size with the actual subexponential limit
-$\log(\mathrm{work})/n\to0$. The count covers sampling and readout
-on real or complex scalars, including transfer-matrix construction, with exact draws from
-explicitly computed finite distributions. Indexing, stored-coefficient reads,
-and schedule and parameter preprocessing are excluded. This is a formal
-algorithm and arithmetic-cost analysis, without an extracted numerical
-executable, numerical-stability analysis, or bit-complexity bound.
-
-The remaining sections explain the general spatial variance-window theorem,
-which applies at every fixed positive OTOC order. It uses actual spatial Haar
-SU(4) circuits, concrete qubit support, and the numerical local constant
-$4^{-8km}$. Geometry proves commutation, and actual global-Haar smallness is
-proved under an explicit dimension threshold. Its late-time design control
-and transition-width bound remain inputs. These are distinct theorem scopes.
+For a reusable statement starting directly from a half-unit mean change, see
+`spatialHaarCircuit_variance_window` in
+[SpatialHaarTheorem.lean](../../Fluctuations/SpatialHaarTheorem.lean).
+The abstract probability theorem and its polynomial-family form are in
+[Main.lean](../../Fluctuations/Main.lean).
 
 ## The general spatial circuit and its observable
 
 For a finite set of sites, the computational basis is `Site → Fin 2`, so the
 global matrix dimension is $2^{|\mathrm{Site}|}$.
-[TensorSupport.lean](../Fluctuations/TensorSupport.lean) defines a tensor matrix
+[TensorSupport.lean](../../Fluctuations/TensorSupport.lean) defines a tensor matrix
 by its entries:
 
 ```math
@@ -65,7 +38,7 @@ these tensors with $Q_s=I$ outside $S$. This is a definition using actual
 matrix entries. The theorem that disjoint supports commute is proved from
 tensor multiplication, rather than included in the definition.
 
-[PatchEmbedding.lean](../Fluctuations/PatchEmbedding.lean) constructs the
+[PatchEmbedding.lean](../../Fluctuations/PatchEmbedding.lean) constructs the
 canonical insertion of an arbitrary patch matrix: tensor with the spectator
 identity and reindex to the global computational basis. The insertion is an
 injective unital complex star-algebra homomorphism and has the claimed support.
@@ -86,9 +59,9 @@ U_0=I,\qquad U_{d+1}=(J_dA_d)U_d,\qquad
 F_d=\mathrm{Tr}\!\left[\rho(U_d^\dagger B U_dM)^{2k}\right].
 ```
 
-[ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) retains both
+[ActiveHaarCircuit.lean](../../Fluctuations/ActiveHaarCircuit.lean) retains both
 products in the circuit and its independent product history. Different depths
-have their own finite history spaces; [HaarProcess.lean](../Fluctuations/HaarProcess.lean)
+have their own finite history spaces; [HaarProcess.lean](../../Fluctuations/HaarProcess.lean)
 relates successive spaces by product-measure identities.
 
 The general spatial Haar theorem fixes $m,q$ within a circuit model. They may vary
@@ -109,11 +82,11 @@ J_d^\dagger BJ_d=B,\qquad
 Thus fresh inactive gates do not affect $F_{d+1}$ when the earlier circuit is
 fixed, and integrating them out leaves the active-block constant unchanged.
 They remain in $U_{d+1}$ and can influence later layers.
-[SpatialSupport.lean](../Fluctuations/SpatialSupport.lean) also proves that an
+[SpatialSupport.lean](../../Fluctuations/SpatialSupport.lean) also proves that an
 interleaved layer can be regrouped while preserving each sublist's order.
 For spatially disjoint patches, support supplies its cross-commutation premise.
 
-[CircuitGeometry.lean](../Fluctuations/CircuitGeometry.lean) defines the active
+[CircuitGeometry.lean](../../Fluctuations/CircuitGeometry.lean) defines the active
 patches relative to a support $S$ as those meeting $S$, and defines the
 one-layer pullback by
 
@@ -134,7 +107,7 @@ N_{\rm active}\leq\ell(r+1)^{\ell}|S|.
 These bounds are deliberately simple. For fixed depth, patch size, and initial
 support size, they are independent of the total number of qubits.
 
-[SpatialHaarGeometry.lean](../Fluctuations/SpatialHaarGeometry.lean) connects
+[SpatialHaarGeometry.lean](../../Fluctuations/SpatialHaarGeometry.lean) connects
 this propagation theorem to the actual sampled `activeHaarCircuitMatrix`.
 Its recursion is
 
@@ -162,7 +135,7 @@ f_V(h)=\mathrm{Tr}\!\left[
 \rho\bigl(V^\dagger W(h)^\dagger B W(h)VM\bigr)^{2k}\right].
 ```
 
-[BalancedHaarFeatures.lean](../Fluctuations/BalancedHaarFeatures.lean) tracks
+[BalancedHaarFeatures.lean](../../Fluctuations/BalancedHaarFeatures.lean) tracks
 the degree separately in every gate. A word contributing to an entry of $W$
 chooses one of $16$ matrix entries from each gate, giving $16^m$ word indices.
 Pairing a word with a conjugated word gives $16^{2m}$ balanced feature indices.
@@ -176,7 +149,7 @@ All observable matrices, embedding coefficients, and spectator dimensions
 affect coefficients in this span, rather than its dimension bound. The space
 is invariant under left translation on the product group SU(4)$^m$.
 
-[HaarEvaluationBound.lean](../Fluctuations/HaarEvaluationBound.lean) proves
+[HaarEvaluationBound.lean](../../Fluctuations/HaarEvaluationBound.lean) proves
 that a finite-dimensional translation-invariant space $\mathcal S$ of
 continuous functions under normalized Haar measure satisfies
 
@@ -187,7 +160,7 @@ continuous functions under normalized Haar measure satisfies
 The proof uses the constant diagonal of the evaluation kernel. Applying it to
 the centered image of $\mathcal S$, whose dimension cannot increase, bounds
 $|\mathbb Ef-f(e)|^2$ by $\dim(\mathcal S)\mathrm{Var}(f)$.
-[ExplicitHaarVariance.lean](../Fluctuations/ExplicitHaarVariance.lean) therefore
+[ExplicitHaarVariance.lean](../../Fluctuations/ExplicitHaarVariance.lean) therefore
 proves
 
 ```math
@@ -205,7 +178,7 @@ of the circuit theorem.
 This obtains the manuscript's numerical coefficient by invariant evaluation;
 it does not formalize the manuscript's decomposition into irreducible
 representations. The older unspecified positive-constant result in
-[FiniteDimensionalVariance.lean](../Fluctuations/FiniteDimensionalVariance.lean)
+[FiniteDimensionalVariance.lean](../../Fluctuations/FiniteDimensionalVariance.lean)
 remains useful for more general full-support measures.
 
 ## From mean control to a variance window
@@ -215,7 +188,7 @@ cone and probe at depth $a$. Unitary conjugation preserves the involution
 relation. The product of the two commuting involutions has every even power
 equal to $I$, so $F_a=1$ pointwise and $\mathbb EF_a=1$.
 
-[GlobalHaarMean.lean](../Fluctuations/GlobalHaarMean.lean) defines the genuine
+[GlobalHaarMean.lean](../../Fluctuations/GlobalHaarMean.lean) defines the genuine
 normalized Haar law on the full global unitary group and the reference
 
 ```math
@@ -235,7 +208,7 @@ $|\mathbb EF_b-\mathbb EF_a|\geq1/2$. The first bound is observable-specific
 moment control. The second follows from the all-orders Haar calculation described below.
 No Haar-smallness hypothesis remains in the final wrapper.
 
-[ExplicitHaarCircuit.lean](../Fluctuations/ExplicitHaarCircuit.lean) combines
+[ExplicitHaarCircuit.lean](../../Fluctuations/ExplicitHaarCircuit.lean) combines
 the local result with total variance and the weighted-square inequality. For
 $\mu_d=\mathbb EF_d$ and $V_d=\mathrm{Var}(F_d)$, it proves
 
@@ -263,24 +236,24 @@ lower bound. This conclusion requires those uniformity conditions.
 
 | Declaration | Scope |
 | --- | --- |
-| `otoc1_subexponential_simulation` in [Simulation.lean](../Fluctuations/Simulation.lean) | Infinite-temperature endpoint simulation at critical depth, with actual joint success probability and the specified `R,N`. See [the simulation guide](simulation.md). |
-| `otoc1_subexponential_simulation_inversePolynomial` in [Simulation.lean](../Fluctuations/Simulation.lean) | Joint accuracy at every size and `log(work)/n -> 0` for the same physical sampler with fixed positive natural inverse-polynomial exponents. The explicit majorant is in [SimulationAsymptotics.lean](../Fluctuations/SimulationAsymptotics.lean). |
-| `otoc1_endpoint_variance_lower`, `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` in [OTOC1.lean](../Fluctuations/OTOC1.lean) | Actual 1D Haar U(4) endpoint fluctuations throughout the front window; all conditional, propagation and counting ingredients are proved. |
-| `brickworkEndpointOTOC_conditional_mean` in [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) | Exact actual one-gate conditional mean for every interior even gate. |
-| `brickworkEndpointOTOC_haar_mean` in [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) | Actual finite-circuit endpoint mean at every even depth and size. |
-| `spatialHaarCircuit_allOrders_of_globalHaar_control` in [SpatialHaarFinal.lean](../Fluctuations/SpatialHaarFinal.lean) | Final theorem: geometry, explicit local coefficient, and actual Haar smallness are proved; design control and width remain inputs. |
-| `spatialHaarCircuit_firstOrder_of_globalHaar_control` in [SpatialHaarFirstOrder.lean](../Fluctuations/SpatialHaarFirstOrder.lean) | First-order refinement using the exact Haar mean, for at least two qubits. |
-| `spatialHaarCircuit_of_globalHaar_control` in [SpatialHaarTheorem.lean](../Fluctuations/SpatialHaarTheorem.lean) | Intermediate theorem retaining both quarter-unit estimates as inputs. |
-| `spatialHaarCircuit_variance_window` in [SpatialHaarTheorem.lean](../Fluctuations/SpatialHaarTheorem.lean) | The same spatial numerical window with a supplied half-unit endpoint gap. |
-| `activeHaarCircuit_explicit_variance_window` in [ExplicitHaarCircuit.lean](../Fluctuations/ExplicitHaarCircuit.lean) | Arbitrary unital star-algebra embeddings with inactive commutation and endpoint gap supplied; coefficient $4^{-8km}$. |
-| `haarLocalOTOC_explicit_conditional_reverseVariance` in [ExplicitHaarVariance.lean](../Fluctuations/ExplicitHaarVariance.lean) | The genuine conditional local inequality for a continuous earlier circuit and an independent Haar block. |
-| `backwardActiveGateCount_le` in [CircuitGeometry.lean](../Fluctuations/CircuitGeometry.lean) | Architecture-only bound on total active gates in a finite block, allowing varying layer counts. |
-| `transition_window` and `theorem_VI_14_family` in [Main.lean](../Fluctuations/Main.lean) | General complex processes and polynomial-family quantifiers when local reverse variance is supplied. |
+| `otoc1_subexponential_simulation` in [Simulation.lean](../../Fluctuations/Simulation.lean) | Infinite-temperature endpoint simulation at critical depth, with actual joint success probability and the specified `R,N`. See [the simulation guide](classical-simulation.md). |
+| `otoc1_subexponential_simulation_inversePolynomial` in [Simulation.lean](../../Fluctuations/Simulation.lean) | Joint accuracy at every size and `log(work)/n -> 0` for the same physical sampler with fixed positive natural inverse-polynomial exponents. The explicit majorant is in [SimulationAsymptotics.lean](../../Fluctuations/SimulationAsymptotics.lean). |
+| `otoc1_endpoint_variance_lower`, `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` in [OTOC1.lean](../../Fluctuations/OTOC1.lean) | Actual 1D Haar U(4) endpoint fluctuations throughout the front window; all conditional, propagation and counting ingredients are proved. |
+| `brickworkEndpointOTOC_conditional_mean` in [BrickworkEndpointOTOC.lean](../../Fluctuations/BrickworkEndpointOTOC.lean) | Exact actual one-gate conditional mean for every interior even gate. |
+| `brickworkEndpointOTOC_haar_mean` in [BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean) | Actual finite-circuit endpoint mean at every even depth and size. |
+| `spatialHaarCircuit_allOrders_of_globalHaar_control` in [SpatialHaarFinal.lean](../../Fluctuations/SpatialHaarFinal.lean) | Final theorem: geometry, explicit local coefficient, and actual Haar smallness are proved; design control and width remain inputs. |
+| `spatialHaarCircuit_firstOrder_of_globalHaar_control` in [SpatialHaarFirstOrder.lean](../../Fluctuations/SpatialHaarFirstOrder.lean) | First-order refinement using the exact Haar mean, for at least two qubits. |
+| `spatialHaarCircuit_of_globalHaar_control` in [SpatialHaarTheorem.lean](../../Fluctuations/SpatialHaarTheorem.lean) | Intermediate theorem retaining both quarter-unit estimates as inputs. |
+| `spatialHaarCircuit_variance_window` in [SpatialHaarTheorem.lean](../../Fluctuations/SpatialHaarTheorem.lean) | The same spatial numerical window with a supplied half-unit endpoint gap. |
+| `activeHaarCircuit_explicit_variance_window` in [ExplicitHaarCircuit.lean](../../Fluctuations/ExplicitHaarCircuit.lean) | Arbitrary unital star-algebra embeddings with inactive commutation and endpoint gap supplied; coefficient $4^{-8km}$. |
+| `haarLocalOTOC_explicit_conditional_reverseVariance` in [ExplicitHaarVariance.lean](../../Fluctuations/ExplicitHaarVariance.lean) | The genuine conditional local inequality for a continuous earlier circuit and an independent Haar block. |
+| `backwardActiveGateCount_le` in [CircuitGeometry.lean](../../Fluctuations/CircuitGeometry.lean) | Architecture-only bound on total active gates in a finite block, allowing varying layer counts. |
+| `transition_window` and `theorem_VI_14_family` in [Main.lean](../../Fluctuations/Main.lean) | General complex processes and polynomial-family quantifiers when local reverse variance is supplied. |
 
 ## The actual global-Haar calculation
 
 For $B,M$ Hermitian traceless involutions and $\mathrm{Tr}\rho=1$,
-[GlobalHaarMeanAllDimensions.lean](../Fluctuations/GlobalHaarMeanAllDimensions.lean) proves
+[GlobalHaarMeanAllDimensions.lean](../../Fluctuations/GlobalHaarMeanAllDimensions.lean) proves
 
 ```math
 |h_{\rho,B,M,k}|\le\frac{2((2k)!)^3}{D^2},
@@ -333,3 +306,7 @@ variance-influence envelope outside the central eye remain unproved.
 The simulation's endpoint touching-tail bound is a separate estimate.
 General graph-distance asymptotics, non-Haar ensemble criteria, and
 computational quantum advantage also remain separate claims.
+
+---
+
+**Next:** [Global Haar mean](haar-mean.md) · [Assumptions and correspondence](../reviews/assumptions.md) · [Paper map](../reference/paper-map.md)
