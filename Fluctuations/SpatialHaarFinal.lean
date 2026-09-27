@@ -1,5 +1,5 @@
 import Fluctuations.SpatialHaarTheorem
-import Fluctuations.GlobalHaarMeanBound
+import Fluctuations.GlobalHaarMeanAllDimensions
 
 open MeasureTheory
 
@@ -22,7 +22,6 @@ theorem spatialHaarCircuit_allOrders_of_globalHaar_control
     (hρ : Matrix.trace ρ = 1)
     (hBHerm : B.IsHermitian) (hB : B * B = 1) (hBtr : Matrix.trace B = 0)
     (hMHerm : M.IsHermitian) (hM : M * M = 1) (hMtr : Matrix.trace M = 0)
-    (hlarge : 2 * ((2 * k).factorial : ℝ) ≤ (2 : ℝ) ^ Fintype.card Site)
     (hDimension : 8 * ((2 * k).factorial : ℝ) ^ 3 ≤
       ((2 : ℝ) ^ Fintype.card Site) ^ 2)
     {a b : ℕ} (hab : a < b) (hsep : Disjoint (L.lightCone a S) T)
@@ -41,8 +40,8 @@ theorem spatialHaarCircuit_allOrders_of_globalHaar_control
   have hcard : (Fintype.card (QubitState Site) : ℝ) =
       (2 : ℝ) ^ Fintype.card Site := by
     simp [QubitState]
-  have hsmall := globalHaarOTOCMean_norm_le_quarter ρ B M hρ
-    hBHerm hB hBtr hMHerm hM hMtr k hk (by rwa [hcard]) (by rwa [hcard])
+  have hsmall := globalHaarOTOCMean_norm_le_quarter_all_dimensions ρ B M hρ
+    hBHerm hB hBtr hMHerm hM hMtr k hk (by rwa [hcard])
   exact spatialHaarCircuit_of_globalHaar_control L hApair hIpair ρ B M k S T
     hBsupport hMsupport hactive hinactive hρ hB hM hab hsep hcontrol hsmall R hwidth
 
