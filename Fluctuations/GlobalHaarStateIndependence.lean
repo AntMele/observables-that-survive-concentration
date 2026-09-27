@@ -17,7 +17,7 @@ def coordinateSignUnitary (i : N) : GlobalUnitary N :=
     by_cases hjl : j = l
     · subst l
       by_cases hji : j = i <;> simp [hji]
-    · simp [Matrix.diagonal_apply, hjl]⟩
+    · simp [hjl]⟩
 
 /-- Every diagonal probe forces the global even-OTOC matrix mean to be diagonal. -/
 theorem globalHaarOTOCMatrixMean_diagonal (B : Matrix N N ℂ) (q : N → ℂ)
@@ -105,7 +105,7 @@ theorem globalHaarOTOCMatrixMean_scalar_of_transitive [Nonempty N]
     obtain ⟨σ, hσi, hσ⟩ := hq i₀ i
     have he := globalHaarOTOCMatrixMean_diagonal_permute B q k σ hσ i₀
     simpa [hσi] using he
-  · simp [globalHaarOTOCMatrixMean_diagonal B q k i j hij, Matrix.one_apply, hij]
+  · simp [globalHaarOTOCMatrixMean_diagonal B q k i j hij, hij]
 
 theorem globalHaarOTOCMean_state_independent_of_transitive [Nonempty N]
     (B : Matrix N N ℂ) (q : N → ℂ) (hq : SignedPermutationTransitive q) (k : ℕ) :
