@@ -2,41 +2,99 @@
 
 ### Towards verifiable quantum advantage with random circuits
 
-**Lean 4 companion to the paper** · Statements, proofs, and reproducible verification
+**Lean 4 companion to the paper** · General OTOC fluctuations → one-dimensional OTOC₁ → classical simulation
 
 [CI workflow & live status](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml) ·
 [![Lean 4.24.0](https://img.shields.io/badge/Lean-4.24.0-blue)](lean-toolchain)
 [![mathlib v4.24.0](https://img.shields.io/badge/mathlib-v4.24.0-blue)](lakefile.toml)
 
-[**Start reading →**](docs/README.md) · [Paper → proof map](docs/reference/paper-map.md) · [Lean source index](Fluctuations/README.md) · [Verify the proofs](docs/verification/README.md)
+[**Read alongside the paper →**](docs/README.md) · [Paper → proof map](docs/reference/paper-map.md) · [Lean source index](Fluctuations/README.md) · [Verification](docs/verification/README.md)
 
-This repository formalizes the paper’s endpoint OTOC fluctuations, classical
-simulation algorithm, general variance-window argument, and global Haar mean
-estimates. Each result has an English guide explaining its assumptions and a
-direct link to the final Lean theorem.
+The paper asks whether local random circuits retain resolvable OTOC
+fluctuations at system-scale depths. Its central result is a **general
+variance lower bound for every fixed OTOC order**. The one-dimensional
+OTOC₁ analysis then sharpens this result and leads to a classical simulation
+algorithm. This repository follows that order.
 
-## Find your result
+## 1. General variance lower bound for OTOC⁽ᵏ⁾
 
-| Result in the paper | What Lean proves | Read the proof |
-| :--- | :--- | :--- |
-| **Endpoint OTOC₁ fluctuations** | Variance of order at least $n^{-1/2}$ throughout the diffusive front window, with a constructed set of order $n^{3/2}$ influential gates. | [Statement & assumptions](docs/results/endpoint-fluctuations.md) · [Lean](Fluctuations/OTOC1.lean) |
-| **Subexponential classical simulation** | An accurate infinite-temperature endpoint-OTOC estimator at critical depth, with subexponential arithmetic work for inverse-polynomial accuracy parameters. | [Algorithm & cost model](docs/results/classical-simulation.md) · [Lean](Fluctuations/Simulation.lean) |
-| **General variance window · VI.14** | A controlled change in the mean forces a consecutive window of large variance; the local Haar coefficient and spatial support bounds are proved. | [Statement & remaining inputs](docs/results/spatial-variance.md) · [Lean](Fluctuations/SpatialHaarFinal.lean) |
-| **Global Haar mean** | The all-order bound $2((2k)!)^3/D^2$ and the exact first-order value $-1/(D^2-1)$. | [Statement & proof route](docs/results/haar-mean.md) · [Lean](Fluctuations/GlobalHaarMeanAllDimensions.lean) |
+**Main text §II · Supplementary Material §VI, Theorem VI.14**
 
-The endpoint results use actual open one-dimensional Haar U(4) circuits.
-Simulation is at infinite temperature and critical depth, with probability
-over both the circuit and the sampler. The general spatial theorem uses
-Haar SU(4) gates and retains design mean control and transition width as
-inputs. See the [assumption boundary](docs/reviews/assumptions.md) for the full scope.
+A constant change in the ensemble mean over a polynomial depth interval
+forces inverse-polynomial variance over consecutive depths. The proof
+converts a change of the mean into variance through a local reverse-variance
+bound, then propagates that variance forward.
 
-## Choose a reading route
+More precisely, if the mean changes by at least $1/2$ between depths $a<b$
+with $b-a\le P$, the local reverse-variance condition with constant $\eta>0$
+gives a depth $a<d_*\le b$ such that
 
-- **Reading the paper?** Start with the [reader guide](docs/README.md), then use the [paper-to-proof map](docs/reference/paper-map.md) to find a theorem by its manuscript label.
-- **Reviewing the formalization?** Follow the [reviewer guide](REVIEW.md) for theorem correspondence, assumptions, and verification evidence.
-- **Working in Lean?** Browse the [129-module source index](Fluctuations/README.md), reproduce the build below, and read [CONTRIBUTING.md](CONTRIBUTING.md).
+```math
+\mathrm{Var}(F_{d_*+r})\ge
+\frac{\eta}{4P^2}\left(\frac{\eta}{1+\eta}\right)^R,
+\qquad 0\le r\le R.
+```
 
-## Reproduce the verification
+Here $F_d$ is the order-$k$ OTOC. For fixed $R$ and a size-independent
+$\eta$, a polynomial bound on $P$ gives the claimed inverse-polynomial
+fluctuations.
+
+Lean proves the general probability theorem and a spatial Haar SU(4)
+realization. In that realization it also proves the local coefficient,
+physical support bounds, and global Haar smallness. Late mean control from
+design convergence and the transition-width bound remain inputs.
+
+**[Read the general theorem](docs/results/01-general-otoc-variance.md)** ·
+[Abstract proof](Fluctuations/Main.lean) ·
+[Spatial Haar theorem](Fluctuations/SpatialHaarFinal.lean)
+
+Supporting ingredient: [global Haar mean estimates](docs/reference/haar-mean.md).
+The [scope review](docs/reviews/assumptions.md) records the precise models and assumptions.
+
+## 2. Sharper results for one-dimensional OTOC₁
+
+**Main text §III · Supplementary Material §VII**
+
+For endpoint observables in open Haar U(4) brickwork circuits, Lean proves
+an $\Omega(n^{-1/2})$ variance lower bound throughout the diffusive front
+window around $d=5n/3$, and constructs $\Theta(n^{3/2})$ gates with individual
+contributions $\Omega(n^{-2})$. These results hold uniformly over trace-one
+states under the explicit size and depth conditions. The exact finite-depth
+mean is also proved. No design-convergence hypothesis is needed here.
+
+**[Read the OTOC₁ results](docs/results/02-otoc1-fluctuations.md)** ·
+[Final theorems](Fluctuations/OTOC1.lean) ·
+[Exact mean](Fluctuations/BrickworkEndpointMean.lean)
+
+## 3. Application: subexponential classical simulation
+
+**Main text §III B · Supplementary Material §VIII**
+
+The one-dimensional structure yields an estimator for the
+infinite-temperature endpoint OTOC at $d=5n/3$, for positive multiples of
+six qubits. Lean proves its joint circuit-and-sampler accuracy guarantee
+and subexponential arithmetic work for inverse-polynomial error and failure
+parameters. The model uses exact scalar arithmetic and finite-distribution
+sampling.
+
+**[Read the algorithm and cost bound](docs/results/03-classical-simulation.md)** ·
+[Final theorems](Fluctuations/Simulation.lean)
+
+## Check or explore the formalization
+
+| Purpose | Starting point |
+| :--- | :--- |
+| Follow the manuscript in order | [Reader guide](docs/README.md) and [paper-to-proof map](docs/reference/paper-map.md) |
+| Find supporting Lean lemmas | [129-module source index](Fluctuations/README.md), grouped by the three parts above |
+| Review the claims and their scope | [Reviewer guide](REVIEW.md) and [assumption audit](docs/reviews/assumptions.md) |
+| Reproduce or extend the proof | [Verification instructions](docs/verification/README.md) and [contribution guide](CONTRIBUTING.md) |
+
+The recorded complete build checks **129 modules** and audits **573 declarations**,
+allowing only `propext`, `Classical.choice`, and `Quot.sound`.
+[Checked source and verification evidence](docs/verification/record.txt)
+
+<details>
+<summary><strong>Quick start: reproduce the Lean checks</strong></summary>
 
 With [Lean’s `elan` toolchain manager](https://github.com/leanprover/elan) installed:
 
@@ -47,28 +105,11 @@ lake exe cache get
 bash scripts/check.sh
 ```
 
-Lean **4.24.0** and mathlib **v4.24.0** are pinned. The recorded complete build
-checks **129 modules** and audits **573 declarations**, allowing only Lean’s
-standard `propext`, `Classical.choice`, and `Quot.sound` axioms.
-[Build instructions](docs/verification/README.md) · [Checked source & evidence](docs/verification/record.txt)
+Lean **4.24.0** and mathlib **v4.24.0** are pinned.
 
-## Repository at a glance
+</details>
 
-```text
-Fluctuations/      Lean proofs, with a topic index
-  README.md       Entry points and expandable module catalog
-docs/
-  README.md       Reader guide
-  results/        Four result guides with precise scope
-  reference/      Manuscript labels → Lean declarations
-  reviews/        Assumption audit and independent reviews
-  verification/   Build instructions and recorded evidence
-scripts/          Build and axiom-audit tools
-REVIEW.md         Reviewer starting point
-CONTRIBUTING.md   Proof-development workflow
-```
-
-When referring to a formal result, record the repository revision, Lean
-declaration, and paper version. The [manuscript provenance](docs/reference/paper-map.md#manuscript-provenance)
-identifies the inspected draft. The previously shared gist is a historical
-snapshot; this repository contains the subsequent extensions.
+When citing a formal result, record the repository revision, theorem
+declaration, and [paper version](docs/reference/paper-map.md#manuscript-provenance).
+The previously shared gist is a historical snapshot; this repository contains
+the subsequent extensions.
