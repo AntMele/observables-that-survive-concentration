@@ -1,6 +1,11 @@
-# Notes for coauthor review
+# Reviewing the formalization
 
-The entry point is [`Fluctuations/Main.lean`](Fluctuations/Main.lean).
+[Repository overview](README.md) · [Mathematical guide](docs/guide.md) ·
+[Paper-to-code map](docs/paper-mapping.md)
+
+The entry point is [`Fluctuations/Main.lean`](Fluctuations/Main.lean). This
+checklist is for readers comparing the formal statements with the paper,
+as well as contributors reviewing a change.
 
 ## The four final results
 
@@ -38,6 +43,9 @@ Install Lean through Elan, then run from the repository root:
 lake exe cache get
 bash scripts/check.sh
 ```
+
+For installation, expected output, and recorded CI evidence, see the
+[reproduction guide](docs/reproduce.md).
 
 `lean-toolchain` selects Lean 4.24.0. `lake-manifest.json` pins mathlib and its
 transitive dependencies. The script builds the project, prints the final
