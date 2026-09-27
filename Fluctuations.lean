@@ -8,3 +8,6 @@ import Fluctuations.HaarWeingartenProjection
 import Fluctuations.HaarOTOCTraceIdentity
 import Fluctuations.SpatialHaarFinal
 import Fluctuations.GlobalHaarMeanAllDimensions
+import Fluctuations.OTOC1
+import Fluctuations.BrickworkEndpointMean
+import Fluctuations.PauliKernelMass
