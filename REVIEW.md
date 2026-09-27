@@ -96,7 +96,7 @@ The [earlier Haar-model CI run](https://github.com/AntMele/observables-that-surv
 passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`; its verification
 job took 4 minutes 55 seconds (5 minutes 14 seconds for the full run).
 That revision predates the active/inactive-layer and mean-change extensions.
-Their local check is complete; their publication CI result is pending. Use the
+Their local check is complete. Use the
 [workflow history](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
 or a fresh check for the source under review and record its revision; an earlier
 successful run does not certify later changes.
