@@ -1,21 +1,21 @@
-# Result guides
+# Results in manuscript order
 
 [Home](../../README.md) / [Reader guide](../README.md) / Results
 
-Choose the result you are reading in the paper. Each guide gives its precise
-statement, assumptions, proof route, and final Lean entry point.
+Start with the paper’s general theorem, continue to its sharper one-dimensional
+analysis, then read the classical simulation application. The filenames follow
+this same order in the GitHub folder listing.
 
-| Result | Guide |
-| --- | --- |
-| Endpoint OTOC fluctuations, influential gates, and the exact finite-depth mean | [Endpoint fluctuations](endpoint-fluctuations.md) |
-| Conditional sampling and subexponential arithmetic cost | [Classical simulation](classical-simulation.md) |
-| The general variance-window argument, Theorem VI.14 | [Spatial variance](spatial-variance.md) |
-| All-order global Haar mean bounds and the exact first-order value | [Global Haar mean](haar-mean.md) |
+| Order | Paper location | Guide |
+| :--- | :--- | :--- |
+| **1. General OTOC⁽ᵏ⁾ variance lower bound** | Main §II; SM §VI, Theorem VI.14 | [Statement, proof mechanism, and spatial Haar realization](01-general-otoc-variance.md) |
+| **2. One-dimensional OTOC₁ results** | Main §III; SM §VII | [Exact mean, variance lower bound, and influential gates](02-otoc1-fluctuations.md) |
+| **3. Classical simulation** | Main §III B; SM §VIII | [Estimator correctness and subexponential arithmetic work](03-classical-simulation.md) |
 
-Use the [paper-to-code map](../reference/paper-map.md) to find a particular
-manuscript label. For the supporting modules, open the
-[Lean source index](../../Fluctuations/README.md).
+The [global Haar mean estimate](../reference/haar-mean.md) is a supporting ingredient of
+the general theorem, corresponding to the manuscript’s preliminaries.
+Each guide links its precise statements to Lean and records its scope.
 
 ---
 
-**Next:** [Review the assumptions](../reviews/assumptions.md) · [Reproduce the verification](../verification/README.md)
+**Begin:** [General variance lower bound →](01-general-otoc-variance.md) · [Paper-to-proof map](../reference/paper-map.md) · [Source index](../../Fluctuations/README.md)
