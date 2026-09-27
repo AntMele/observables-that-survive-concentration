@@ -6,7 +6,8 @@
 
 The project has two results. The general theorem converts a mean change and a
 local reverse-variance condition into persistent fluctuations. The Haar-circuit
-extension constructs actual matrix OTOCs from independent SU(4) gates and
+extension constructs actual matrix out-of-time-order correlators (OTOCs) from
+independent SU(4) gates and
 **proves the local reverse-variance condition** for that model. Its final
 variance theorem retains the mean-gap and transition-width assumptions.
 
@@ -41,7 +42,7 @@ F_d=\mathrm{Tr}\!\left[\rho\left(U_d^\dagger B U_d M\right)^{2k}\right].
 `haarCircuit_theorem_VI_14` chooses **one $\eta(m,k)>0$ before the global matrix
 dimension, gate embeddings, state/observable matrices, and depth interval**.
 If $a<b$, the endpoint means differ by at least $1/2$, and $b-a\leq P$, then
-some $a<d_*\leq b$ satisfies
+for any chosen $R\in\mathbb N$, some $a<d_*\leq b$ satisfies
 
 ```math
 \mathrm{Var}(F_{d_*+r})\geq
@@ -86,9 +87,11 @@ bash scripts/check.sh
 
 Lean **4.24.0** and mathlib **v4.24.0** are pinned. The check builds the library
 and audits all listed declarations and their transitive dependencies against
-`propext`, `Classical.choice`, and `Quot.sound`. Use the
-[reproduction guide](docs/reproduce.md) to distinguish current verification
-from the recorded CI run of the earlier abstract-only version.
+`propext`, `Classical.choice`, and `Quot.sound`. The
+[Haar-extension CI run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
+passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`.
+See the [reproduction guide](docs/reproduce.md) for that verification record
+and instructions to check another revision.
 
 ## Source route
 
