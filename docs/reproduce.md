@@ -3,10 +3,12 @@
 [Repository overview](../README.md) · [Mathematical guide](guide.md) ·
 [Paper-to-code map](paper-mapping.md)
 
-This guide builds the entire imported library and checks the transitive axiom
-dependencies of the listed principal results. Read the [paper mapping](paper-mapping.md)
-for the distinction between proved ingredients, model assumptions, and the
-external design-convergence input.
+This guide builds the library and checks the transitive axiom dependencies
+of the listed principal results. Start with the [OTOC(1) guide](otoc1.md)
+and [OTOC1.lean](../Fluctuations/OTOC1.lean) for the endpoint theorem.
+The [paper mapping](paper-mapping.md) distinguishes this unconditional
+brickwork result from the general spatial theorem, whose design-convergence
+and transition-width bounds remain external inputs.
 
 ## First-time setup
 
@@ -70,9 +72,13 @@ dependencies is a separate change that requires a fresh verification run.
 types, then uses `#print axioms` on all listed public declarations. These cover
 the probability/window results, finite-dimensional bound, actual Haar sampling,
 matrix polynomial membership, physical embeddings, product conditioning, local
-Haar inequalities, and circuit histories. The full-layer extension adds
-inactive-gate cancellation, the mean-gap argument, and the resulting circuit
-theorems. Inspect the committed list for the exact declarations being checked.
+Haar inequalities, and circuit histories. The general spatial coverage
+includes inactive-gate cancellation, the mean-gap argument, actual global
+Haar integration and its all-dimension bound. The endpoint coverage includes
+actual U(4) Pauli moments, tensor embeddings, product conditioning, the
+frozen-gate covariance reset, universal endpoint propagation, the conditional
+mean, actual finite-depth mean, and the final variance and many-gate influence
+results. Inspect the committed list for the exact declarations being checked.
 
 Each report includes the declaration's transitive axiom dependencies, including
 those reached through supporting lemmas. The
@@ -82,9 +88,14 @@ reports and permits only Lean's standard `propext`, `Classical.choice`, and
 reports. Explicit mathematical assumptions appear in the theorem statements;
 they are not new global axioms.
 
-The build checks all imported library modules. The axiom audit covers the
-listed declarations and their dependencies; it does not automatically add
-future, unrelated declarations. Reviewing the assumptions and model against
+The portable build checks the library through Lake. The offline helper
+uses [module-order.py](../scripts/module-order.py) to discover every
+`Fluctuations/*.lean` module and compile them in topological import order,
+then checks the root module and runs the same enforced audit. This includes
+supporting modules beyond the final theorem's direct imports.
+
+The axiom audit covers its listed declarations and their dependencies; it
+does not automatically add future, unrelated declarations. Reviewing the assumptions and model against
 the paper remains a separate mathematical check.
 
 ## Verification evidence
@@ -113,8 +124,8 @@ SHARED_LEAN_PROJECT=/absolute/path/to/existing/lean-project \
 The existing project must contain the Lean binary at
 `.elan/toolchains/leanprover--lean4---v4.24.0/bin/lean` and compatible compiled
 packages under `.lake/packages/`. The helper reads those files and writes only
-this project's compiled modules. It finishes with the same enforced
-axiom check.
+this project's compiled modules. It compiles all local modules in dependency
+order and finishes with the same enforced axiom check.
 
 If `SHARED_LEAN_PROJECT` is unset, the helper looks for a neighboring directory
 named `Single-copySTABLEARNING`. This is an optional development convenience;
