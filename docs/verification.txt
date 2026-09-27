@@ -1,19 +1,10 @@
-Verification completed: 2026-09-27T13:54:28+00:00
+Active-patch and mean-change extension: local verification
+Recorded: 2026-09-27T16:54:45+00:00
 Command: bash scripts/check-local.sh
-Exit status: 0
-Lean: 4.24.0
-mathlib: v4.24.0
-mathlib commit: f897ebcf72cd16f89ab4577d0c826cd14afaafc7
-
-All twelve library modules and the top-level import were compiled from source.
-The 24-declaration audit covers the original general-ensemble theorem and the
-new Haar SU(4) local variance, conditional variance, physical embeddings, and
-concrete independent-circuit result. Only the standard axioms propext,
-Classical.choice, and Quot.sound are allowed. No sorry or custom axioms.
-
-This is a local verification record, not a new GitHub Actions result.
-The general spatial light-cone reduction, design convergence, and explicit
-numerical constant 4^(-8*k*m) are not established by this extension.
+Lean 4.24.0; mathlib v4.24.0 (pinned in repository)
+All 15 Fluctuations modules and root import compiled successfully.
+The read-only local mathlib installation was reused; no manuscript files were modified.
+The following is the complete check output, including the 42-declaration axiom audit.
 
 def Fluctuations.complexVariance.{u_1} : {Ω : Type u_1} →
   {m₀ : MeasurableSpace Ω} → MeasureTheory.Measure Ω → (Ω → ℂ) → ℝ :=
@@ -133,6 +124,67 @@ Fluctuations.haarCircuit_theorem_VI_14 : ∀ (m k : ℕ),
                         η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤
                           Fluctuations.complexVariance (Fluctuations.historyMeasure (Fluctuations.su4Haar m) (d + r))
                             ⇑(Fluctuations.unitaryHaarCircuitOTOC E ρ B M k (d + r))
+Fluctuations.activeHaarCircuit_theorem_VI_14 : ∀ (m k : ℕ),
+  ∃ η,
+    0 < η ∧
+      ∀ (q : ℕ) (N : Type u_1) [inst : Fintype N] [inst_1 : DecidableEq N]
+        (A : ℕ → Fin m → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ)
+        (I : ℕ → Fin q → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ) (ρ B M : Matrix N N ℂ),
+        (∀ (d : ℕ) (i : Fin q) (U : ↥Fluctuations.SU4), Commute ((I d i) ↑U) B) →
+          ∀ {a b : ℕ},
+            a < b →
+              1 / 2 ≤
+                  ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
+                        (Fluctuations.activeHaarCircuitOTOC A I ρ B M k b)
+                          x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
+                      ∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) a),
+                        (Fluctuations.activeHaarCircuitOTOC A I ρ B M k a)
+                          x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) a‖ →
+                ∀ (R : ℕ) {P : ℝ},
+                  ↑(b - a) ≤ P →
+                    ∃ d,
+                      a < d ∧
+                        d ≤ b ∧
+                          ∀ r ≤ R,
+                            η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤
+                              Fluctuations.complexVariance
+                                (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) (d + r))
+                                ⇑(Fluctuations.activeHaarCircuitOTOC A I ρ B M k (d + r))
+@Fluctuations.activeHaarCircuit_theorem_of_moment_control : ∀ {N : Type u_1} [inst : Fintype N] [inst_1 : DecidableEq N]
+  {m q : ℕ} (A : ℕ → Fin m → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ)
+  (I : ℕ → Fin q → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ) (ρ B M : Matrix N N ℂ) (k : ℕ),
+  (∀ (d : ℕ) (i : Fin q) (U : ↥Fluctuations.SU4), Commute ((I d i) ↑U) B) →
+    ρ.trace = 1 →
+      B * B = 1 →
+        M * M = 1 →
+          ∀ {a b : ℕ},
+            a < b →
+              (∀ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) a),
+                  Commute
+                    ((Fluctuations.activeHaarCircuitMatrix A I a x).conjTranspose * B *
+                      Fluctuations.activeHaarCircuitMatrix A I a x)
+                    M) →
+                ∀ (referenceMean : ℂ),
+                  ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
+                            (Fluctuations.activeHaarCircuitOTOC A I ρ B M k b)
+                              x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
+                          referenceMean‖ ≤
+                      1 / 4 →
+                    ‖referenceMean‖ ≤ 1 / 4 →
+                      ∀ (R : ℕ) {P : ℝ},
+                        ↑(b - a) ≤ P →
+                          ∃ d,
+                            a < d ∧
+                              d ≤ b ∧
+                                ∀ r ≤ R,
+                                  Fluctuations.haarLocalConstant m k *
+                                        (Fluctuations.haarLocalConstant m k /
+                                            (1 + Fluctuations.haarLocalConstant m k)) ^
+                                          R /
+                                      (4 * P ^ 2) ≤
+                                    Fluctuations.complexVariance
+                                      (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) (d + r))
+                                      ⇑(Fluctuations.activeHaarCircuitOTOC A I ρ B M k (d + r))
 'Fluctuations.complex_total_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.norm_mean_sq_le_secondMoment' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.slope_to_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -157,4 +209,22 @@ Fluctuations.haarCircuit_theorem_VI_14 : ∀ (m k : ℕ),
 'Fluctuations.history_transition_window' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.history_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.haarCircuit_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
-Axiom audit passed for all 24 declarations: only propext, Classical.choice, and Quot.sound are allowed.
+'Fluctuations.theorem_VI_14_of_step_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.ordered_product_inactive_mul_active' depends on axioms: [propext, Quot.sound]
+'Fluctuations.haarBlockMatrix_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.haarBlockMatrix_inactive_conjugation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.matrix_conjugate_layer_eq_active' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.embedded_su4_layer_eq_active' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.disjoint_tensor_factors_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.preLightCone_otoc_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.integral_preLightCone_otoc_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.mean_gap_of_error_budget' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.mean_gap_one_half' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuitMatrix_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuitOTOC_section' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuit_localReverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuit_step_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuit_early_mean' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuit_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.activeHaarCircuit_theorem_of_moment_control' depends on axioms: [propext, Classical.choice, Quot.sound]
+Axiom audit passed for all 42 declarations: only propext, Classical.choice, and Quot.sound are allowed.
