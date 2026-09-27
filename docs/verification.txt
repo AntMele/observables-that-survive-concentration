@@ -1,12 +1,36 @@
-Complete OTOC1, spatial Haar variance, and global Haar mean verification
-Completed UTC: 2026-09-27T19:53:51+00:00
+Complete simulation, OTOC1 fluctuation, spatial Haar, and global mean verification
+Completed UTC: 2026-09-27T21:22:54.923754+00:00
 Command: bash scripts/check-local.sh
 Lean: 4.24.0
 Mathlib: v4.24.0 (f897ebcf72cd16f89ab4577d0c826cd14afaafc7)
 Result: PASS; exit code 0; no warnings or errors
-Library: all 87 modules plus the top-level import compiled
-Axiom audit: all 331 listed declarations passed the enforced allowlist
+Library: all 129 modules plus the top-level import recompiled
+Axiom audit: all 573 listed declarations passed the enforced allowlist
 Allowed axioms: propext, Classical.choice, Quot.sound
+
+Classical simulation: Fluctuations.otoc1_subexponential_simulation
+Combined accuracy/subexponential limit:
+  Fluctuations.otoc1_subexponential_simulation_inversePolynomial
+Actual normalized-trace target: Fluctuations.simulationCriticalOTOC
+Actual circuit/sampler joint law: Fluctuations.simulationCriticalSuccessProbability
+Physical sampler law equality: Fluctuations.simulationPhysicalSamplerKernel_eq
+Derived Haar eye bias: Fluctuations.simulationEye_bias
+Exact compressed updates: Fluctuations.pauliSamplerFixed_compressed,
+  Fluctuations.pauliSamplerInputMarginal_compressed,
+  Fluctuations.compressed_operation_work
+
+Simulation scope: n=6(s+1), d=10(s+1)=5n/3, independent Haar U(4) gates,
+open odd-then-even brickwork, infinite-temperature endpoint OTOC.
+For epsilon,delta in (0,1), the actual sampler attains additive error epsilon
+with joint probability at least 1-delta. R and N are exactly the manuscript's
+radius and ceiling sample count. No bias, tail, mean-change, local-variance,
+or support-width estimate is assumed in the final theorem.
+For epsilon=n^(-a), delta=n^(-b), fixed positive natural a,b, the same sampler
+has the stated accuracy at every allowed size and log(work)/n tends to zero.
+The work counter covers scalar arithmetic (real or complex), local transfer
+construction, exact finite sampling, and sampling/readout loops. It excludes
+indexing, memory access, and schedule/parameter preprocessing. No compiled
+numerical simulator, bit-complexity, or finite-precision claim is made.
 
 Concrete OTOC1 variance: Fluctuations.otoc1_endpoint_variance_lower
 Concrete influential gates: Fluctuations.otoc1_many_influential_gates
@@ -17,25 +41,35 @@ General spatial theorem: Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar
 All-dimension global mean bound: Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions
 Exact SU(4) local coefficient: Fluctuations.haarLocalOTOC_explicit_reverseVariance_identity
 
-OTOC1: actual independent Haar U(4) gates in the open brickwork circuit,
-even n,d, C>=0, sqrt(n)>=12(C+2), |d-5n/3|<=C*sqrt(n), Tr(rho)=1.
+OTOC1 fluctuation scope: actual independent Haar U(4) gates, even n,d,
+C>=0, sqrt(n)>=12(C+2), |d-5n/3|<=C*sqrt(n), Tr(rho)=1.
 Proves Var(X)>=b_C/(24*sqrt(n)) with b_C>0, and a concrete set of
 Theta(n^(3/2)) gates, each with conditional-mean variance >= b_C/n^2.
-No mean-change, reverse-variance, conditional-mean, propagation, or gate-count
-premise remains. The actual mean also has an exact finite binomial-image formula.
-The Psi regrouping, Gaussian approximation, full exterior influence envelope,
-and simulation runtime are not claimed.
+The actual mean also has an exact finite binomial-image formula.
+Literal Psi regrouping, the Gaussian mean-front approximation, and the full
+exterior variance-influence envelope remain outside the verified statements.
+The simulation touching-tail bound is a separate proved estimate.
 
 The general spatial theorem still uses design mean control and transition width.
 Its actual all-dimension Haar bound is 2*((2*k)!)^3/D^2 for k>0,
 Hermitian traceless involutions B,M, and trace-one rho.
-See REVIEW.md, docs/otoc1.md and docs/paper-mapping.md for precise scope.
+See REVIEW.md, docs/simulation.md, docs/simulation-review.md,
+docs/otoc1.md and docs/paper-mapping.md for precise scope.
 
-This is a local verification record, not a claim about an unobserved CI run.
-Inspect GitHub Actions for the exact published commit's independent Lake build.
-SHA-256 fingerprints below identify the checked mathematical source and configuration.
+Independent GitHub Actions check of the mathematical source:
+  Proof revision: 7b132973a163daccda547e84a14ba3e09dcf6837
+  Run: https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36350927041
+  Status: SUCCESS observed in GitHub Actions; duration 20m 39s.
+  The independent Lake build and 573-declaration axiom enforcement passed.
+The downloaded archive at that revision matched all 152 intended local
+source/configuration/documentation files before subsequent documentation edits.
+Later verification-record, contributor-guide, and README typography updates do not alter the
+mathematical source or verification configuration fingerprinted below.
 
-9f92c3be6778b8bbf4bf61f5ba667dd7359bd67ae57b50eeb944a1309fb5d12d  Fluctuations.lean
+SHA-256 fingerprints of the checked mathematical source and configuration:
+
+4f72de2de83c9783b9ee714d54041db0927664e5541535b1e1cac6dcdbdbdd06  .github/workflows/lean.yml
+1077f333f372d56b5264871fab292e8b72a99fa2805dd83345bfa97310adca42  Fluctuations.lean
 93896ea25cc2351ae0d1ba4dbd876ef97354f6e0201d8710ae4a50baa4e20dbf  Fluctuations/ActiveHaarCircuit.lean
 b7deaa18fa20439efc23758ea89b0030fd06790748dba9fe289db1db0a3d9fd8  Fluctuations/BalancedHaarFeatures.lean
 eb6eeac8529370de70fc0ec38ed5bb67ec46d3b8a5d8f9e24c86aad901fcf354  Fluctuations/BinomialLocalBounds.lean
@@ -110,6 +144,48 @@ bad0ca262fbd0c8440664d7e476be8b9da366ecda64a4bce558d808717a8ec1f  Fluctuations/P
 79051e0501929c11dbb1a453c770917493d4c81c66d86eea43b53cca7b701f77  Fluctuations/ProductKernelEvolution.lean
 2859862e974de10f8d1f7b78f99c802bf2335f0227e572e727c8b57b7988b5aa  Fluctuations/ProductVariance.lean
 19478eeb19b6d9be046e7e93cfaec44fd5960e2c5e8624b0541ff822dd254d69  Fluctuations/QubitEmbedding.lean
+9647ab2d85b6add6b42d1d1759db9cc9a988b588caff149dce09b8c205fcc3d9  Fluctuations/Simulation.lean
+0444916d8b186a0ea32fb17aacf0068760e6aeb50092a9d50426b39b0fb32f21  Fluctuations/SimulationAccuracy.lean
+e20d5c078fcb7e82f5d67e675bff9d558d51754f3cb45cda02a8469d989ed247  Fluctuations/SimulationAsymptotics.lean
+01a14fb1f2986deb8cef7c7c131ce37569530ce60287da4fbd106b5961ea0eca  Fluctuations/SimulationAveraging.lean
+9ed362aa129c43742e1144c40efe01d159bb0a149d802ce8fd946eed3b7906b0  Fluctuations/SimulationBackwardAverage.lean
+868ee0f644df8a154e6eebc063906b62b397b26faaab532f15539e928465f58e  Fluctuations/SimulationBackwardInfluence.lean
+5bde5cdda77987c1ac0ca412a67941b8c4db23ff8e44123af6ad21fe30bfe018  Fluctuations/SimulationCircuitAverage.lean
+deb2eaf74aa9800482d1f43f58cad6204401eaba727a548d6e479454fea9210d  Fluctuations/SimulationCompressedOperations.lean
+f4355b6ee64687f18636f1ade8f1476387ad45fe1229253c6eaa45aa8db5f31c  Fluctuations/SimulationConcentration.lean
+b536088dc49d4f0aac62418fdb2a1d1abce8165b7492265dfc34127379fd379e  Fluctuations/SimulationCost.lean
+4a9d6879222cc91c9458c190b5074f1cb1781b96e3352be93809d92a83045e0c  Fluctuations/SimulationEndpointTail.lean
+908eb3593f81e957da711e1326154713e7a04aec7eaaf85843819f90606c05a4  Fluctuations/SimulationExpectedTouch.lean
+112aa257c18a8bcb53472665b7f97d818165b7d90cecd0f97106ce7439b93bd0  Fluctuations/SimulationEyeError.lean
+45f26587cbc676f57ed88109243d28f1191994798f68512013b2d7b8d257d107  Fluctuations/SimulationGateCoordinates.lean
+1aa7f7c89eb6b567b181701e8b97ac62c735dfcba9481b02c0b74a63ca7ab3ff  Fluctuations/SimulationGeometryCost.lean
+bbd4e49a15fc8631ebc14a47e1ba004d3ae091ac85fd01b87756b65b9bfbbe24  Fluctuations/SimulationGeometryReorder.lean
+4f139bc3d1392629c39f6d853767cec3079c416563b2001fe91d0cd07c5d5ea1  Fluctuations/SimulationGeometrySampler.lean
+6cc88832552a3e872ff27e290ac5b7eb74378c801975412ed318041d13014a4c  Fluctuations/SimulationJointProbability.lean
+e447ea26a5b20ae705988a98ed12200a409cb31697feda70c86edb42fe5af79d  Fluctuations/SimulationLocalCoordinate.lean
+466ccfd5190415414a3583fcdba6ae00cb323afeb480863f54c4e89fb264096a  Fluctuations/SimulationLocalInfluence.lean
+5d47d600ba1277c381ecc820a426b7b43c939b107117cf7286a251f429f4837d  Fluctuations/SimulationMixedCircuit.lean
+305036b11d490b4e51fcdb22743a93d354b3c9933c35588a57c54fc2406309b7  Fluctuations/SimulationMixedCircuitCommutation.lean
+305113fe84c095ab409294adf098568acaaedebc0fc7e14e49da954a2c680fc7  Fluctuations/SimulationMixedCircuitOTOC.lean
+1321c58a69f5d0eda07174e59ad1d364bc51a3c3a5cc765ee27bc650c1ba5334  Fluctuations/SimulationMixedListIndex.lean
+e6633dfd2953fbdc068b135fa4d0fb048d833a18e8b0415ea0d3e2240cc0b23e  Fluctuations/SimulationParameters.lean
+c63e8de3cd52d6c1b5bb0cbebbbadfe02441e76408e2481098000792def83d7f  Fluctuations/SimulationPerturbation.lean
+811c9741f89a3ba28eea6f5301b001ff9c119be3e5f44a40372fc4682e436f53  Fluctuations/SimulationPhysicalLaw.lean
+500a44149be00c58453275a0829c88f7ff26b61339c8144afea80e13b2883556  Fluctuations/SimulationPrefixBridge.lean
+ca05165ba1454da4a8b5eb80512fc89fac3f0021be37a60d89125e148dbcbe58  Fluctuations/SimulationReverseCircuit.lean
+7c87096368a79661a76edb6037815c94549a441453f4c513ec39aa427c2e55a5  Fluctuations/SimulationSampler.lean
+acd1d871eb82759980c28e0574ff2d644dd67a627431ae40271c701b1f68f84f  Fluctuations/SimulationSamplerCovariance.lean
+9c835d045ef75dad588a312948993b2db4e8caeb3856dd0593104b613352daf6  Fluctuations/SimulationSamplerReorder.lean
+940ce8c2f2a1a712f0a76d14073309ba551f3b6418f926c204ab26bba3e96c07  Fluctuations/SimulationSamplerSupport.lean
+213f6ea0341ff65563c16e803a4b244cc4cef7f403eea7f8ad0b939b6a6db415  Fluctuations/SimulationSamplingKernel.lean
+75f5b60f8e41bc144943f5cffc2d7921cd8d852ca170e72b606dbea51a2972a6  Fluctuations/SimulationSamplingProbability.lean
+43b42a9eec97ac89a60ebadf5786f46262ae57612b57557c952f2f1e6b32b92c  Fluctuations/SimulationTailBinomial.lean
+cb776720a260a25679c8ab3a9682d072a4aad90fe95e6eb96465c412ba5c474a  Fluctuations/SimulationTailCausal.lean
+32a1c291f4353b04598bdb7347fcfecb3fbdb8f129039a1841eccc7b7f511805  Fluctuations/SimulationTailPhysical.lean
+a67de99fa9f81a227c70e96514c68be648d01b3ea1014f7ca88dc73a8d30b3dc  Fluctuations/SimulationTailReflection.lean
+a2ffd9341f014b51b6f05491d82e0c41b83a386e4e4d4c4126fd08143a873a4d  Fluctuations/SimulationTouchingTail.lean
+5983f69a6662d8e930fc198329581ea3ff8388cb6fb6a38e3fdb816763a87ae5  Fluctuations/SimulationTrace.lean
+2a12420353cbe15c2ba36125cdae75c0acf63ba096d2d2ebed301e770f579b30  Fluctuations/SimulationWidth.lean
 4bafa83de16df7bb5652ba5511d3409d882aa4e1f4969004cbf0ff9449379971  Fluctuations/SpatialHaarFinal.lean
 6587c4670992f94e9e64838e61634f6c30bc71867b229aa9a8d98a5b396173bf  Fluctuations/SpatialHaarFirstOrder.lean
 73f53cc2a1f4e7de9bac93bb83506b0c8a859a23f0f68beaf3c175142a07306a  Fluctuations/SpatialHaarGeometry.lean
@@ -123,13 +199,12 @@ a4d91cbdca9cfc929efe86b2517f4c4e86413bd5dae9b7b37537ab20c90ad604  Fluctuations/U
 b7cc8111a5029b7564565d90a667f2c0eb139e39d27db7d1e1962396cf1b634a  Fluctuations/WeightedVariance.lean
 9362fa0be9f2644f0f00f8d22f60353c43c99aafeb208378b3502d9e53533261  Fluctuations/WeingartenGramBounds.lean
 822200e6b51b7300ca4cf4c90108dac30c147f0d63cdf404cf13ce9e89daab70  Fluctuations/Window.lean
-42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434  lean-toolchain
-3b77eef9d7e4a2341fc34e07cbd56d1d4a9dc1b4825f291b3dc288aafacf25a1  lakefile.toml
 968747a8c37c1b4c16c4bb1ca5d7a7579728e3aca84bc0bedfaa04ba61c38730  lake-manifest.json
-9348d2fded15ea510b8f0fcf96e65e57a9760c908397ece92ec5146ce4c04845  scripts/Audit.lean
-88a1a3656afc955d22e55891d3bac71416a953624d33f92c74949f05ac245705  scripts/check-axioms.py
+3b77eef9d7e4a2341fc34e07cbd56d1d4a9dc1b4825f291b3dc288aafacf25a1  lakefile.toml
+42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434  lean-toolchain
+62c580c0d6520be26a21ac22671464db7f5b013eece8aeee2a77b504c4cd7cd9  scripts/Audit.lean
+1023980033938f681f67b626cbb656b05d16e54b6ae02ae7c13a41e0576ce3ed  scripts/check-axioms.py
 26b6af68e04dab5043b4ab3bf9702cecde5688d747dbb1ec9c380718a5e663b5  scripts/check-local.sh
 04c9f7bda851aea33220a1b56f4ed41b5f3d6a2430c15f8ad692c503df6e2205  scripts/check.sh
 826a966242113992d990a15e8925861f4e513072ea87f8fc65f109ca914f6780  scripts/lean-local.sh
 b6609a49af8b17225cc70b5622b0401359838582773974bb0dc650cf0ddf9c40  scripts/module-order.py
-4f72de2de83c9783b9ee714d54041db0927664e5541535b1e1cac6dcdbdbdd06  .github/workflows/lean.yml
