@@ -56,3 +56,119 @@ statements, in addition to every main theorem's kernel axiom dependencies. -/
 #print axioms Fluctuations.activeHaarCircuit_early_mean
 #print axioms Fluctuations.activeHaarCircuit_theorem_VI_14
 #print axioms Fluctuations.activeHaarCircuit_theorem_of_moment_control
+
+/- Spatial architecture, exact Haar coefficient, and actual global mean. -/
+#print Fluctuations.globalHaarOTOCMean
+#print Fluctuations.explicitHaarConstant
+#check @Fluctuations.spatialHaarCircuit_variance_window
+#check @Fluctuations.spatialHaarCircuit_of_globalHaar_control
+
+#print axioms Fluctuations.tensorMatrix_mul
+#print axioms Fluctuations.Supported.commute
+#print axioms Fluctuations.supported_patchMatrix
+#print axioms Fluctuations.supported_patchEmbedding
+#print axioms Fluctuations.patchEmbedding_injective
+#print axioms Fluctuations.supported_twoQubitPatchEmbedding
+#print axioms Fluctuations.twoQubitPatchEmbedding_mem_unitary
+#print axioms Fluctuations.LayerArchitecture.card_active_le
+#print axioms Fluctuations.LayerArchitecture.conjugate_eq_active
+#print axioms Fluctuations.LayerArchitecture.supported_conjugate
+#print axioms Fluctuations.supported_spatialCircuit
+#print axioms Fluctuations.spatialCircuit_commute_of_disjoint
+#print axioms Fluctuations.card_backwardCone_le
+#print axioms Fluctuations.backwardActiveGateCount_le
+#print axioms Fluctuations.HaarSpatialArchitecture.active_count_le
+#print axioms Fluctuations.HaarSpatialArchitecture.card_lightCone_le
+#print axioms Fluctuations.HaarSpatialArchitecture.circuit_supported
+#print axioms Fluctuations.HaarSpatialArchitecture.early_commute
+#print axioms Fluctuations.HaarSpatialArchitecture.inactive_commute
+#print axioms Fluctuations.HaarSpatialArchitecture.early_mean
+#print axioms Fluctuations.haar_subspace_reverseVariance
+#print axioms Fluctuations.haarLocalOTOC_balanced_mem
+#print axioms Fluctuations.balancedSU4_polynomial_translate_mem
+#print axioms Fluctuations.balancedSU4_polynomial_finrank_le
+#print axioms Fluctuations.explicitHaarConstant_pos
+#print axioms Fluctuations.haarLocalOTOC_explicit_reverseVariance_identity
+#print axioms Fluctuations.haarLocalOTOC_explicit_conditional_reverseVariance
+#print axioms Fluctuations.activeHaarCircuit_explicit_step_bounds
+#print axioms Fluctuations.activeHaarCircuit_explicit_variance_window
+#print axioms Fluctuations.activeHaarCircuit_explicit_theorem_of_moment_control
+#print axioms Fluctuations.explicitHaarWindowConstant_antitone
+#print axioms Fluctuations.globalHaarOTOCMean_eq_trace_matrixMean
+#print axioms Fluctuations.globalHaarOTOCMatrixMean_conjugation
+#print axioms Fluctuations.globalHaarOTOCMatrixMean_commute
+#print axioms Fluctuations.spatialHaarCircuit_variance_window
+#print axioms Fluctuations.spatialHaarCircuit_of_globalHaar_control
+
+/- Genuine Haar symmetries and the conditional combinatorial estimate. -/
+#print axioms Fluctuations.globalHaarOTOCMatrixMean_conjugateProbe
+#print axioms Fluctuations.globalHaarOTOCMatrixMean_conjugateButterfly
+#print axioms Fluctuations.globalMaximallyMixedState_trace
+#print axioms Fluctuations.globalHaarOTOCMean_balancedZ_state_independent
+#print axioms Fluctuations.globalHaarOTOCMean_conjugateBalancedZ_state_independent
+#print axioms Fluctuations.globalHaarOTOCMean_balancedZ_eq_normalized_trace
+#print axioms Fluctuations.maximal_cycles_weingarten_argument_ne_one
+#print axioms Fluctuations.weingartenOTOCSum_norm_le_factorial
+#print axioms Fluctuations.norm_le_of_weingartenHaarIdentity
+#print axioms Fluctuations.quarter_bound_of_weingartenHaarIdentity
+#check @Fluctuations.norm_le_of_weingartenHaarIdentity
+#print Fluctuations.WeingartenCoefficientBounds
+#print Fluctuations.WeingartenHaarIdentity
+
+/- Actual inverse-Gram bounds and first-order Haar twirl identities. -/
+#print axioms Fluctuations.globalHaarTwirl_one
+#print axioms Fluctuations.globalHaarTwirl_trace
+#print axioms Fluctuations.globalHaarTwirl_equivariant
+#print axioms Fluctuations.globalHaarTwirl_superTrace
+#print axioms Fluctuations.globalHaarOTOCMatrixMean_one_eq_twirl
+#print axioms Fluctuations.normalizedPermutationGram_isUnit
+#print axioms Fluctuations.normalizedPermutationGram_inverse_bounds
+#print axioms Fluctuations.gramWeingarten_inverse_identity
+#print axioms Fluctuations.gramWeingartenCoefficient_bounds
+#print axioms Fluctuations.gramWeingartenOTOCSum_norm_le
+#print axioms Fluctuations.norm_le_of_gramWeingartenHaarIdentity
+#print axioms Fluctuations.quarter_bound_of_gramWeingartenHaarIdentity
+#check @Fluctuations.quarter_bound_of_gramWeingartenHaarIdentity
+
+/- Complete tensor integration and exact first-order mean. -/
+#print axioms Fluctuations.unitaryConjugationEquivariant_classification
+#print axioms Fluctuations.globalHaarOTOCMean_one_exact
+#print axioms Fluctuations.globalHaarOTOCMean_one_norm_le_quarter
+#print axioms Fluctuations.globalHaarOTOCMatrixMean_scalar_of_traceless_involution
+#print axioms Fluctuations.globalHaarOTOCMean_state_independent_of_traceless_involution
+#print axioms Fluctuations.globalHaarOTOCMean_traceless_involution_eq_normalized_trace
+#print axioms Fluctuations.tensorPower_commutant_eq_permutation_sum
+#print axioms Fluctuations.tensorPower_commutant_mem_span
+#print axioms Fluctuations.matrixPolynomialEval_zero_of_unitary
+#print axioms Fluctuations.tensorPower_commute_all_of_unitary
+#print axioms Fluctuations.tensorPower_unitary_commutant_eq_permutation_sum
+#print axioms Fluctuations.tensorPower_unitary_commutant_mem_span
+#print axioms Fluctuations.globalHaarRepresentationMean_commute
+#print axioms Fluctuations.globalHaarRepresentationMean_trace_pairing
+#print axioms Fluctuations.globalHaarTensorMean_eq_permutation_sum
+#print axioms Fluctuations.globalHaarTensorMean_mem_span
+#print axioms Fluctuations.matrix_expansion_of_gram
+#print axioms Fluctuations.tensorPositionPermutation_gram
+#print axioms Fluctuations.tensorPowerMatrix_diagonal_trace_permutation
+#print axioms Fluctuations.tensorPowerMatrix_traceless_involution_trace_permutation
+#print axioms Fluctuations.globalHaarTensorMean_weingarten
+#print axioms Fluctuations.trace_power_eq_tensor_cycle
+#print axioms Fluctuations.globalHaarOTOCMean_maximallyMixed_eq_tensor
+#print axioms Fluctuations.qubit_globalHaarOTOCMean_one_norm_le_quarter
+#print axioms Fluctuations.spatialHaarCircuit_firstOrder_of_globalHaar_control
+#check @Fluctuations.globalHaarTensorMean_weingarten
+#check @Fluctuations.spatialHaarCircuit_firstOrder_of_globalHaar_control
+
+/- Final all-orders mean and spatial variance theorem. -/
+#print axioms Fluctuations.globalHaarOTOCMean_eq_weingarten
+#print axioms Fluctuations.globalHaarOTOCMean_norm_le
+#print axioms Fluctuations.globalHaarOTOCMean_norm_le_quarter
+#print axioms Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control
+#check @Fluctuations.globalHaarOTOCMean_norm_le
+#check @Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control
+
+/- Uniformity over all matrix dimensions. -/
+#print axioms Fluctuations.globalHaarOTOCMean_norm_le_one
+#print axioms Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions
+#print axioms Fluctuations.globalHaarOTOCMean_norm_le_quarter_all_dimensions
+#check @Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions
