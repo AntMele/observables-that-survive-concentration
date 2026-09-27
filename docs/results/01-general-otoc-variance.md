@@ -32,7 +32,7 @@ $a<d_*\le b$ such that
 ```
 
 Thus an interval of $R+1$ consecutive depths lies inside
-$\{a+1,\ldots,b+R\}$ and satisfies this lower bound. If $R$ is fixed,
+$\lbrace a+1,\ldots,b+R\rbrace$ and satisfies this lower bound. If $R$ is fixed,
 $\eta$ is independent of system size, and $P\le p(n)$ for a fixed
 polynomial, the lower bound is inverse-polynomial in $n$.
 `theorem_VI_14_family` proves these family quantifiers explicitly.
