@@ -9,6 +9,7 @@ namespace Fluctuations
 
 variable {N : Type*} [Fintype N] [DecidableEq N]
 
+omit [Fintype N] in
 @[simp] theorem tensorPositionPermutation_one (r : ℕ) :
     tensorPositionPermutation N (1 : Equiv.Perm (Fin r)) = 1 := by
   ext x y
@@ -20,6 +21,7 @@ theorem tensorPositionPermutation_mul {r : ℕ} (σ τ : Equiv.Perm (Fin r)) :
   ext x y
   simp [Matrix.mul_apply, tensorPositionPermutation, mul_ite, Function.comp_def]
 
+omit [Fintype N] in
 theorem tensorPositionPermutation_star {r : ℕ} (σ : Equiv.Perm (Fin r)) :
     star (tensorPositionPermutation N σ) = tensorPositionPermutation N σ⁻¹ := by
   ext x y
@@ -79,6 +81,7 @@ lemma permutationCycleLabel_representative {r : ℕ} (σ : Equiv.Perm (Fin r))
     apply Subtype.ext
     exact (σ.eq_cycleOf_of_mem_cycleFactorsFinset_iff c.val c.prop _).mpr hc |>.symm
 
+omit [Fintype N] [DecidableEq N] in
 lemma invariant_word_sameCycle {r : ℕ} (σ : Equiv.Perm (Fin r))
     (x : Fin r → N) (hx : x = x ∘ σ) {i j : Fin r} (hij : σ.SameCycle i j) :
     x i = x j := by
@@ -93,6 +96,7 @@ lemma invariant_word_sameCycle {r : ℕ} (σ : Equiv.Perm (Fin r))
   rw [← hn]
   exact (hp n).symm
 
+omit [Fintype N] [DecidableEq N] in
 lemma invariant_word_cycleRepresentative {r : ℕ} (σ : Equiv.Perm (Fin r))
     (x : Fin r → N) (hx : x = x ∘ σ) (t : Fin r) :
     x (permutationCycleRepresentative σ (permutationCycleLabel σ t)) = x t := by
@@ -309,6 +313,7 @@ theorem tensorPowerMatrix_unitary_conjugate_trace_permutation {r : ℕ}
       simpa only [Matrix.mul_assoc] using Matrix.trace_mul_comm R (X * star R * P)
     _ = Matrix.trace (X * P) := by rw [hPR, ← Matrix.mul_assoc (star R), hRR, Matrix.one_mul]
 
+omit [DecidableEq N] in
 lemma sum_sign_pow (q : N → ℂ) (hq : ∀ i, q i = 1 ∨ q i = -1)
     (htr : ∑ i, q i = 0) (n : ℕ) :
     (∑ i, q i ^ n) = if Even n then (Fintype.card N : ℂ) else 0 := by
