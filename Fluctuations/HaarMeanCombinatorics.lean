@@ -80,8 +80,8 @@ noncomputable def weingartenOTOCSum (D : ℝ) (k : ℕ)
     (D : ℂ) ^ (haarCycleCount σ + haarCycleCount η) *
       W (η⁻¹ * finRotate (2 * k) * σ) / (D : ℂ)
 
-/-- This is the missing analytic identification when `h` is an actual global
-Haar OTOC mean. It is deliberately a named assumption, not an axiom or theorem. -/
+/-- The scalar integration identity used by the generic finite-sum transfer.
+The concrete Haar instance is established in `GlobalHaarMeanBound.lean`. -/
 def WeingartenHaarIdentity (h : ℂ) (D : ℝ) (k : ℕ)
     (W : Equiv.Perm (Fin (2 * k)) → ℂ) : Prop :=
   h = weingartenOTOCSum D k W
