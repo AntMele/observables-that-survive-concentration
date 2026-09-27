@@ -35,7 +35,7 @@ gives a depth $a<d_*\le b$ such that
 \qquad 0\le r\le R.
 ```
 
-Here $F_d$ is the order-$k$ OTOC. For fixed $R$ and a size-independent
+Here $F_d$ is the OTOC of order $k$. For fixed $R$ and a size-independent
 $\eta$, a polynomial bound on $P$ gives the claimed inverse-polynomial
 fluctuations.
 
