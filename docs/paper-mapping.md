@@ -19,12 +19,17 @@ Match labels and mathematical statements when the manuscript numbering changes.
 | Eqs. (109)–(110), total variance and integrated local estimate | `complex_total_variance`, `localReverseVariance_integrated` in [Probability.lean](../Fluctuations/Probability.lean) | Proved |
 | Eq. (111), weighted inequality | `weighted_norm_sq`, `weighted_variance_comparison` in [WeightedVariance.lean](../Fluctuations/WeightedVariance.lean) | Proved |
 | Lemma VI.13 / Eq. (108) | `forward_persistence` in [WeightedVariance.lean](../Fluctuations/WeightedVariance.lean) | Proved |
-| Eq. (114), half-unit mean change | `hchange` in [Main.lean](../Fluctuations/Main.lean), endpoint-gap premise in [HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) | Assumed in both routes |
+| Eq. (114), half-unit mean change | `mean_gap_one_half` in [MeanChange.lean](../Fluctuations/MeanChange.lean); assembled in [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) | Derived from the early identity and two quarter-unit estimates in the strongest circuit theorem; supplied directly in the general theorem and gap-based circuit variants |
 | Eqs. (115)–(118), large increment and propagation | [Window.lean](../Fluctuations/Window.lean) and [Main.lean](../Fluctuations/Main.lean) | Proved |
 | Eq. (119) and Theorem VI.14 | `theorem_VI_14`, `theorem_VI_14_interval`, `theorem_VI_14_family` in [Main.lean](../Fluctuations/Main.lean) | General bound, interval, and polynomial family proved from the two inputs |
 | Remark VI.15, arbitrary mean gap | `transition_window` in [Main.lean](../Fluctuations/Main.lean) | Proved |
 
-## Haar-gate extension
+## Full-layer Haar extension
+
+The strongest entry point is `activeHaarCircuit_theorem_of_moment_control` in
+[ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean). The local Haar
+lemma below supplies its variance input; the algebraic locality and mean-change
+steps then connect that input to full circuit layers.
 
 | Manuscript ingredient | Formal component | Exact coverage |
 | --- | --- | --- |
@@ -36,7 +41,14 @@ Match labels and mathematical statements when the manuscript numbering changes.
 | Desired local bound, label `eq:desired-local-reverse-variance` | `haarLocalOTOC_reverseVariance_identity` in [HaarLocalVariance.lean](../Fluctuations/HaarLocalVariance.lean) | Positive constant depending only on $m,k$; the identity value is the previous OTOC |
 | Conditional local inequality | `product_condExp`, `product_localReverseVariance` in [ProductVariance.lean](../Fluctuations/ProductVariance.lean); `haarLocalOTOC_conditional_reverseVariance` in [HaarLocalVariance.lean](../Fluctuations/HaarLocalVariance.lean) | Proved under an independent Haar block and a continuous earlier circuit on a compact history space |
 | Repeated independent blocks | [HaarProcess.lean](../Fluctuations/HaarProcess.lean) and [HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) | Product histories and the actual recursion $U_{d+1}=W_dU_d$ |
-| Theorem VI.14 for that model | `haarCircuit_theorem_VI_14` in [HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) | Local reverse variance discharged; endpoint gap and width bound remain inputs |
+| Inactive-gate cancellation in the local function | `haarBlockMatrix_inactive_conjugation`, `embedded_su4_layer_eq_active` in [SpatialSupport.lean](../Fluctuations/SpatialSupport.lean) | Any number of inactive gates cancels under explicit commutation with $B$; an interleaved list additionally requires active/inactive cross-commutation |
+| Disjoint-support commutation | `disjoint_tensor_factors_commute`, `qubitEmbedding_commutes_spectator` in [SpatialSupport.lean](../Fluctuations/SpatialSupport.lean) | Proved for separate tensor factors; graph support propagation and the active-gate count are not derived |
+| Pre-light-cone identity, label `lem:pre-light-cone-identity` | `preLightCone_otoc_eq_one` in [MeanChange.lean](../Fluctuations/MeanChange.lean); `activeHaarCircuit_early_mean` in [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) | Trace normalization, involutions, and early-time commutation imply the OTOC and early mean equal one; geometric commutation is an input |
+| Late moment control, label `eq:otoc-test-moment-control`, and Haar mean estimate, label `prop:haar-otock-small` | `hcontrol`, `href` in `activeHaarCircuit_theorem_of_moment_control` | Scalar error and reference-mean bounds of $1/4$ are inputs; neither estimate nor design convergence is proved |
+| Mean change, label `eq:fixed-k-proof-order-one-mean-change` | `mean_gap_one_half` in [MeanChange.lean](../Fluctuations/MeanChange.lean) | Derives the half-unit gap from early mean one and those two scalar bounds |
+| Theorem VI.14 for full layers | `activeHaarCircuit_theorem_of_moment_control` in [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) | Local reverse variance and the half-gap are derived; commutation certificates, scalar mean estimates, and width bound remain inputs |
+| Variant with a supplied endpoint gap | `activeHaarCircuit_theorem_VI_14` in [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) | Same full-layer variance bound without trace-normalization or involution assumptions |
+| Earlier model with only active gates | `haarCircuit_theorem_VI_14` in [HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) | Local reverse variance discharged; endpoint gap and width bound remain inputs |
 
 The raw monomial space is deliberately larger than the refined representation
 used for the paper's explicit estimate. The project proves existence of a
@@ -50,19 +62,28 @@ complex square-integrable processes. Its mean-change and local reverse-variance
 inputs are explicit theorem parameters. Slope-to-variance and persistence are
 proved from the latter; neither is an additional assumption of the final result.
 
-The Haar-circuit theorem instead constructs the observable and sampling law.
-For fixed $m,k$, its positive constant is chosen before the global dimension,
-embeddings, observable matrices, and depth window. Continuity, square-integrability,
-feature membership, and the local inequality are derived for this model.
-The usual physical matrix choices are included, although positivity or Pauli
-conditions are not needed for the variance implication.
+The full-layer Haar theorem constructs the observable and sampling law. Each
+step contains $m$ active and $q$ inactive independent gates, ordered as inactive
+times active; both counts are fixed across depths within each process.
+The positive constant $\eta(m,k)$ is independent of $q$, global
+dimension, embeddings, observable matrices, and depth. Inactive gates remain in
+the full circuit history and may affect later depths. Continuity,
+square-integrability, feature membership, and the local inequality are derived.
 
-A modeled step contains exactly $m$ new independent gates. The reduction from a
-general spatial circuit to a fixed-size active block, including light-cone and
-inactive-gate cancellation arguments, remains outside the formalization. So do
-design/mixing arguments for the endpoint mean gap and width, the full
-stabilizing-element/open-support criteria for other ensembles, the sharper Haar
-constant, and computational quantum advantage.
+The strongest route also derives the early identity and half-gap. Its reference
+mean is a supplied complex number: it can represent the paper's Haar mean, but
+the theorem does not identify or compute a Haar average. The two scalar bounds,
+early commutation, inactive-gate commutation, and transition width are explicit
+inputs. Trace normalization and involutions are required for this route; the
+supplied-gap variant allows arbitrary observable matrices.
+
+The algebraic cancellation and tensor-factor commutation results do not supply
+a graph light cone, support propagation, an active-gate cardinality bound, or
+the geometric certificates for an arbitrary architecture. The number $q$ may
+grow across system sizes while $m,k$ stay fixed. Design convergence, mixing
+depths, the paper's Haar-mean estimate, full stabilizing-element/open-support
+criteria for other ensembles, the sharper Haar constant, and computational
+quantum advantage remain outside the proved claims.
 
 ## Manuscript provenance
 
@@ -80,6 +101,6 @@ SHA-256: 9f653514f023afd3ca37d2a05693fb8ca15749d7a870273852d772c4ea9f5a18
 
 When discussing the mathematics, cite the paper. For the machine-checked proof,
 also record the exact repository commit and declaration, such as
-`Fluctuations.haarCircuit_theorem_VI_14` or
+`Fluctuations.activeHaarCircuit_theorem_of_moment_control` or
 `Fluctuations.theorem_VI_14_family`. No publication identifier is inferred from
 the draft filename.
