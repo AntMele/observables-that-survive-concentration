@@ -4,7 +4,8 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
 for module in Probability WeightedVariance Window Main FiniteDimensionalVariance HaarSU4 \
-  LocalPolynomial ProductVariance HaarProcess QubitEmbedding HaarLocalVariance HaarCircuit; do
+  LocalPolynomial ProductVariance HaarProcess QubitEmbedding HaarLocalVariance HaarCircuit \
+  SpatialSupport MeanChange ActiveHaarCircuit; do
   bash scripts/lean-local.sh -o "Fluctuations/$module.olean" "Fluctuations/$module.lean"
 done
 bash scripts/lean-local.sh -o Fluctuations.olean Fluctuations.lean
