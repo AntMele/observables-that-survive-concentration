@@ -1,66 +1,85 @@
-# A reader’s guide to the formalization
+# Read the formalization alongside the paper
 
 [Home](../README.md) / Reader guide
 
-Read the English statement first, check its assumptions, then open the named
-Lean declaration. You can follow the mathematical argument without reading
-every supporting module.
+The paper develops one argument in three stages: **general fixed-order
+fluctuations**, a **sharper one-dimensional OTOC₁ analysis**, and a
+**classical simulation application**. Follow the same sequence here.
+The section numbers below refer to the [inspected manuscript](reference/paper-map.md#manuscript-provenance).
 
-## From the paper to the proof
+## The manuscript route
 
-| You are reading about… | Begin here | Then open… |
-| :--- | :--- | :--- |
-| The OTOC₁ fluctuation lower bound and influential gates | [Endpoint fluctuations](results/endpoint-fluctuations.md) | [OTOC1.lean](../Fluctuations/OTOC1.lean) |
-| The exact finite-depth endpoint mean | [Endpoint mean and scope](results/endpoint-fluctuations.md) | [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) |
-| The classical conditional-sampling algorithm and subexponential cost | [Classical simulation](results/classical-simulation.md) | [Simulation.lean](../Fluctuations/Simulation.lean) |
-| The general variance-window theorem VI.14 | [Spatial variance](results/spatial-variance.md) | [SpatialHaarFinal.lean](../Fluctuations/SpatialHaarFinal.lean) |
-| Smallness of the global Haar mean | [Global Haar mean](results/haar-mean.md) | [GlobalHaarMeanAllDimensions.lean](../Fluctuations/GlobalHaarMeanAllDimensions.lean) |
+| Order | In the manuscript | English guide | Final Lean entry points |
+| :--- | :--- | :--- | :--- |
+| **1. General OTOC⁽ᵏ⁾ variance** | Main §II; SM §VI, especially Theorem VI.14 | [General variance lower bound](results/01-general-otoc-variance.md) | [Main.lean](../Fluctuations/Main.lean), [SpatialHaarFinal.lean](../Fluctuations/SpatialHaarFinal.lean) |
+| **2. One-dimensional OTOC₁** | Main §III and §III A; SM §VII | [Exact mean, fluctuations, and influential gates](results/02-otoc1-fluctuations.md) | [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean), [OTOC1.lean](../Fluctuations/OTOC1.lean) |
+| **3. Classical simulation** | Main §III B; SM §VIII | [Estimator, error, and subexponential work](results/03-classical-simulation.md) | [Simulation.lean](../Fluctuations/Simulation.lean) |
 
-For exact manuscript labels, intermediate lemmas, and draft provenance, use
-the [complete paper-to-proof map](reference/paper-map.md). The
-[Lean source index](../Fluctuations/README.md) groups every module by its role
-in the argument.
+## 1. Begin with the general variance theorem
 
-## Three ways to use this companion
+The central idea is that **a change in the mean forces fluctuations**.
+Before the light cone reaches the probe, the OTOC is one. At a later depth,
+control of the mean relative to its small Haar value certifies a constant
+change. The proof finds a large one-layer mean increment, converts it into
+variance, and propagates the lower bound to subsequent depths.
 
-### Understand a result
+Read the [general result guide](results/01-general-otoc-variance.md) in this order:
 
-1. Choose a result guide above.
-2. Read **the statement and hypotheses**, including the circuit model and probability space.
-3. Open the final Lean entry point. Its theorem signature specifies the exact quantifiers.
-4. Follow the proof route in the guide, or the imports in the source, when you need a supporting ingredient.
+1. **Statement:** what Theorem VI.14 concludes and how the polynomial scaling arises.
+2. **Abstract argument:** `theorem_VI_14`, its interval form, and its family form in [Main.lean](../Fluctuations/Main.lean).
+3. **Spatial Haar realization:** [SpatialHaarFinal.lean](../Fluctuations/SpatialHaarFinal.lean), where the local Haar and geometric ingredients are proved.
+4. **Supporting ingredients:** light cones and support, the explicit local reverse-variance coefficient, and the [global Haar mean estimate](reference/haar-mean.md) from the preliminaries.
 
-### Review correctness and correspondence
+For the abstract theorem, mean change and local reverse variance are
+hypotheses. The concrete spatial Haar theorem proves the local coefficient,
+early identity, and Haar smallness; late moment control and transition width
+remain inputs. Its SU(4) model and architecture restrictions are listed in
+the guide. Hardware-ensemble applications and general graph-distance
+asymptotics in the paper are not all covered by that concrete assembly.
 
-Begin with the [reviewer guide](../REVIEW.md). It connects the
-[assumption audit](reviews/assumptions.md), the
-[endpoint review](reviews/endpoint.md), and the
-[simulation review](reviews/simulation.md).
-A compiled theorem and its correspondence to the paper are distinct checks;
-the reviews explain the mathematical correspondence and its limits.
+## 2. Then read the one-dimensional refinement
 
-### Reproduce or extend the proof
+The paper next asks which depths and gates produce the fluctuations.
+In open Haar U(4) brickwork circuits, the endpoint analysis yields a much
+stronger $\Omega(n^{-1/2})$ variance lower bound throughout a diffusive
+window around $5n/3$, with a constructed set of $\Theta(n^{3/2})$
+influential gates.
 
-Follow the [verification instructions](verification/README.md), consult the
-[recorded build and axiom audit](verification/record.txt), and use the
-[contribution guide](../CONTRIBUTING.md) for changes.
+The [OTOC₁ guide](results/02-otoc1-fluctuations.md) follows SM §VII:
+the exact finite-circuit mean, the status of the Gaussian approximation,
+the variance lower bound, and individual gate contributions. These
+fluctuation statements are uniform over trace-one states and require no
+design-convergence assumption.
 
-## Keep the theorem scopes separate
+The exact mean is proved through a finite image formula. The manuscript’s
+literal $\Psi$ regrouping, its Gaussian mean-front approximation, and the
+full exterior influence envelope remain outside the formalization; their
+status is marked where they appear in the paper’s route.
 
-| Topic | Scope to keep in mind |
-| :--- | :--- |
-| Endpoint fluctuations | Actual Haar U(4) brickwork; every trace-one input matrix; explicit even-size, even-depth, and front-window conditions. No design-convergence assumption. |
-| Classical simulation | Infinite-temperature endpoint OTOC; positive multiples of six at depth $5n/3$; joint circuit-and-sampler success probability; exact scalar arithmetic and finite-distribution draws. |
-| General spatial variance | Actual Haar SU(4) gates; explicit architecture and support conditions; fixed active/inactive counts in the assembled process. Design mean control and transition width remain inputs. |
-| Global Haar mean | Actual normalized U($D$) Haar integral; Hermitian traceless involutions and a trace-one state for the all-order estimate. This differs from the finite-depth circuit mean. |
+## 3. Finish with the classical simulation application
 
-The current results do not establish computational quantum advantage,
-finite-precision simulation or bit complexity, the manuscript’s literal
-$\Psi$ regrouping, its Gaussian mean-front approximation, or the full exterior
-variance-influence envelope. The simulation’s proved Gaussian touching-tail
-estimate is a separate statement. The general spatial pipeline’s SU(4)-to-U(4)
-Haar-law correspondence is also outside its current formal assembly.
+The [simulation guide](results/03-classical-simulation.md) follows the algorithm’s
+argument: average gates outside an enlarged eye, sample the conditional Pauli
+law, bound the error, and count the arithmetic work.
+
+The final result concerns the **infinite-temperature** endpoint OTOC, for
+positive multiples of six qubits at the critical depth $5n/3$. The probability
+is over both the Haar circuit and the sampler. The proved subexponential
+cost is in exact scalar arithmetic with finite-distribution draws; it is not
+a finite-precision or bit-complexity result. Its Gaussian touching-tail
+estimate is distinct from the unformalized mean-front approximation above.
+
+## Find a declaration, review a claim, or run Lean
+
+- **A theorem or lemma in the paper:** use the [paper-to-proof map](reference/paper-map.md), organized in the same three-part order.
+- **A supporting module:** use the [Lean source index](../Fluctuations/README.md). All 129 modules are grouped under the three main parts.
+- **Assumptions and correspondence:** begin with the [reviewer guide](../REVIEW.md); then read the [assumption audit](reviews/assumptions.md) and the independent [endpoint](reviews/endpoint.md) or [simulation](reviews/simulation.md) review.
+- **Compilation and axiom checks:** follow [verification instructions](verification/README.md) and consult the [recorded evidence](verification/record.txt).
+- **Development:** read [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+The repository formalizes the stated mathematical results. Computational
+quantum advantage itself is not established by these proofs.
 
 ---
 
-**Next:** [Choose a paper theorem](reference/paper-map.md) · [Browse the Lean modules](../Fluctuations/README.md) · [Reproduce verification](verification/README.md)
+**Start here:** [1. General OTOC⁽ᵏ⁾ variance lower bound →](results/01-general-otoc-variance.md)
