@@ -2,41 +2,70 @@
 
 [Overview](../README.md) · [Paper map](paper-mapping.md) · [Reproduction](reproduce.md)
 
-The project separates the general fluctuation argument from a concrete Haar
-model that supplies its local reverse-variance input.
+The strongest result combines algebraic locality certificates, a proved local
+Haar variance inequality, and explicit bounds controlling the endpoint means.
+The general fluctuation theorem is retained for other ensembles.
 
 ## The concrete circuit model
 
-Let $h_d=(h_{d,1},\ldots,h_{d,m})$ be a fresh block of independent normalized
-Haar SU(4) gates at step $d$. Blocks at different steps are independent. For
-unital complex star-algebra embeddings $E_{d,i}$ into a finite global matrix
-space, define the ordered product $W_d$ of the $E_{d,i}(h_{d,i})$ and set
+At every depth, sample $m$ active and $q$ inactive independent normalized Haar
+SU(4) gates. All gates in different layers are also independent. Their unital
+complex star-algebra embeddings may depend on depth. Let $A_d$ and $J_d$ be the
+ordered active and inactive products and define
 
 ```math
-U_0=I,\qquad U_{d+1}=W_dU_d,\qquad
+U_0=I,\qquad U_{d+1}=(J_dA_d)U_d,\qquad
 F_d=\mathrm{Tr}\!\left[\rho(U_d^\dagger B U_dM)^{2k}\right].
 ```
 
-[HaarSU4.lean](../Fluctuations/HaarSU4.lean) constructs the actual special
-unitary matrix group, proves compactness, and defines the normalized product
-Haar law. [HaarProcess.lean](../Fluctuations/HaarProcess.lean) constructs finite
-histories recursively, adjoining a new independent block at every step.
-[HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) defines the matrices and OTOC
-on those histories. Different depths have their own finite history spaces;
-product-measure identities relate consecutive depths.
+[ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) retains both
+blocks in the circuit matrix and its independent product history. The parameter
+$q$ is fixed within a given model but may vary across system sizes; the variance
+constant does not depend on it. The active count $m$ and order $k$ determine
+that constant.
 
-The embeddings preserve multiplication, identity, complex scalars, and adjoint,
-so they take SU(4) gates to global unitary matrices.
-[QubitEmbedding.lean](../Fluctuations/QubitEmbedding.lean) supplies the concrete
-example $A\mapsto A\otimes I_S$ for any finite spectator system $S$. The theorem
-allows arbitrary finite global dimensions and such embeddings; the matrices
-$\rho,B,M$ are unrestricted. Density matrices and Pauli observables are
-particular choices, rather than extra assumptions needed by the inequality.
+[HaarSU4.lean](../Fluctuations/HaarSU4.lean) constructs the actual compact special
+unitary group and normalized product Haar law.
+[HaarProcess.lean](../Fluctuations/HaarProcess.lean) constructs finite histories
+recursively. Different depths have their own finite history spaces, related by
+product-measure identities. The star-algebra embeddings preserve unitary gates;
+[QubitEmbedding.lean](../Fluctuations/QubitEmbedding.lean) supplies
+$C\mapsto C\otimes I_S$ on any finite spectator system.
+
+## What the locality certificate proves
+
+The full-layer theorem assumes that every possible embedded inactive gate
+commutes with $B$. Unitarity then gives
+
+```math
+J_d^\dagger BJ_d=B,\qquad
+(J_dA_d)^\dagger B(J_dA_d)=A_d^\dagger BA_d.
+```
+
+Thus, with earlier history fixed, fresh inactive gates do not affect the OTOC.
+They are integrated out without weakening the active-block variance constant.
+They are **not deleted from the circuit**: they remain in $U_{d+1}$ and can
+influence later layers.
+
+[SpatialSupport.lean](../Fluctuations/SpatialSupport.lean) also treats an
+interleaved ordered gate list. If every active factor commutes with every
+inactive factor, the factors can be regrouped as inactive times active while
+preserving the internal order of each list. If the inactive factors are unitary
+and commute with $B$, their conjugation cancels. The ordered model above does
+not need this additional cross-commutation assumption because its order is
+already specified.
+
+Separate tensor factors provide a concrete commutation certificate:
+$C\otimes I$ commutes with $I\otimes D$. These are algebraic support results.
+The project does not construct a graph light cone, propagate support through an
+arbitrary architecture, or prove that the number of active gates is bounded by
+an architecture-dependent constant. Those certificates and the chosen count
+must still be supplied for a geometric application.
 
 ## Why local reverse variance follows
 
-Fix an earlier circuit $V$ and vary only the next block $W(h)$. Its local
-observable is
+Fix the earlier full circuit $V$. After the cancellation above, only the next
+active block $W(h)$ remains in the local observable:
 
 ```math
 f_V(h)=\mathrm{Tr}\!\left[
@@ -73,12 +102,39 @@ because the embeddings preserve identity.
 local integral inequality and its genuine conditional-expectation version
 under the independent product law. [ProductVariance.lean](../Fluctuations/ProductVariance.lean)
 identifies conditioning on the first factor with averaging the fresh block.
-Thus the concrete Haar theorem does not assume the local inequality,
+Thus the full-layer theorem does not assume the local inequality,
 square-integrability, continuity, or polynomial membership as additional premises.
 
 The space used here is a larger total-degree space than the paper's more refined
 representation. This proves uniform existence of $\eta(m,k)$, not the explicit
 value $4^{-8km}$.
+
+## How the half-unit mean gap is obtained
+
+[MeanChange.lean](../Fluctuations/MeanChange.lean) proves the algebra behind the
+early-time identity. Assume $\mathrm{Tr}(\rho)=1$, $B^2=M^2=I$, and at depth $a$
+the evolved observable $U_a^\dagger BU_a$ commutes with $M$ for every history.
+Unitary conjugation preserves the involution relation. The product of two
+commuting involutions has every even power equal to $I$, so $F_a=1$ pointwise
+and $\mathbb EF_a=1$.
+
+Now provide a complex reference mean $h$ satisfying
+
+```math
+|\mathbb EF_b-h|\leq\frac14,\qquad |h|\leq\frac14.
+```
+
+The triangle inequality gives $|\mathbb EF_b|\leq1/2$, hence
+$|\mathbb EF_b-\mathbb EF_a|\geq1/2$.
+`activeHaarCircuit_theorem_of_moment_control` assembles this derivation with the
+local Haar bound and the variance-window argument below. Trace normalization
+and the involution relations are needed for this route; the theorem with a
+supplied endpoint gap permits arbitrary $\rho,B,M$.
+
+The reference is a supplied complex number. In the paper it is chosen as the
+Haar mean. The theorem does not compute that mean, prove its smallness, or
+derive the approximation bound from a unitary-design distance. It proves the
+half-gap once those scalar estimates and early commutation are certified.
 
 ## From a mean change to a variance window
 
@@ -92,7 +148,7 @@ the local assumption says that with $M_d=\mathbb E[F_{d+1}\mid\mathcal G_d]$,
 
 almost everywhere, with one common $\eta>0$.
 
-The remaining argument is the same for both routes:
+The following argument is shared by the circuit and general-process results:
 
 1. An endpoint gap $|m_b-m_a|\geq\Delta$ with $a<b$ forces one increment of
    size at least $\Delta/(b-a)$.
@@ -120,28 +176,34 @@ final probabilistic results.
 
 | Declaration | Scope |
 | --- | --- |
+| `activeHaarCircuit_theorem_of_moment_control` in [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) | Full layers; derives the half-gap from early commutation, trace normalization, involutions, and the two quarter-unit mean bounds. |
+| `activeHaarCircuit_theorem_VI_14` in [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) | Full layers with inactive-gate commutation certificates and a supplied half-unit gap. |
 | `haarCircuit_theorem_VI_14` in [HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) | Actual independent Haar SU(4) circuit blocks; local reverse variance is proved. |
 | `haarLocalOTOC_conditional_reverseVariance` in [HaarLocalVariance.lean](../Fluctuations/HaarLocalVariance.lean) | The conditional local inequality for a continuous earlier circuit and an independent Haar block. |
 | `history_transition_window` in [HaarProcess.lean](../Fluctuations/HaarProcess.lean) | Arbitrary nonnegative mean gap for continuous history observables in one fixed local feature space. |
 | `transition_window` in [Main.lean](../Fluctuations/Main.lean) | General complex square-integrable processes with mean change and local reverse variance supplied. |
 | `theorem_VI_14`, `theorem_VI_14_interval`, `theorem_VI_14_family` in [Main.lean](../Fluctuations/Main.lean) | The uniform bound, explicit finite interval, and polynomial-family quantifiers for the general theorem. |
 
-The Haar-circuit theorem chooses $\eta$ before the global matrix index type,
+The full-layer theorem chooses $\eta$ before $q$, the global matrix index type,
 embeddings, and observable matrices. The same constant therefore applies as
-system size varies while $m,k$ stay fixed. With $P=p(n)$ and fixed $R$, the
+system size and the inactive-gate count vary while $m,k$ stay fixed. With $P=p(n)$ and fixed $R$, the
 prefactor $c=\eta\kappa^R/4$ is positive and independent of $n$. Allowing $m$ or
 $R$ to grow with $n$ does not give that uniform conclusion automatically.
 
 ## What still connects this model to the paper
 
-The model adds exactly $m$ independent gates per step. Reducing a general
-spatial architecture or a layer containing a growing number of gates to a
-fixed-size active block requires light-cone and inactive-gate cancellation
-arguments that are not formalized here. The mean gap and width bound are also
-inputs: this project does not prove design convergence, mixing depths, or the
-paper's Haar-average estimates that establish them.
+The algebraic cancellation and mean-gap deduction are formalized. Applying them
+to a particular spatial architecture still requires the inactive-gate and
+early-time commutation certificates, a suitable active/inactive decomposition,
+and a system-size-independent active count. Tensor-factor commutation and the
+interleaved-list theorem supply useful pieces, but there is no general graph
+support-propagation or light-cone cardinality theorem here.
+The identification of an architecture's gate coordinates with the grouped
+product sampling law also remains to be supplied for that architecture.
 
-The full stabilizing-element/open-support criteria for other ensembles, the
-sharper numerical Haar constant, the paper's other results, and computational
-quantum advantage remain outside the proved claims. The general theorem is
-available for those ensembles once its stated hypotheses are supplied.
+The late-time moment error, reference-mean bound, and transition-width bound
+are inputs. The project does not prove design convergence, mixing depths, or
+the paper's Haar-average estimates. The full stabilizing-element/open-support
+criteria for other ensembles, the sharper numerical Haar constant, the paper's
+other results, and computational quantum advantage also remain outside the
+proved claims.
