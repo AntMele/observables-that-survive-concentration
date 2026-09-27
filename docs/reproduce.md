@@ -4,11 +4,13 @@
 [Paper-to-code map](paper-mapping.md)
 
 This guide checks the formal statements in the repository, including the
-variance lower bound corresponding to Theorem VI.14 and its concrete Haar SU(4)
-extension. The general theorem assumes mean change and local reverse variance.
-The Haar-circuit theorem proves the local condition for its fixed-size independent
-gate blocks and retains the endpoint-gap and width assumptions. The
-[paper mapping](paper-mapping.md) records the precise scope of each route.
+variance lower bound corresponding to Theorem VI.14 and its full-layer Haar
+SU(4) extension. The strongest circuit theorem proves the local variance
+condition and derives the half-unit mean gap from commutation certificates,
+trace normalization, involutions, and two supplied scalar mean estimates. The
+width bound is also an input. The general theorem instead assumes mean change
+and local reverse variance. The [paper mapping](paper-mapping.md) records the
+precise scope of each route.
 
 ## First-time setup
 
@@ -40,8 +42,10 @@ dependencies. It exits with an error if a build or audit step fails.
 A successful run reports a completed build and ends with:
 
 ```text
-Axiom audit passed for all 24 declarations: only propext, Classical.choice, and Quot.sound are allowed.
+Axiom audit passed for all 42 declarations: only propext, Classical.choice, and Quot.sound are allowed.
 ```
+
+The declaration count is determined by the committed audit list.
 
 To read the statements and axiom reports again after a successful build:
 
@@ -67,11 +71,12 @@ dependencies is a separate change that requires a fresh verification run.
 ## What the axiom audit checks
 
 [`scripts/Audit.lean`](../scripts/Audit.lean) displays definitions and theorem
-types, then uses `#print axioms` on all listed public declarations. The current
-24-declaration audit covers the original probability/window results and the new
-finite-dimensional bound, actual Haar sampling, matrix polynomial membership,
-physical embeddings, product conditioning, local Haar inequalities, history
-processes, and concrete circuit theorem.
+types, then uses `#print axioms` on all listed public declarations. These cover
+the probability/window results, finite-dimensional bound, actual Haar sampling,
+matrix polynomial membership, physical embeddings, product conditioning, local
+Haar inequalities, and circuit histories. The full-layer extension adds
+inactive-gate cancellation, the mean-gap argument, and the resulting circuit
+theorems. Inspect the committed list for the exact declarations being checked.
 
 Each report includes the declaration's transitive axiom dependencies, including
 those reached through supporting lemmas. The
@@ -88,17 +93,24 @@ the paper remains a separate mathematical check.
 
 ## Recorded verification and current status
 
-The [Haar-extension GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
+The [earlier Haar-model GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
 passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`, including the
-concrete circuit theorem and the enforced 24-declaration axiom audit. Its
+concrete fixed-block circuit theorem and its enforced axiom audit. Its
 verification job took **4 minutes 55 seconds**; the full run took
-**5 minutes 14 seconds**. This is evidence for that exact source revision.
+**5 minutes 14 seconds**. This is evidence for that exact source revision,
+which predates `SpatialSupport.lean`, `MeanChange.lean`, and
+`ActiveHaarCircuit.lean`.
 
-The current [local verification record](verification.txt) reports a successful
-full source rebuild on **2026-09-27**, using `bash scripts/check-local.sh`, with
-no warnings or errors. All twelve library modules and the top-level import
-compiled, and the enforced 24-declaration axiom audit passed. This record covers
-the Haar extension, including `haarCircuit_theorem_VI_14`.
+The combined local check of the full-layer and mean-change extensions passed
+on **2026-09-27** with `bash scripts/check-local.sh`: all **15 library modules**
+and the top-level import compiled, and the enforced **42-declaration axiom
+audit** passed with no warnings or errors. The
+[verification record](verification.txt) contains the command, timestamp,
+theorem statements, and axiom reports, including
+`activeHaarCircuit_theorem_of_moment_control`.
+
+The new extension's publication CI result is pending; the successful local
+check and the older GitHub run are separate pieces of evidence.
 
 For historical reference, the earlier [GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
 passed for commit `4d4a4d4a1ec88d9c3618e887b54ca2be8c10e175` in
