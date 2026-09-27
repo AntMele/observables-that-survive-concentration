@@ -11,6 +11,8 @@ statements, in addition to every main theorem's kernel axiom dependencies. -/
 #check @Fluctuations.haarLocalOTOC_reverseVariance_identity
 #check @Fluctuations.haarLocalOTOC_conditional_reverseVariance
 #check @Fluctuations.haarCircuit_theorem_VI_14
+#check @Fluctuations.activeHaarCircuit_theorem_VI_14
+#check @Fluctuations.activeHaarCircuit_theorem_of_moment_control
 
 #print axioms Fluctuations.complex_total_variance
 #print axioms Fluctuations.norm_mean_sq_le_secondMoment
@@ -36,3 +38,21 @@ statements, in addition to every main theorem's kernel axiom dependencies. -/
 #print axioms Fluctuations.history_transition_window
 #print axioms Fluctuations.history_theorem_VI_14
 #print axioms Fluctuations.haarCircuit_theorem_VI_14
+#print axioms Fluctuations.theorem_VI_14_of_step_bounds
+#print axioms Fluctuations.ordered_product_inactive_mul_active
+#print axioms Fluctuations.haarBlockMatrix_mem_unitary
+#print axioms Fluctuations.haarBlockMatrix_inactive_conjugation
+#print axioms Fluctuations.matrix_conjugate_layer_eq_active
+#print axioms Fluctuations.embedded_su4_layer_eq_active
+#print axioms Fluctuations.disjoint_tensor_factors_commute
+#print axioms Fluctuations.preLightCone_otoc_eq_one
+#print axioms Fluctuations.integral_preLightCone_otoc_eq_one
+#print axioms Fluctuations.mean_gap_of_error_budget
+#print axioms Fluctuations.mean_gap_one_half
+#print axioms Fluctuations.activeHaarCircuitMatrix_mem_unitary
+#print axioms Fluctuations.activeHaarCircuitOTOC_section
+#print axioms Fluctuations.activeHaarCircuit_localReverseVariance
+#print axioms Fluctuations.activeHaarCircuit_step_bounds
+#print axioms Fluctuations.activeHaarCircuit_early_mean
+#print axioms Fluctuations.activeHaarCircuit_theorem_VI_14
+#print axioms Fluctuations.activeHaarCircuit_theorem_of_moment_control
