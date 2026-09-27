@@ -1,17 +1,24 @@
-# Endpoint OTOC fluctuations
+# 2. One-dimensional OTOC₁: mean and fluctuations
 
-[Home](../../README.md) / [Reader guide](../README.md) / Endpoint fluctuations
+[Home](../../README.md) / [Reader guide](../README.md) / 2. One-dimensional OTOC₁
 
-The entry point is [OTOC1.lean](../../Fluctuations/OTOC1.lean). It formalizes the
-paper's **macroscopic origin of OTOC fluctuations** theorem: the variance
-lower bound throughout a diffusive front window, and the many individual
-gate contributions that produce it. The actual finite-circuit Haar mean is
-proved in [BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean).
-See the [earlier independent scope review](../reviews/endpoint.md) for these
-fluctuation and mean results. It predates the subsequent
-[classical simulation extension](classical-simulation.md).
+**Paper:** main text §III and §III A → SM §VII. The fluctuation statements
+are `thm:main-otoc1-variance-front-window` and
+`thm:endpoint-otoc1-variance-front-window`.
 
-## The precise mathematical statement
+After the [general fixed-order theorem](01-general-otoc-variance.md), the paper
+sharpens the picture in one dimension: it identifies the front window and
+constructs macroscopically many gates that contribute to the variance.
+This guide follows the appendix from the exact mean to the variance and
+individual gate contributions.
+
+**Read:** [Exact mean](#the-actual-finite-circuit-mean) · [Gaussian approximation status](#gaussian-mean-front-status) · [Variance](#variance-lower-bound) · [Influential gates](#which-gates-contribute)
+
+The final fluctuation entry point is [OTOC1.lean](../../Fluctuations/OTOC1.lean).
+The [independent endpoint review](../reviews/endpoint.md) covers the
+fluctuation and exact-mean results.
+
+## Circuit and observable
 
 Take an open chain of even length $n$ and an even depth $d$. Odd layers act
 on $(1,2),(3,4),\ldots$; even layers act on $(2,3),(4,5),\ldots$. Every
@@ -21,6 +28,37 @@ The chronological product is $U_d=L_1\cdots L_d$, and
 ```math
 X_\rho(U_d)=\mathrm{Tr}\!\left[\rho(U_d^\dagger Z_1U_dZ_n)^2\right].
 ```
+
+## The actual finite-circuit mean
+
+[BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean)
+identifies the quantum Haar integral with the finite reflecting endpoint walk.
+For $n=2(r+1)$ and positive even depth $d=2T$,
+
+```math
+\mathbb E X_\rho=1-\frac{16}{15}(Q_r^{T-1})_{r,0}.
+```
+
+Here `endpointMarkov r` is the proved matrix on the $r+1$ endpoint cells,
+including both reflecting boundaries. The depth-zero mean is $1$; for two
+qubits, every positive even depth has mean $-1/15$. These are actual
+quantum-circuit identities, uniform over trace-one $\rho$.
+
+`brickworkEndpointOTOC_haar_mean_images` expands the mean into an exact
+finite binomial-image sum, using [EndpointMean.lean](../../Fluctuations/EndpointMean.lean).
+The actual pre-light-cone mean is also proved equal to $1$. The image formula
+is an alternative exact expression; its algebraic regrouping into the
+manuscript's compressed $\Psi_d$ display is not formalized.
+
+## Gaussian mean-front status
+
+SM §VII next gives a Gaussian approximation to the mean with error
+$5/\sqrt n$. That approximation, and the literal regrouping of the exact
+mean into the manuscript’s $\Psi$ expression, are not formalized here.
+The proved variance lower bound below uses independently established
+front-window estimates; it does not assume this Gaussian approximation.
+
+## Variance lower bound
 
 For any fixed $C\ge0$, assume
 
@@ -107,52 +145,6 @@ $(\ell,t)=(2(a+1),2(s+1))$. Its independent sample coordinate is
 $s(2r+1)+(r+1)+a$. The eye conditions prove that a complete odd layer lies
 after every selected gate.
 
-## The actual finite-circuit mean
-
-[BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean)
-identifies the quantum Haar integral with the finite reflecting endpoint walk.
-For $n=2(r+1)$ and positive even depth $d=2T$,
-
-```math
-\mathbb E X_\rho=1-\frac{16}{15}(Q_r^{T-1})_{r,0}.
-```
-
-Here `endpointMarkov r` is the proved matrix on the $r+1$ endpoint cells,
-including both reflecting boundaries. The depth-zero mean is $1$; for two
-qubits, every positive even depth has mean $-1/15$. These are actual
-quantum-circuit identities, uniform over trace-one $\rho$.
-
-`brickworkEndpointOTOC_haar_mean_images` expands the mean into an exact
-finite binomial-image sum, using [EndpointMean.lean](../../Fluctuations/EndpointMean.lean).
-The actual pre-light-cone mean is also proved equal to $1$. The image formula
-is an alternative exact expression; its algebraic regrouping into the
-manuscript's compressed $\Psi_d$ display is not formalized.
-
-## Classical simulation at infinite temperature
-
-[Simulation.lean](../../Fluctuations/Simulation.lean) additionally formalizes
-the paper's classical estimator at $n=6(s+1)$ and $d=10(s+1)=5n/3$.
-Here the state is fixed to $I/2^n$, giving the normalized trace
-$F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$.
-The algorithm retains an enlarged eye of realized gates and samples the
-conditional Pauli distribution while storing a single compressed coherent
-vector. Its success probability is at least $1-\delta$ at additive error
-$\varepsilon$, over both the Haar circuit and the algorithmic randomness.
-
-The error estimate, exact sampler law, and support and operation counts are
-proved. The chosen radius and sample count give subexponential arithmetic
-cost. For $\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive
-natural exponents, `otoc1_subexponential_simulation_inversePolynomial`
-combines accuracy at every size with $\log(\mathrm{work})/n\to0$ for the
-same sampler. The exact scalar-arithmetic count (real or complex) covers sampling and readout,
-including transfer-matrix construction, with exact finite-distribution draws.
-It excludes indexing, stored-coefficient reads, and schedule and parameter
-preprocessing; an extracted numerical executable and finite-precision or
-bit-complexity analyses are not supplied. Read the
-[simulation guide](classical-simulation.md) for the precise theorem and operation
-model. The simulation guarantee is specifically infinite-temperature; the
-fluctuation theorem on this page holds for every trace-one state.
-
 ## Scope of the endpoint formalization
 
 The Gaussian mean approximation with error $5/\sqrt n$ and the full spatial
@@ -163,8 +155,16 @@ from that full influence-envelope claim. The literal $\Psi_d$ regrouping
 also remains outside the formalization, as described above.
 
 The higher-order spatial theorem and its design-convergence input remain
-documented separately in the [general mathematical guide](spatial-variance.md).
+documented separately in the [general mathematical guide](01-general-otoc-variance.md).
+## Next in the paper: classical simulation
+
+The paper then uses the one-dimensional structure to obtain a
+subexponential classical estimator at infinite temperature. Continue to
+[the simulation guide](03-classical-simulation.md) for its proved averaging
+error, sampler law, joint success probability, and arithmetic cost.
 
 ---
 
-**Next:** [Classical simulation](classical-simulation.md) · [Independent endpoint review](../reviews/endpoint.md) · [Paper map](../reference/paper-map.md)
+**Previous:** [1. General OTOC⁽ᵏ⁾ variance](01-general-otoc-variance.md) · **Next:** [3. Classical simulation →](03-classical-simulation.md)
+
+[Independent endpoint review](../reviews/endpoint.md) · [Paper map](../reference/paper-map.md)
