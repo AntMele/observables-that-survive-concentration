@@ -121,10 +121,10 @@ the influence of gates outside that set.
 | Local Haar integration | Full mixed Pauli covariance, uniform nonidentity mixing, $\mathbb EA=4/5$, $\sigma_A^2>0$ | [PauliLocalHaar.lean](../../Fluctuations/PauliLocalHaar.lean), [LocalPauliBalance.lean](../../Fluctuations/LocalPauliBalance.lean) |
 | Quantum to classical | Actual Haar integrals and fixed-gate conditional integrals equal their derived Pauli recurrences | [PauliCircuitBridge.lean](../../Fluctuations/PauliCircuitBridge.lean), [PauliFrozenCircuit.lean](../../Fluctuations/PauliFrozenCircuit.lean) |
 | Endpoint walk | Forward shock law and universal endpoint evolution, including correlated distributions after a fixed gate | [PauliBrickwork.lean](../../Fluctuations/PauliBrickwork.lean), [EndpointLumpability.lean](../../Fluctuations/EndpointLumpability.lean) |
+| Actual mean | Exact quantum Haar mean equals the finite endpoint-chain and binomial-image expressions | [BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean) |
 | Conditional mean | Exact $-(16/15)PF(A-4/5)$ deviation from the full mean, with the entire physical schedule included | [PauliBrickworkConditional.lean](../../Fluctuations/PauliBrickworkConditional.lean), [BrickworkEndpointOTOC.lean](../../Fluctuations/BrickworkEndpointOTOC.lean) |
 | Propagation | Exact finite-walk ballot formulas and positive binomial lower bounds derived from Stirling | [EndpointPropagation.lean](../../Fluctuations/EndpointPropagation.lean), [BinomialLocalBounds.lean](../../Fluctuations/BinomialLocalBounds.lean), [EndpointFrontLower.lean](../../Fluctuations/EndpointFrontLower.lean) |
 | Count and sum | Actual eye cardinality and the independent-coordinate variance sum | [EndpointPhysicalEye.lean](../../Fluctuations/EndpointPhysicalEye.lean), [CoordinateAverages.lean](../../Fluctuations/CoordinateAverages.lean) |
-| Actual mean | Exact quantum Haar mean equals the finite endpoint-chain and binomial-image expressions | [BrickworkEndpointMean.lean](../../Fluctuations/BrickworkEndpointMean.lean) |
 | Final theorem | Explicit uniform variance and individual-influence lower bounds | [OTOC1.lean](../../Fluctuations/OTOC1.lean) |
 
 The conditional quantum proof retains off-diagonal Pauli moments created
@@ -156,6 +156,7 @@ also remains outside the formalization, as described above.
 
 The higher-order spatial theorem and its design-convergence input remain
 documented separately in the [general mathematical guide](01-general-otoc-variance.md).
+
 ## Next in the paper: classical simulation
 
 The paper then uses the one-dimensional structure to obtain a
