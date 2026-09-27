@@ -1,14 +1,13 @@
 # Reproduce the Lean verification
 
-[Repository overview](../README.md) · [Mathematical guide](guide.md) ·
-[Paper-to-code map](paper-mapping.md)
+[Home](../../README.md) / [Reader guide](../README.md) / Verification
 
 This guide builds the library and checks the transitive axiom dependencies
-of the listed principal results. Start with the [OTOC(1) guide](otoc1.md)
-and [OTOC1.lean](../Fluctuations/OTOC1.lean) for the endpoint variance theorem.
-For classical simulation, start with the [simulation guide](simulation.md)
-and [Simulation.lean](../Fluctuations/Simulation.lean).
-The [paper mapping](paper-mapping.md) distinguishes this unconditional
+of the listed principal results. Start with the [OTOC(1) guide](../results/endpoint-fluctuations.md)
+and [OTOC1.lean](../../Fluctuations/OTOC1.lean) for the endpoint variance theorem.
+For classical simulation, start with the [simulation guide](../results/classical-simulation.md)
+and [Simulation.lean](../../Fluctuations/Simulation.lean).
+The [paper mapping](../reference/paper-map.md) distinguishes this unconditional
 brickwork result from the general spatial theorem, whose design-convergence
 and transition-width bounds remain external inputs.
 
@@ -61,16 +60,16 @@ that also enforces the allowlist.
 
 | Component | Version or revision | Recorded in |
 | --- | --- | --- |
-| Lean | `leanprover/lean4:v4.24.0` | [`lean-toolchain`](../lean-toolchain) |
-| Mathlib | `v4.24.0`, commit `f897ebcf72cd16f89ab4577d0c826cd14afaafc7` | [`lakefile.toml`](../lakefile.toml), [`lake-manifest.json`](../lake-manifest.json) |
-| Transitive packages | Exact Git revisions | [`lake-manifest.json`](../lake-manifest.json) |
+| Lean | `leanprover/lean4:v4.24.0` | [`lean-toolchain`](../../lean-toolchain) |
+| Mathlib | `v4.24.0`, commit `f897ebcf72cd16f89ab4577d0c826cd14afaafc7` | [`lakefile.toml`](../../lakefile.toml), [`lake-manifest.json`](../../lake-manifest.json) |
+| Transitive packages | Exact Git revisions | [`lake-manifest.json`](../../lake-manifest.json) |
 
 Keep the committed toolchain and manifest when reproducing a result. Updating
 dependencies is a separate change that requires a fresh verification run.
 
 ## What the axiom audit checks
 
-[`scripts/Audit.lean`](../scripts/Audit.lean) displays definitions and theorem
+[`scripts/Audit.lean`](../../scripts/Audit.lean) displays definitions and theorem
 types, then uses `#print axioms` on all listed public declarations. These cover
 the probability/window results, finite-dimensional bound, actual Haar sampling,
 matrix polynomial membership, physical embeddings, product conditioning, local
@@ -88,14 +87,14 @@ statement. Inspect the committed list for the exact declarations being checked.
 
 Each report includes the declaration's transitive axiom dependencies, including
 those reached through supporting lemmas. The
-[audit checker](../scripts/check-axioms.py) requires exactly the declared set of
+[audit checker](../../scripts/check-axioms.py) requires exactly the declared set of
 reports and permits only Lean's standard `propext`, `Classical.choice`, and
 `Quot.sound`. It rejects `sorryAx`, any additional axiom, and missing or duplicate
 reports. Explicit mathematical assumptions appear in the theorem statements;
 they are not new global axioms.
 
 The portable build checks the library through Lake. The offline helper
-uses [module-order.py](../scripts/module-order.py) to discover every
+uses [module-order.py](../../scripts/module-order.py) to discover every
 `Fluctuations/*.lean` module and compile them in topological import order,
 then checks the root module and runs the same enforced audit. This includes
 supporting modules beyond the final theorem's direct imports.
@@ -106,7 +105,7 @@ the paper remains a separate mathematical check.
 
 ## Verification evidence
 
-The [verification record](verification.txt) records the latest complete local
+The [verification record](record.txt) records the latest complete local
 build, enforced axiom audit, and source fingerprints. Local development uses
 the same pinned Lean and Mathlib versions through `scripts/check-local.sh`.
 The standard `scripts/check.sh` route uses Lake and is run independently by
@@ -145,3 +144,17 @@ the clone-and-check procedure above is the standard reproduction route.
 - **Clone or Actions access is denied:** while the repository is private, sign
   in with a GitHub account that has access. Repository visibility does not
   affect the verification commands after the source has been obtained.
+
+---
+
+**Related:** [Verification record](record.txt) · [Review guide](../../REVIEW.md) · [Contributing](../../CONTRIBUTING.md)
+
+## Documentation reorganization
+
+The recorded build above predates the reader-focused documentation layout.
+The record is preserved verbatim, so document paths inside it refer to that
+verified revision. Use the [reader guide](../README.md) to find current result
+guides, the [reviewer guide](../../REVIEW.md) for review notes, and the
+[paper-to-code map](../reference/paper-map.md) for manuscript correspondence.
+The reorganization changes documentation only; Lean sources, build scripts,
+and pinned dependencies retain the recorded hashes.
