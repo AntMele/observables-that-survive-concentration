@@ -3,19 +3,10 @@
 set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_ROOT"
-for module in Probability WeightedVariance Window Main FiniteDimensionalVariance HaarSU4 \
-  LocalPolynomial ProductVariance HaarProcess QubitEmbedding HaarLocalVariance HaarCircuit \
-  SpatialSupport MeanChange ActiveHaarCircuit HaarEvaluationBound BalancedHaarFeatures \
-  ExplicitHaarVariance TensorSupport PatchEmbedding CircuitGeometry SpatialHaarGeometry \
-  GlobalHaarMean GlobalHaarStateIndependence GlobalHaarFirstOrder HaarMeanCombinatorics \
-  WeingartenGramBounds UnitaryEquivariantClassification GlobalHaarFirstOrderValue \
-  GlobalHaarPauliMean HaarTensorInvariants TensorUnitaryExtension HaarTensorProjection \
-  TensorPermutationTrace HaarWeingartenProjection HaarOTOCTraceIdentity \
-  GlobalHaarMeanBound GlobalHaarUnitBound GlobalHaarMeanAllDimensions \
-  ExplicitHaarCircuit SpatialHaarTheorem SpatialHaarFirstOrder \
-  SpatialHaarFinal; do
+module_order="$(python3 scripts/module-order.py)"
+while IFS= read -r module; do
   bash scripts/lean-local.sh -o "Fluctuations/$module.olean" "Fluctuations/$module.lean"
-done
+done <<< "$module_order"
 bash scripts/lean-local.sh -o Fluctuations.olean Fluctuations.lean
 audit_log="$(mktemp)"
 trap 'rm -f "$audit_log"' EXIT
