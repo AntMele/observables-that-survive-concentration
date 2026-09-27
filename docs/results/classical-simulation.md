@@ -1,13 +1,13 @@
 # Classical simulation of the endpoint OTOC
 
-[Overview](../README.md) · [OTOC(1) fluctuations](otoc1.md) · [Paper map](paper-mapping.md) · [Reproduction](reproduce.md)
+[Home](../../README.md) / [Reader guide](../README.md) / Classical simulation
 
 This page explains the formalization of the paper's theorem
 `thm:endpoint-sim-otoc1-runtime`. The assembled statements are
 [`otoc1_subexponential_simulation` and
-`otoc1_subexponential_simulation_inversePolynomial`](../Fluctuations/Simulation.lean).
-See the [independent review](simulation-review.md) for an English translation
-and comparison with the manuscript, and the [verification record](verification.txt)
+`otoc1_subexponential_simulation_inversePolynomial`](../../Fluctuations/Simulation.lean).
+See the [independent review](../reviews/simulation.md) for an English translation
+and comparison with the manuscript, and the [verification record](../verification/record.txt)
 for the checked source revision.
 
 ## The statement and its scope
@@ -140,21 +140,25 @@ bound of the form
 
 | Step | Main source |
 | --- | --- |
-| Complete accuracy/work theorem and combined subexponential corollary | [Simulation.lean](../Fluctuations/Simulation.lean) |
-| Actual trace equals a Pauli sign average | [SimulationTrace.lean](../Fluctuations/SimulationTrace.lean) |
-| Normalized sampler, including zero-weight branches | [SimulationSampler.lean](../Fluctuations/SimulationSampler.lean) |
-| Full local Haar covariance and mixed-circuit correctness | [SimulationSamplerCovariance.lean](../Fluctuations/SimulationSamplerCovariance.lean), [SimulationMixedCircuit.lean](../Fluctuations/SimulationMixedCircuit.lean) |
-| Exact conditional sign expectation | [SimulationMixedCircuitOTOC.lean](../Fluctuations/SimulationMixedCircuitOTOC.lean) |
-| Forward and backward gate perturbations | [SimulationLocalCoordinate.lean](../Fluctuations/SimulationLocalCoordinate.lean), [SimulationBackwardInfluence.lean](../Fluctuations/SimulationBackwardInfluence.lean) |
-| Exact finite binomial and reflecting-chain tails | [SimulationTailBinomial.lean](../Fluctuations/SimulationTailBinomial.lean), [SimulationEndpointTail.lean](../Fluctuations/SimulationEndpointTail.lean) |
-| Physical prefix/suffix and Haar expected touching mass | [SimulationPrefixBridge.lean](../Fluctuations/SimulationPrefixBridge.lean), [SimulationTailReflection.lean](../Fluctuations/SimulationTailReflection.lean), [SimulationExpectedTouch.lean](../Fluctuations/SimulationExpectedTouch.lean) |
-| Actual partial integration and telescoping error | [SimulationAveraging.lean](../Fluctuations/SimulationAveraging.lean), [SimulationCircuitAverage.lean](../Fluctuations/SimulationCircuitAverage.lean) |
-| Finite output law and joint probability space | [SimulationSamplingProbability.lean](../Fluctuations/SimulationSamplingProbability.lean), [SimulationSamplingKernel.lean](../Fluctuations/SimulationSamplingKernel.lean), [SimulationJointProbability.lean](../Fluctuations/SimulationJointProbability.lean) |
-| Physical outside-first law equals the accuracy kernel | [SimulationPhysicalLaw.lean](../Fluctuations/SimulationPhysicalLaw.lean) |
-| Exact small-array update formulas and entry counts | [SimulationCompressedOperations.lean](../Fluctuations/SimulationCompressedOperations.lean) |
-| Physical gate coordinates, causal exclusions and complete eye bias | [SimulationGateCoordinates.lean](../Fluctuations/SimulationGateCoordinates.lean), [SimulationEyeError.lean](../Fluctuations/SimulationEyeError.lean) |
-| Width, generated operation counts, subexponential limit | [SimulationWidth.lean](../Fluctuations/SimulationWidth.lean), [SimulationGeometryCost.lean](../Fluctuations/SimulationGeometryCost.lean), [SimulationAsymptotics.lean](../Fluctuations/SimulationAsymptotics.lean) |
+| Complete accuracy/work theorem and combined subexponential corollary | [Simulation.lean](../../Fluctuations/Simulation.lean) |
+| Actual trace equals a Pauli sign average | [SimulationTrace.lean](../../Fluctuations/SimulationTrace.lean) |
+| Normalized sampler, including zero-weight branches | [SimulationSampler.lean](../../Fluctuations/SimulationSampler.lean) |
+| Full local Haar covariance and mixed-circuit correctness | [SimulationSamplerCovariance.lean](../../Fluctuations/SimulationSamplerCovariance.lean), [SimulationMixedCircuit.lean](../../Fluctuations/SimulationMixedCircuit.lean) |
+| Exact conditional sign expectation | [SimulationMixedCircuitOTOC.lean](../../Fluctuations/SimulationMixedCircuitOTOC.lean) |
+| Forward and backward gate perturbations | [SimulationLocalCoordinate.lean](../../Fluctuations/SimulationLocalCoordinate.lean), [SimulationBackwardInfluence.lean](../../Fluctuations/SimulationBackwardInfluence.lean) |
+| Exact finite binomial and reflecting-chain tails | [SimulationTailBinomial.lean](../../Fluctuations/SimulationTailBinomial.lean), [SimulationEndpointTail.lean](../../Fluctuations/SimulationEndpointTail.lean) |
+| Physical prefix/suffix and Haar expected touching mass | [SimulationPrefixBridge.lean](../../Fluctuations/SimulationPrefixBridge.lean), [SimulationTailReflection.lean](../../Fluctuations/SimulationTailReflection.lean), [SimulationExpectedTouch.lean](../../Fluctuations/SimulationExpectedTouch.lean) |
+| Actual partial integration and telescoping error | [SimulationAveraging.lean](../../Fluctuations/SimulationAveraging.lean), [SimulationCircuitAverage.lean](../../Fluctuations/SimulationCircuitAverage.lean) |
+| Finite output law and joint probability space | [SimulationSamplingProbability.lean](../../Fluctuations/SimulationSamplingProbability.lean), [SimulationSamplingKernel.lean](../../Fluctuations/SimulationSamplingKernel.lean), [SimulationJointProbability.lean](../../Fluctuations/SimulationJointProbability.lean) |
+| Physical outside-first law equals the accuracy kernel | [SimulationPhysicalLaw.lean](../../Fluctuations/SimulationPhysicalLaw.lean) |
+| Exact small-array update formulas and entry counts | [SimulationCompressedOperations.lean](../../Fluctuations/SimulationCompressedOperations.lean) |
+| Physical gate coordinates, causal exclusions and complete eye bias | [SimulationGateCoordinates.lean](../../Fluctuations/SimulationGateCoordinates.lean), [SimulationEyeError.lean](../../Fluctuations/SimulationEyeError.lean) |
+| Width, generated operation counts, subexponential limit | [SimulationWidth.lean](../../Fluctuations/SimulationWidth.lean), [SimulationGeometryCost.lean](../../Fluctuations/SimulationGeometryCost.lean), [SimulationAsymptotics.lean](../../Fluctuations/SimulationAsymptotics.lean) |
 
 All objects above are definitions or proved statements. Intermediate lemmas
 may expose assumptions that later physical-circuit lemmas discharge; the
 final theorem is the place to inspect the remaining scientific assumptions.
+
+---
+
+**Next:** [Independent simulation review](../reviews/simulation.md) · [Endpoint fluctuations](endpoint-fluctuations.md) · [Reproduce the checks](../verification/README.md)
