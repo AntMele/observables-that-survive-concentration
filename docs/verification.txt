@@ -1,36 +1,65 @@
-Complete spatial Haar variance and global Haar mean verification
-Completed UTC: 2026-09-27T18:24:20+00:00
+Complete OTOC1, spatial Haar variance, and global Haar mean verification
+Completed UTC: 2026-09-27T19:53:51+00:00
 Command: bash scripts/check-local.sh
 Lean: 4.24.0
 Mathlib: v4.24.0 (f897ebcf72cd16f89ab4577d0c826cd14afaafc7)
 Result: PASS; exit code 0; no warnings or errors
-Library: all 43 modules plus the top-level import compiled
-Axiom audit: all 132 listed declarations passed the enforced allowlist
+Library: all 87 modules plus the top-level import compiled
+Axiom audit: all 331 listed declarations passed the enforced allowlist
 Allowed axioms: propext, Classical.choice, Quot.sound
 
-Final spatial theorem: Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control
-Actual all-dimension mean bound: Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions
-Exact local coefficient: Fluctuations.haarLocalOTOC_explicit_reverseVariance_identity
+Concrete OTOC1 variance: Fluctuations.otoc1_endpoint_variance_lower
+Concrete influential gates: Fluctuations.otoc1_many_influential_gates
+Actual conditional mean: Fluctuations.brickworkEndpointOTOC_conditional_mean
+Actual endpoint Haar mean: Fluctuations.brickworkEndpointOTOC_haar_mean
+Positive constant: Fluctuations.endpointInfluenceConstant_pos
+General spatial theorem: Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control
+All-dimension global mean bound: Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions
+Exact SU(4) local coefficient: Fluctuations.haarLocalOTOC_explicit_reverseVariance_identity
 
-The all-dimension Haar bound is 2*((2*k)!)^3/D^2 for k>0,
+OTOC1: actual independent Haar U(4) gates in the open brickwork circuit,
+even n,d, C>=0, sqrt(n)>=12(C+2), |d-5n/3|<=C*sqrt(n), Tr(rho)=1.
+Proves Var(X)>=b_C/(24*sqrt(n)) with b_C>0, and a concrete set of
+Theta(n^(3/2)) gates, each with conditional-mean variance >= b_C/n^2.
+No mean-change, reverse-variance, conditional-mean, propagation, or gate-count
+premise remains. The actual mean also has an exact finite binomial-image formula.
+The Psi regrouping, Gaussian approximation, full exterior influence envelope,
+and simulation runtime are not claimed.
+
+The general spatial theorem still uses design mean control and transition width.
+Its actual all-dimension Haar bound is 2*((2*k)!)^3/D^2 for k>0,
 Hermitian traceless involutions B,M, and trace-one rho.
-The spatial theorem derives the Haar quarter-bound from D^2 >= 8*((2*k)!)^3.
-Design mean control, physical architecture/support/separation, and width remain inputs.
-See REVIEW.md and docs/paper-mapping.md for precise model coverage.
+See REVIEW.md, docs/otoc1.md and docs/paper-mapping.md for precise scope.
 
 This is a local verification record, not a claim about an unobserved CI run.
 Inspect GitHub Actions for the exact published commit's independent Lake build.
-The mathematical source corresponds to repository revision
-69d247e3a91c0017b3f59402fd6e01002548c817; this record is a later documentation addition.
+SHA-256 fingerprints below identify the checked mathematical source and configuration.
 
-SHA-256 fingerprints of checked source and configuration:
-582173cf1a824d50dc0e54068b2fd3323ca3442e79d3b8eaaf163da7be1fd383  Fluctuations.lean
+9f92c3be6778b8bbf4bf61f5ba667dd7359bd67ae57b50eeb944a1309fb5d12d  Fluctuations.lean
 93896ea25cc2351ae0d1ba4dbd876ef97354f6e0201d8710ae4a50baa4e20dbf  Fluctuations/ActiveHaarCircuit.lean
 b7deaa18fa20439efc23758ea89b0030fd06790748dba9fe289db1db0a3d9fd8  Fluctuations/BalancedHaarFeatures.lean
+eb6eeac8529370de70fc0ec38ed5bb67ec46d3b8a5d8f9e24c86aad901fcf354  Fluctuations/BinomialLocalBounds.lean
+a0cfe3b7f4ec95e6af295a8a155949fa261eae69adbfa89dca9a741f46e0042f  Fluctuations/BrickworkEndpointMean.lean
+0d6ae657e489073d2ce877714eb2faf490745c18e28a487b9d2f1ef7e58b9530  Fluctuations/BrickworkEndpointOTOC.lean
+29f43a5be62a06a5c3668597587e461c2d37b70c26f5fdda971eb694e9d0f098  Fluctuations/BrickworkEvenRemainder.lean
 a47877619c2abf4e92bd0bce7d956632d73041cff43f279e8f72146bea550447  Fluctuations/CircuitGeometry.lean
+bc6f6ab3456b80444cfab0f16389128455bb757716cf8fb1f6087a7cdf2b938e  Fluctuations/CoordinateAverages.lean
+918b7316cf50d4bc2ba8e1d644a1e7109dc96802eba39269568d0f45f621fce3  Fluctuations/EndpointBinomial.lean
+47d5b4b5782b7a6f2790d9d9d89ef461339e75959c76ab70d1f904adf4ee876a  Fluctuations/EndpointEye.lean
+b43a84a23a298f92ad907a85a22a2529282d9cf37aa25f37ceb1e37bd82d169f  Fluctuations/EndpointFrontLower.lean
+65113c07b3abe3d418a1d148fbc598731779006a8b86d57fe7330b8e66981652  Fluctuations/EndpointFrontMass.lean
+0c38f0c5e7086cbed328bdba64cc41d7e599010cb873af43a77c6e1e7ea8ce6c  Fluctuations/EndpointImages.lean
+1377019b0520f493b391c3911394c764a33d7ffe6076a725e158f98bdcd91bb0  Fluctuations/EndpointLumpability.lean
+1442b8f5915022d9482690e08f31efc2f01ad0579ca551f2f243e35a7d43fdcf  Fluctuations/EndpointMarkov.lean
+baeeaba46f27c61f05dfe74965954699cdbd90f44b7ce9bf160dae04c6936013  Fluctuations/EndpointMean.lean
+7ac1eb96b835e81e8c039a76fdece492be1d246ea02f333ca45d648ccd2dec94  Fluctuations/EndpointPerturbation.lean
+63db8c3bb6d44b962d3b747d33a8200df837ecd69405d2e0bb5e347f0ef9a346  Fluctuations/EndpointPhysicalEye.lean
+0f21e5a8a83b9e3abca93c37f3f45f15b5c4b69afdf5992902909e61d8fe7121  Fluctuations/EndpointPropagation.lean
+88b71f51e73a7de238780ef018e8e6c633ddcfef437216c5eee9dba1b733fd95  Fluctuations/EndpointVarianceAssembly.lean
 f9186dceaa9cb30c1fcfb07e2c0140e1f235ba75cae48bf9a573634250d7e9d6  Fluctuations/ExplicitHaarCircuit.lean
 53edddf467f03a53b0854d29f9c2d9a02a93642158b5a0d8fe2d10d26d1b9d85  Fluctuations/ExplicitHaarVariance.lean
 eeaadd50592baf7fda1ad7f1fcb789b038b80e98820f8946ec544a10aa55729e  Fluctuations/FiniteDimensionalVariance.lean
+4e86fbcfdb9dda1b43ca632270acabd28572095858d3a2b485d15fcd0116cb60  Fluctuations/GateInfluence.lean
 e94386502ce37b145b6786f5c322d16cae541cd5fd76b086ba8d4dfe003f65ea  Fluctuations/GlobalHaarFirstOrder.lean
 72d6168bbed44ae87e845cd06e047c75530086475720eab02c8d36907cba3410  Fluctuations/GlobalHaarFirstOrderValue.lean
 d4f05d5da6b503aa1c54dc6dd874989a7182741f81b49f6fd3104d63a01cd2ec  Fluctuations/GlobalHaarMean.lean
@@ -40,20 +69,45 @@ bdcab44694e8414fa92548ac462ef7e696f24c5bf84e9708cbb10badc3b75fdd  Fluctuations/G
 4eeb5b8d06077004c191d23008279b1f29bec42ca146acd915938eeada3376e7  Fluctuations/GlobalHaarStateIndependence.lean
 1ef3d9354fdc76b5f75374816db07bf9345e0f572f88a7732131acbf0c97c2f6  Fluctuations/GlobalHaarUnitBound.lean
 88eae1fe3ae3ca06f3101772bc35d9a5d4254387332fae60f82b317415caede4  Fluctuations/HaarCircuit.lean
+0f318c3ceb58c9392d70fa02242360593f42ded63bf0cb40e9812a6297173e16  Fluctuations/HaarConjugationCovariance.lean
 b1e36bba7b2730608f0379e94dd478e4aa70fc92c5d53808606d9d8da2b1771a  Fluctuations/HaarEvaluationBound.lean
 8783e35d1c444e078cfe5a8d38aede1911d929a114717e4831283ced2de50fee  Fluctuations/HaarLocalVariance.lean
 bb041280fd97936d05d84aeebc8c4deaa1d080eafa1f43d4ab3a9b1e5fd19daa  Fluctuations/HaarMeanCombinatorics.lean
+d270fb9f3c3a51eabaea7b0a425d31ed20c93218fdbb02fee9b15389de10bd51  Fluctuations/HaarMixedCovariance.lean
 f2d7b363571176f6c55f3863415b85329465222a93805b3ff48816067fd9d891  Fluctuations/HaarOTOCTraceIdentity.lean
 3a0a34a772978dbe3c6819b6ac411668ddd2f53cdcd12b792dab5dee774ff323  Fluctuations/HaarProcess.lean
 7ff1d79db771856d0288b9bc6e4fe8c20bd02a0cecf6b2b01eeb0c6b98972c4d  Fluctuations/HaarSU4.lean
 aee83bb9b37045034cc96bc1263b93e13311e33fcbf992b8b67104e5307205a2  Fluctuations/HaarTensorInvariants.lean
 8b308a03bbca284251fa285c4e52befb2130c7a82fecc61be4167448893d8257  Fluctuations/HaarTensorProjection.lean
 21faf6cb31d77d506f257e6d8728800bdabc471f2bdc1109237b38fc9582145c  Fluctuations/HaarWeingartenProjection.lean
+3941080dde911a3f175a9d002ada9751132324621be79d3c59c13e415888ca70  Fluctuations/LocalPauliBalance.lean
 72d30a60b262c33e9ffda576453bf0472cd23c6886dc7093bb24e80098bb6719  Fluctuations/LocalPolynomial.lean
 54c2b96140c424c9cd9a0413f849ecda5b034857d34142aa60d907e7f9d2623c  Fluctuations/Main.lean
 65ef06c4f8a3872a84cfc1c29149eb97a071daa77cdea1e7511ec0842116086d  Fluctuations/MeanChange.lean
+9f188916fb9ef1f8912f581672aca5a960c0d2a256a9cecf60ae1b2ae0512f5a  Fluctuations/OTOC1.lean
 0c106fa72e2e342dbe150356632faed58649b153100de7b0f76ca49a8dd14fe5  Fluctuations/PatchEmbedding.lean
+9b7d243d26f2d168fcc6498d0805f95cd545bfc3bcbc0e139048bd8a1f63c609  Fluctuations/PauliBasis.lean
+07206ca1426822036d76d2cd9548738e270d70d3ae78f534693140fdde1c819c  Fluctuations/PauliBrickwork.lean
+ad1543fa00d2127a6850c471d0ee7e2790ba1c1d47d0c9c6a53d14b3423ec61e  Fluctuations/PauliBrickworkCircuit.lean
+78f2c74bf55b7d40fe2fa042c6d9995f8cb8130cdb82873b9e51895fb9a3f003  Fluctuations/PauliBrickworkConditional.lean
+e001fe4ff662241fac51174cc231e79ba478cba73114c5467d5408d2016226ee  Fluctuations/PauliBrickworkInitial.lean
+25d2fddde3e0c519413b76c8d2fd0aaefd1694c5b95086ab0a9f794795be4d75  Fluctuations/PauliBrickworkScheduleSplit.lean
+dd8f4098045b1a517a4a8da08ce56bfb9c166ef74ec2dd7211407a88935fe629  Fluctuations/PauliCircuitBridge.lean
+7ca6657f78af24e04b7bb14d3b18668a6b3d24db3dfefac6a9a81a1e291ba676  Fluctuations/PauliEndpointObservable.lean
+670cb2f15fe598f3c6099f6f13ec6e99fb3a945d2a3d3698906a816e7cbadd27  Fluctuations/PauliFixedGate.lean
+8ad477c527ef997f819d6188a7ac2287e7bf0fc87e39640464bab3edb9111506  Fluctuations/PauliFixedLocal.lean
+5b95170b8a27cd1cf1f54cb7147bd25712961c78ba30bf6864acf535c46aa617  Fluctuations/PauliFixedPropagation.lean
+3afda01cfdcf8df4c0809d30c272eb6bf6eb6ee52e74530854b4ecba4071ca01  Fluctuations/PauliFrozenCircuit.lean
+5ba7e333a333546c0285fc6c787b1e1269141920bd96eb84b4a620a4cb8c572f  Fluctuations/PauliFrozenSchedule.lean
+5bb96ed6f79fd5b93744c7fcbbe4359c46022fdb5b13e056faa0ce6d7a9acd4f  Fluctuations/PauliKernelMass.lean
+d7a99b9594f6eebd79638e6da04eecde23ab86ed03f57281ef36f6e5a39f530d  Fluctuations/PauliLocalHaar.lean
+86b568aa05dbaaccd02392df7306698c52e7a2117e3ad76ee731f67b25b7a5a7  Fluctuations/PauliPairCommutation.lean
+05540eb9250fb3d0f1feeaba5075817faf7984e93991c2254158a21ef06eb36b  Fluctuations/PauliShock.lean
+bad0ca262fbd0c8440664d7e476be8b9da366ecda64a4bce558d808717a8ec1f  Fluctuations/PauliString.lean
+6359a303117115198769133fd965b2e71b2731a889f4886c272ab59375d310ed  Fluctuations/PauliStringQuantum.lean
+612f96f85b383a38be7d1e78b6a15b6140b1ff4eb84888c61155647485acb360  Fluctuations/PauliUntouchedObservable.lean
 8f68d2005af4a8ea6a7320457b98fd5aae590a6606ba5f8cc4fcc344e47e3148  Fluctuations/Probability.lean
+79051e0501929c11dbb1a453c770917493d4c81c66d86eea43b53cca7b701f77  Fluctuations/ProductKernelEvolution.lean
 2859862e974de10f8d1f7b78f99c802bf2335f0227e572e727c8b57b7988b5aa  Fluctuations/ProductVariance.lean
 19478eeb19b6d9be046e7e93cfaec44fd5960e2c5e8624b0541ff822dd254d69  Fluctuations/QubitEmbedding.lean
 4bafa83de16df7bb5652ba5511d3409d882aa4e1f4969004cbf0ff9449379971  Fluctuations/SpatialHaarFinal.lean
@@ -65,577 +119,17 @@ c63456931eb99558fa9e0025e493a85819c6ece7c87a023902701d532d47a6bd  Fluctuations/S
 8c65e80756364543427840cd9c795071a16d3ef1f19cf200521a6a18a83810f1  Fluctuations/TensorSupport.lean
 8d011e36234c6212a988387ce7bff702f615f7a533aacd1cd98bd4906ec1389a  Fluctuations/TensorUnitaryExtension.lean
 43c2ebc79d93be196db022395eee78577be3a164d26bc837573a8ed46aa888f3  Fluctuations/UnitaryEquivariantClassification.lean
+a4d91cbdca9cfc929efe86b2517f4c4e86413bd5dae9b7b37537ab20c90ad604  Fluctuations/UniversalEndpointObservable.lean
 b7cc8111a5029b7564565d90a667f2c0eb139e39d27db7d1e1962396cf1b634a  Fluctuations/WeightedVariance.lean
 9362fa0be9f2644f0f00f8d22f60353c43c99aafeb208378b3502d9e53533261  Fluctuations/WeingartenGramBounds.lean
 822200e6b51b7300ca4cf4c90108dac30c147f0d63cdf404cf13ce9e89daab70  Fluctuations/Window.lean
-169000198a97bb87f7d0a33a7002962f7e7dade9c0e193c91bdbc9ad1dd72cf7  scripts/Audit.lean
-9267441448ece2398f97cb0d1104741627019a0c2c0575a57c68a50c6d2611f9  scripts/check-axioms.py
-900b28beda83431bd8acd78d5701039cad1fa8d59feda537f32507811c870941  scripts/check-local.sh
-04c9f7bda851aea33220a1b56f4ed41b5f3d6a2430c15f8ad692c503df6e2205  scripts/check.sh
 42779d67b81608af8a12aa4328d2ab47ca201925b3b2bd68369587b5340bb434  lean-toolchain
 3b77eef9d7e4a2341fc34e07cbd56d1d4a9dc1b4825f291b3dc288aafacf25a1  lakefile.toml
 968747a8c37c1b4c16c4bb1ca5d7a7579728e3aca84bc0bedfaa04ba61c38730  lake-manifest.json
-
-Complete theorem and axiom audit output:
-
-def Fluctuations.complexVariance.{u_1} : {Ω : Type u_1} →
-  {m₀ : MeasurableSpace Ω} → MeasureTheory.Measure Ω → (Ω → ℂ) → ℝ :=
-fun {Ω} {m₀} μ F => ∫ (ω : Ω), ‖F ω - ∫ (ω : Ω), F ω ∂μ‖ ^ 2 ∂μ
-def Fluctuations.LocalReverseVariance.{u_1} : {Ω : Type u_1} →
-  {m₀ : MeasurableSpace Ω} → MeasureTheory.Measure Ω → MeasurableSpace Ω → ℝ → (Ω → ℂ) → (Ω → ℂ) → Prop :=
-fun {Ω} {m₀} μ m η F G => ∀ᵐ (ω : Ω) ∂μ, η * ‖μ[G|m] ω - F ω‖ ^ 2 ≤ μ[fun ω => ‖G ω - μ[G|m] ω‖ ^ 2|m] ω
-@Fluctuations.transition_window : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
-  [MeasureTheory.IsProbabilityMeasure μ] (F : ℕ → Ω → ℂ) (G : ℕ → MeasurableSpace Ω),
-  (∀ (d : ℕ), G d ≤ mΩ) →
-    (∀ (d : ℕ), MeasureTheory.MemLp (F d) 2 μ) →
-      ∀ {η Δ : ℝ},
-        0 < η →
-          0 ≤ Δ →
-            (∀ (d : ℕ), Fluctuations.LocalReverseVariance μ (G d) η (F d) (F (d + 1))) →
-              ∀ {a b : ℕ},
-                a < b →
-                  Δ ≤ ‖∫ (ω : Ω), F b ω ∂μ - ∫ (ω : Ω), F a ω ∂μ‖ →
-                    ∃ d,
-                      a < d ∧
-                        d ≤ b ∧
-                          ∀ (r : ℕ),
-                            η * (η / (1 + η)) ^ r * Δ ^ 2 / ↑(b - a) ^ 2 ≤ Fluctuations.complexVariance μ (F (d + r))
-@Fluctuations.theorem_VI_14 : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
-  [MeasureTheory.IsProbabilityMeasure μ] (F : ℕ → Ω → ℂ) (G : ℕ → MeasurableSpace Ω),
-  (∀ (d : ℕ), G d ≤ mΩ) →
-    (∀ (d : ℕ), MeasureTheory.MemLp (F d) 2 μ) →
-      ∀ {η : ℝ},
-        0 < η →
-          (∀ (d : ℕ), Fluctuations.LocalReverseVariance μ (G d) η (F d) (F (d + 1))) →
-            ∀ {a b : ℕ},
-              a < b →
-                1 / 2 ≤ ‖∫ (ω : Ω), F b ω ∂μ - ∫ (ω : Ω), F a ω ∂μ‖ →
-                  ∀ (R : ℕ) {P : ℝ},
-                    ↑(b - a) ≤ P →
-                      ∃ d,
-                        a < d ∧
-                          d ≤ b ∧
-                            ∀ r ≤ R, η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤ Fluctuations.complexVariance μ (F (d + r))
-@Fluctuations.theorem_VI_14_interval : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace Ω] {μ : MeasureTheory.Measure Ω}
-  [MeasureTheory.IsProbabilityMeasure μ] (F : ℕ → Ω → ℂ) (G : ℕ → MeasurableSpace Ω),
-  (∀ (d : ℕ), G d ≤ mΩ) →
-    (∀ (d : ℕ), MeasureTheory.MemLp (F d) 2 μ) →
-      ∀ {η : ℝ},
-        0 < η →
-          (∀ (d : ℕ), Fluctuations.LocalReverseVariance μ (G d) η (F d) (F (d + 1))) →
-            ∀ {a b : ℕ},
-              a < b →
-                1 / 2 ≤ ‖∫ (ω : Ω), F b ω ∂μ - ∫ (ω : Ω), F a ω ∂μ‖ →
-                  ∀ (R : ℕ) {P : ℝ},
-                    ↑(b - a) ≤ P →
-                      ∃ d,
-                        have I := Finset.Icc d (d + R);
-                        I.card = R + 1 ∧
-                          I ⊆ Finset.Icc (a + 1) (b + R) ∧
-                            ∀ t ∈ I, η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤ Fluctuations.complexVariance μ (F t)
-@Fluctuations.theorem_VI_14_family : ∀ {Ω : ℕ → Type u_1} [mΩ : (n : ℕ) → MeasurableSpace (Ω n)]
-  (μ : (n : ℕ) → MeasureTheory.Measure (Ω n)) [∀ (n : ℕ), MeasureTheory.IsProbabilityMeasure (μ n)]
-  (F : (n : ℕ) → ℕ → Ω n → ℂ) (G : (n : ℕ) → ℕ → MeasurableSpace (Ω n)) (a b : ℕ → ℕ) (p : Polynomial ℝ) {η : ℝ},
-  0 < η →
-    ∀ (R n₀ : ℕ),
-      (∀ (n : ℕ), n₀ ≤ n → ∀ (d : ℕ), G n d ≤ mΩ n) →
-        (∀ (n : ℕ), n₀ ≤ n → ∀ (d : ℕ), MeasureTheory.MemLp (F n d) 2 (μ n)) →
-          (∀ (n : ℕ), n₀ ≤ n → ∀ (d : ℕ), Fluctuations.LocalReverseVariance (μ n) (G n d) η (F n d) (F n (d + 1))) →
-            (∀ (n : ℕ), n₀ ≤ n → a n < b n) →
-              (∀ (n : ℕ), n₀ ≤ n → 1 / 2 ≤ ‖∫ (ω : Ω n), F n (b n) ω ∂μ n - ∫ (ω : Ω n), F n (a n) ω ∂μ n‖) →
-                (∀ (n : ℕ), n₀ ≤ n → ↑(b n - a n) ≤ Polynomial.eval (↑n) p) →
-                  ∃ c,
-                    0 < c ∧
-                      ∀ (n : ℕ),
-                        n₀ ≤ n →
-                          ∃ d,
-                            a n < d ∧
-                              d ≤ b n ∧
-                                ∀ r ≤ R,
-                                  c / Polynomial.eval (↑n) p ^ 2 ≤ Fluctuations.complexVariance (μ n) (F n (d + r))
-@Fluctuations.haarLocalOTOC_reverseVariance_identity : ∀ {m : ℕ} {N : Type u_1} [inst : Fintype N]
-  [inst_1 : DecidableEq N] (E : Fin m → Matrix (Fin 4) (Fin 4) ℂ →ₗ[ℂ] Matrix N N ℂ),
-  (∀ (g : Fin m), (E g) 1 = 1) →
-    ∀ (ρ B V M : Matrix N N ℂ) (k : ℕ),
-      Fluctuations.haarLocalConstant m k *
-          ‖∫ (x : Fluctuations.SU4Block m), (Fluctuations.haarLocalOTOC E ρ B V M k) x ∂Fluctuations.su4Haar m -
-                (ρ * (V.conjTranspose * B * V * M) ^ (2 * k)).trace‖ ^
-            2 ≤
-        Fluctuations.complexVariance (Fluctuations.su4Haar m) ⇑(Fluctuations.haarLocalOTOC E ρ B V M k)
-@Fluctuations.haarLocalOTOC_conditional_reverseVariance : ∀ {X : Type u_1} [inst : TopologicalSpace X] [CompactSpace X]
-  [T2Space X] [SecondCountableTopology X] [mX : MeasurableSpace X] [BorelSpace X] {μ : MeasureTheory.Measure X}
-  [MeasureTheory.IsProbabilityMeasure μ] {m : ℕ} {N : Type u_2} [inst_6 : Fintype N] [inst_7 : DecidableEq N]
-  (E : Fin m → Matrix (Fin 4) (Fin 4) ℂ →ₗ[ℂ] Matrix N N ℂ),
-  (∀ (g : Fin m), (E g) 1 = 1) →
-    ∀ (ρ B M : Matrix N N ℂ) (V : X → Matrix N N ℂ),
-      Continuous V →
-        ∀ (k : ℕ),
-          Fluctuations.LocalReverseVariance (μ.prod (Fluctuations.su4Haar m)) (MeasurableSpace.comap Prod.fst mX)
-            (Fluctuations.haarLocalConstant m k)
-            (fun p => (ρ * ((V p.1).conjTranspose * B * V p.1 * M) ^ (2 * k)).trace) fun p =>
-            (Fluctuations.haarLocalOTOC E ρ B (V p.1) M k) p.2
-Fluctuations.haarCircuit_theorem_VI_14 : ∀ (m k : ℕ),
-  ∃ η,
-    0 < η ∧
-      ∀ (N : Type u_1) [inst : Fintype N] [inst_1 : DecidableEq N]
-        (E : ℕ → Fin m → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ) (ρ B M : Matrix N N ℂ) {a b : ℕ},
-        a < b →
-          1 / 2 ≤
-              ‖∫ (x : Fluctuations.GateHistory (Fluctuations.SU4Block m) b),
-                    (Fluctuations.unitaryHaarCircuitOTOC E ρ B M k b)
-                      x ∂Fluctuations.historyMeasure (Fluctuations.su4Haar m) b -
-                  ∫ (x : Fluctuations.GateHistory (Fluctuations.SU4Block m) a),
-                    (Fluctuations.unitaryHaarCircuitOTOC E ρ B M k a)
-                      x ∂Fluctuations.historyMeasure (Fluctuations.su4Haar m) a‖ →
-            ∀ (R : ℕ) {P : ℝ},
-              ↑(b - a) ≤ P →
-                ∃ d,
-                  a < d ∧
-                    d ≤ b ∧
-                      ∀ r ≤ R,
-                        η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤
-                          Fluctuations.complexVariance (Fluctuations.historyMeasure (Fluctuations.su4Haar m) (d + r))
-                            ⇑(Fluctuations.unitaryHaarCircuitOTOC E ρ B M k (d + r))
-Fluctuations.activeHaarCircuit_theorem_VI_14 : ∀ (m k : ℕ),
-  ∃ η,
-    0 < η ∧
-      ∀ (q : ℕ) (N : Type u_1) [inst : Fintype N] [inst_1 : DecidableEq N]
-        (A : ℕ → Fin m → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ)
-        (I : ℕ → Fin q → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ) (ρ B M : Matrix N N ℂ),
-        (∀ (d : ℕ) (i : Fin q) (U : ↥Fluctuations.SU4), Commute ((I d i) ↑U) B) →
-          ∀ {a b : ℕ},
-            a < b →
-              1 / 2 ≤
-                  ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
-                        (Fluctuations.activeHaarCircuitOTOC A I ρ B M k b)
-                          x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
-                      ∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) a),
-                        (Fluctuations.activeHaarCircuitOTOC A I ρ B M k a)
-                          x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) a‖ →
-                ∀ (R : ℕ) {P : ℝ},
-                  ↑(b - a) ≤ P →
-                    ∃ d,
-                      a < d ∧
-                        d ≤ b ∧
-                          ∀ r ≤ R,
-                            η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤
-                              Fluctuations.complexVariance
-                                (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) (d + r))
-                                ⇑(Fluctuations.activeHaarCircuitOTOC A I ρ B M k (d + r))
-@Fluctuations.activeHaarCircuit_theorem_of_moment_control : ∀ {N : Type u_1} [inst : Fintype N] [inst_1 : DecidableEq N]
-  {m q : ℕ} (A : ℕ → Fin m → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ)
-  (I : ℕ → Fin q → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ) (ρ B M : Matrix N N ℂ) (k : ℕ),
-  (∀ (d : ℕ) (i : Fin q) (U : ↥Fluctuations.SU4), Commute ((I d i) ↑U) B) →
-    ρ.trace = 1 →
-      B * B = 1 →
-        M * M = 1 →
-          ∀ {a b : ℕ},
-            a < b →
-              (∀ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) a),
-                  Commute
-                    ((Fluctuations.activeHaarCircuitMatrix A I a x).conjTranspose * B *
-                      Fluctuations.activeHaarCircuitMatrix A I a x)
-                    M) →
-                ∀ (referenceMean : ℂ),
-                  ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
-                            (Fluctuations.activeHaarCircuitOTOC A I ρ B M k b)
-                              x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
-                          referenceMean‖ ≤
-                      1 / 4 →
-                    ‖referenceMean‖ ≤ 1 / 4 →
-                      ∀ (R : ℕ) {P : ℝ},
-                        ↑(b - a) ≤ P →
-                          ∃ d,
-                            a < d ∧
-                              d ≤ b ∧
-                                ∀ r ≤ R,
-                                  Fluctuations.haarLocalConstant m k *
-                                        (Fluctuations.haarLocalConstant m k /
-                                            (1 + Fluctuations.haarLocalConstant m k)) ^
-                                          R /
-                                      (4 * P ^ 2) ≤
-                                    Fluctuations.complexVariance
-                                      (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) (d + r))
-                                      ⇑(Fluctuations.activeHaarCircuitOTOC A I ρ B M k (d + r))
-'Fluctuations.complex_total_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.norm_mean_sq_le_secondMoment' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.slope_to_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.forward_persistence' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.exists_large_increment' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.transition_window' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.theorem_VI_14_interval' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.theorem_VI_14_family' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.finiteDimensional_reverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.su4Haar_independent' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.matrixBlockOTOC_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.matrixBlockOTOC_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.qubitEmbedding' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.qubitEmbedding_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.starAlgHom_su4_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.product_condExp' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.product_localReverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarLocalConstant_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarLocalOTOC_reverseVariance_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarLocalOTOC_conditional_reverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.history_transition_window' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.history_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarCircuit_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.theorem_VI_14_of_step_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.ordered_product_inactive_mul_active' depends on axioms: [propext, Quot.sound]
-'Fluctuations.haarBlockMatrix_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarBlockMatrix_inactive_conjugation' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.matrix_conjugate_layer_eq_active' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.embedded_su4_layer_eq_active' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.disjoint_tensor_factors_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.preLightCone_otoc_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.integral_preLightCone_otoc_eq_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.mean_gap_of_error_budget' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.mean_gap_one_half' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuitMatrix_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuitOTOC_section' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_localReverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_step_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_early_mean' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_theorem_of_moment_control' depends on axioms: [propext, Classical.choice, Quot.sound]
-def Fluctuations.globalHaarOTOCMean.{u_1} : {N : Type u_1} →
-  [Fintype N] → [DecidableEq N] → Matrix N N ℂ → Matrix N N ℂ → Matrix N N ℂ → ℕ → ℂ :=
-fun {N} [Fintype N] [DecidableEq N] ρ B M k =>
-  ∫ (U : ↥(Fluctuations.GlobalUnitary N)), (Fluctuations.globalOTOC ρ B M k) U ∂Fluctuations.globalHaar N
-def Fluctuations.explicitHaarConstant : ℕ → ℕ → ℝ :=
-fun m k => 1 / 4 ^ (8 * k * m)
-@Fluctuations.spatialHaarCircuit_variance_window : ∀ {Site : Type u_1} [inst : Fintype Site] [inst_1 : DecidableEq Site]
-  {m q : ℕ} (L : Fluctuations.HaarSpatialArchitecture Site m q)
-  (hApair : ∀ (d : ℕ) (i : Fin m), (L.activePatch d i).card = 2)
-  (hIpair : ∀ (d : ℕ) (i : Fin q), (L.inactivePatch d i).card = 2) (ρ B M : Fluctuations.QubitOperator Site) (k : ℕ)
-  (S : Finset Site),
-  Fluctuations.Supported S B →
-    (∀ (d : ℕ) (i : Fin m), ¬Disjoint (L.activePatch d i) S) →
-      (∀ (d : ℕ) (i : Fin q), Disjoint (L.inactivePatch d i) S) →
-        ∀ {a b : ℕ},
-          a < b →
-            1 / 2 ≤
-                ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
-                      (Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair) (L.inactiveEmbedding hIpair) ρ B M
-                          k b)
-                        x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
-                    ∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) a),
-                      (Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair) (L.inactiveEmbedding hIpair) ρ B M
-                          k a)
-                        x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) a‖ →
-              ∀ (R : ℕ) {P : ℝ},
-                ↑(b - a) ≤ P →
-                  ∃ d,
-                    a < d ∧
-                      d ≤ b ∧
-                        ∀ r ≤ R,
-                          Fluctuations.explicitHaarConstant S.card k *
-                                (Fluctuations.explicitHaarConstant S.card k /
-                                    (1 + Fluctuations.explicitHaarConstant S.card k)) ^
-                                  R /
-                              (4 * P ^ 2) ≤
-                            Fluctuations.complexVariance
-                              (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) (d + r))
-                              ⇑(Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                  (L.inactiveEmbedding hIpair) ρ B M k (d + r))
-@Fluctuations.spatialHaarCircuit_of_globalHaar_control : ∀ {Site : Type u_1} [inst : Fintype Site]
-  [inst_1 : DecidableEq Site] {m q : ℕ} (L : Fluctuations.HaarSpatialArchitecture Site m q)
-  (hApair : ∀ (d : ℕ) (i : Fin m), (L.activePatch d i).card = 2)
-  (hIpair : ∀ (d : ℕ) (i : Fin q), (L.inactivePatch d i).card = 2) (ρ B M : Fluctuations.QubitOperator Site) (k : ℕ)
-  (S T : Finset Site),
-  Fluctuations.Supported S B →
-    Fluctuations.Supported T M →
-      (∀ (d : ℕ) (i : Fin m), ¬Disjoint (L.activePatch d i) S) →
-        (∀ (d : ℕ) (i : Fin q), Disjoint (L.inactivePatch d i) S) →
-          Matrix.trace ρ = 1 →
-            B * B = 1 →
-              M * M = 1 →
-                ∀ {a b : ℕ},
-                  a < b →
-                    Disjoint (L.lightCone a S) T →
-                      ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
-                                (Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                    (L.inactiveEmbedding hIpair) ρ B M k b)
-                                  x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
-                              Fluctuations.globalHaarOTOCMean ρ B M k‖ ≤
-                          1 / 4 →
-                        ‖Fluctuations.globalHaarOTOCMean ρ B M k‖ ≤ 1 / 4 →
-                          ∀ (R : ℕ) {P : ℝ},
-                            ↑(b - a) ≤ P →
-                              ∃ d,
-                                a < d ∧
-                                  d ≤ b ∧
-                                    ∀ r ≤ R,
-                                      Fluctuations.explicitHaarConstant S.card k *
-                                            (Fluctuations.explicitHaarConstant S.card k /
-                                                (1 + Fluctuations.explicitHaarConstant S.card k)) ^
-                                              R /
-                                          (4 * P ^ 2) ≤
-                                        Fluctuations.complexVariance
-                                          (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q)
-                                            (d + r))
-                                          ⇑(Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                              (L.inactiveEmbedding hIpair) ρ B M k (d + r))
-'Fluctuations.tensorMatrix_mul' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.Supported.commute' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.supported_patchMatrix' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.supported_patchEmbedding' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.patchEmbedding_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.supported_twoQubitPatchEmbedding' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.twoQubitPatchEmbedding_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.LayerArchitecture.card_active_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.LayerArchitecture.conjugate_eq_active' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.LayerArchitecture.supported_conjugate' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.supported_spatialCircuit' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.spatialCircuit_commute_of_disjoint' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.card_backwardCone_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.backwardActiveGateCount_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.HaarSpatialArchitecture.active_count_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.HaarSpatialArchitecture.card_lightCone_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.HaarSpatialArchitecture.circuit_supported' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.HaarSpatialArchitecture.early_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.HaarSpatialArchitecture.inactive_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.HaarSpatialArchitecture.early_mean' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haar_subspace_reverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarLocalOTOC_balanced_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.balancedSU4_polynomial_translate_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.balancedSU4_polynomial_finrank_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.explicitHaarConstant_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.haarLocalOTOC_explicit_reverseVariance_identity' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.haarLocalOTOC_explicit_conditional_reverseVariance' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.activeHaarCircuit_explicit_step_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_explicit_variance_window' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.activeHaarCircuit_explicit_theorem_of_moment_control' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.explicitHaarWindowConstant_antitone' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_eq_trace_matrixMean' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMatrixMean_conjugation' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMatrixMean_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.spatialHaarCircuit_variance_window' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.spatialHaarCircuit_of_globalHaar_control' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMatrixMean_conjugateProbe' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMatrixMean_conjugateButterfly' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalMaximallyMixedState_trace' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_balancedZ_state_independent' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_conjugateBalancedZ_state_independent' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.globalHaarOTOCMean_balancedZ_eq_normalized_trace' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.maximal_cycles_weingarten_argument_ne_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.weingartenOTOCSum_norm_le_factorial' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.norm_le_of_weingartenHaarIdentity' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.quarter_bound_of_weingartenHaarIdentity' depends on axioms: [propext, Classical.choice, Quot.sound]
-@Fluctuations.norm_le_of_weingartenHaarIdentity : ∀ {h : ℂ} {D C : ℝ} {k : ℕ},
-  1 ≤ D →
-    0 < k →
-      ∀ (W : Equiv.Perm (Fin (2 * k)) → ℂ),
-        Fluctuations.WeingartenCoefficientBounds D C (2 * k) W →
-          Fluctuations.WeingartenHaarIdentity h D k W → ‖h‖ ≤ ↑(2 * k).factorial ^ 2 * C / D ^ 2
-structure Fluctuations.WeingartenCoefficientBounds (D C : ℝ) (r : ℕ) (W : Equiv.Perm (Fin r) → ℂ) : Prop
-number of parameters: 4
-fields:
-  Fluctuations.WeingartenCoefficientBounds.constant_nonneg : 0 ≤ C
-  Fluctuations.WeingartenCoefficientBounds.all_coefficients : ∀ (π : Equiv.Perm (Fin r)), D ^ r * ‖W π‖ ≤ C
-  Fluctuations.WeingartenCoefficientBounds.nonidentity_coefficients : ∀ (π : Equiv.Perm (Fin r)),
-      π ≠ 1 → D ^ (r + 1) * ‖W π‖ ≤ C
-constructor:
-  Fluctuations.WeingartenCoefficientBounds.mk {D C : ℝ} {r : ℕ} {W : Equiv.Perm (Fin r) → ℂ} (constant_nonneg : 0 ≤ C)
-    (all_coefficients : ∀ (π : Equiv.Perm (Fin r)), D ^ r * ‖W π‖ ≤ C)
-    (nonidentity_coefficients : ∀ (π : Equiv.Perm (Fin r)), π ≠ 1 → D ^ (r + 1) * ‖W π‖ ≤ C) :
-    Fluctuations.WeingartenCoefficientBounds D C r W
-def Fluctuations.WeingartenHaarIdentity : ℂ → ℝ → (k : ℕ) → (Equiv.Perm (Fin (2 * k)) → ℂ) → Prop :=
-fun h D k W => h = Fluctuations.weingartenOTOCSum D k W
-'Fluctuations.globalHaarTwirl_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarTwirl_trace' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarTwirl_equivariant' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarTwirl_superTrace' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMatrixMean_one_eq_twirl' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.normalizedPermutationGram_isUnit' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.normalizedPermutationGram_inverse_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.gramWeingarten_inverse_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.gramWeingartenCoefficient_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.gramWeingartenOTOCSum_norm_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.norm_le_of_gramWeingartenHaarIdentity' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.quarter_bound_of_gramWeingartenHaarIdentity' depends on axioms: [propext, Classical.choice, Quot.sound]
-@Fluctuations.quarter_bound_of_gramWeingartenHaarIdentity : ∀ {h : ℂ} {D : ℝ} {k : ℕ},
-  1 ≤ D →
-    0 < k →
-      2 * ↑(2 * k).factorial ≤ D →
-        Fluctuations.WeingartenHaarIdentity h D k (Fluctuations.gramWeingartenCoefficient D (2 * k)) →
-          8 * ↑(2 * k).factorial ^ 3 ≤ D ^ 2 → ‖h‖ ≤ 1 / 4
-'Fluctuations.unitaryConjugationEquivariant_classification' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_one_exact' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_one_norm_le_quarter' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMatrixMean_scalar_of_traceless_involution' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.globalHaarOTOCMean_state_independent_of_traceless_involution' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.globalHaarOTOCMean_traceless_involution_eq_normalized_trace' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.tensorPower_commutant_eq_permutation_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.tensorPower_commutant_mem_span' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.matrixPolynomialEval_zero_of_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.tensorPower_commute_all_of_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.tensorPower_unitary_commutant_eq_permutation_sum' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.tensorPower_unitary_commutant_mem_span' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarRepresentationMean_commute' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarRepresentationMean_trace_pairing' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarTensorMean_eq_permutation_sum' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarTensorMean_mem_span' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.matrix_expansion_of_gram' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.tensorPositionPermutation_gram' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.tensorPowerMatrix_diagonal_trace_permutation' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.tensorPowerMatrix_traceless_involution_trace_permutation' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-'Fluctuations.globalHaarTensorMean_weingarten' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.trace_power_eq_tensor_cycle' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_maximallyMixed_eq_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.qubit_globalHaarOTOCMean_one_norm_le_quarter' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.spatialHaarCircuit_firstOrder_of_globalHaar_control' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-@Fluctuations.globalHaarTensorMean_weingarten : ∀ {N : Type u_1} [inst : Fintype N] [inst_1 : DecidableEq N] {r : ℕ},
-  r ≤ Fintype.card N →
-    1 ≤ ↑(Fintype.card N) →
-      2 * ↑r.factorial ≤ ↑(Fintype.card N) →
-        ∀ (X : Matrix (Fin r → N) (Fin r → N) ℂ),
-          Fluctuations.globalHaarRepresentationMean (Fluctuations.tensorPowerRepresentation r) X =
-            ∑ σ,
-              (∑ τ,
-                  Fluctuations.gramWeingartenCoefficient (↑(Fintype.card N)) r (σ⁻¹ * τ) *
-                    ((Fluctuations.tensorPositionPermutation N τ).conjTranspose * X).trace) •
-                Fluctuations.tensorPositionPermutation N σ
-@Fluctuations.spatialHaarCircuit_firstOrder_of_globalHaar_control : ∀ {Site : Type u_1} [inst : Fintype Site]
-  [inst_1 : DecidableEq Site] {m q : ℕ} (L : Fluctuations.HaarSpatialArchitecture Site m q)
-  (hApair : ∀ (d : ℕ) (i : Fin m), (L.activePatch d i).card = 2)
-  (hIpair : ∀ (d : ℕ) (i : Fin q), (L.inactivePatch d i).card = 2) (ρ B M : Fluctuations.QubitOperator Site)
-  (S T : Finset Site),
-  Fluctuations.Supported S B →
-    Fluctuations.Supported T M →
-      (∀ (d : ℕ) (i : Fin m), ¬Disjoint (L.activePatch d i) S) →
-        (∀ (d : ℕ) (i : Fin q), Disjoint (L.inactivePatch d i) S) →
-          Matrix.trace ρ = 1 →
-            B * B = 1 →
-              M * M = 1 →
-                Matrix.trace B = 0 →
-                  Matrix.trace M = 0 →
-                    2 ≤ Fintype.card Site →
-                      ∀ {a b : ℕ},
-                        a < b →
-                          Disjoint (L.lightCone a S) T →
-                            ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
-                                      (Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                          (L.inactiveEmbedding hIpair) ρ B M 1 b)
-                                        x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q) b -
-                                    Fluctuations.globalHaarOTOCMean ρ B M 1‖ ≤
-                                1 / 4 →
-                              ∀ (R : ℕ) {P : ℝ},
-                                ↑(b - a) ≤ P →
-                                  ∃ d,
-                                    a < d ∧
-                                      d ≤ b ∧
-                                        ∀ r ≤ R,
-                                          Fluctuations.explicitHaarConstant S.card 1 *
-                                                (Fluctuations.explicitHaarConstant S.card 1 /
-                                                    (1 + Fluctuations.explicitHaarConstant S.card 1)) ^
-                                                  R /
-                                              (4 * P ^ 2) ≤
-                                            Fluctuations.complexVariance
-                                              (Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q)
-                                                (d + r))
-                                              ⇑(Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                                  (L.inactiveEmbedding hIpair) ρ B M 1 (d + r))
-'Fluctuations.globalHaarOTOCMean_eq_weingarten' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_norm_le' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_norm_le_quarter' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-@Fluctuations.globalHaarOTOCMean_norm_le : ∀ {N : Type u_1} [inst : Fintype N] [inst_1 : DecidableEq N] [Nonempty N]
-  (ρ B M : Matrix N N ℂ),
-  ρ.trace = 1 →
-    B.IsHermitian →
-      B * B = 1 →
-        B.trace = 0 →
-          M.IsHermitian →
-            M * M = 1 →
-              M.trace = 0 →
-                ∀ (k : ℕ),
-                  0 < k →
-                    2 * ↑(2 * k).factorial ≤ ↑(Fintype.card N) →
-                      ‖Fluctuations.globalHaarOTOCMean ρ B M k‖ ≤ 2 * ↑(2 * k).factorial ^ 3 / ↑(Fintype.card N) ^ 2
-@Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control : ∀ {Site : Type u_1} [inst : Fintype Site]
-  [inst_1 : DecidableEq Site] {m q : ℕ} (L : Fluctuations.HaarSpatialArchitecture Site m q)
-  (hApair : ∀ (d : ℕ) (i : Fin m), (L.activePatch d i).card = 2)
-  (hIpair : ∀ (d : ℕ) (i : Fin q), (L.inactivePatch d i).card = 2) (ρ B M : Fluctuations.QubitOperator Site) (k : ℕ),
-  0 < k →
-    ∀ (S T : Finset Site),
-      Fluctuations.Supported S B →
-        Fluctuations.Supported T M →
-          (∀ (d : ℕ) (i : Fin m), ¬Disjoint (L.activePatch d i) S) →
-            (∀ (d : ℕ) (i : Fin q), Disjoint (L.inactivePatch d i) S) →
-              Matrix.trace ρ = 1 →
-                Matrix.IsHermitian B →
-                  B * B = 1 →
-                    Matrix.trace B = 0 →
-                      Matrix.IsHermitian M →
-                        M * M = 1 →
-                          Matrix.trace M = 0 →
-                            8 * ↑(2 * k).factorial ^ 3 ≤ (2 ^ Fintype.card Site) ^ 2 →
-                              ∀ {a b : ℕ},
-                                a < b →
-                                  Disjoint (L.lightCone a S) T →
-                                    ‖∫ (x : Fluctuations.GateHistory (Fluctuations.ActiveHaarLayer m q) b),
-                                              (Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                                  (L.inactiveEmbedding hIpair) ρ B M k b)
-                                                x ∂Fluctuations.historyMeasure (Fluctuations.activeHaarLayerMeasure m q)
-                                                b -
-                                            Fluctuations.globalHaarOTOCMean ρ B M k‖ ≤
-                                        1 / 4 →
-                                      ∀ (R : ℕ) {P : ℝ},
-                                        ↑(b - a) ≤ P →
-                                          ∃ d,
-                                            a < d ∧
-                                              d ≤ b ∧
-                                                ∀ r ≤ R,
-                                                  Fluctuations.explicitHaarConstant S.card k *
-                                                        (Fluctuations.explicitHaarConstant S.card k /
-                                                            (1 + Fluctuations.explicitHaarConstant S.card k)) ^
-                                                          R /
-                                                      (4 * P ^ 2) ≤
-                                                    Fluctuations.complexVariance
-                                                      (Fluctuations.historyMeasure
-                                                        (Fluctuations.activeHaarLayerMeasure m q) (d + r))
-                                                      ⇑(Fluctuations.activeHaarCircuitOTOC (L.activeEmbedding hApair)
-                                                          (L.inactiveEmbedding hIpair) ρ B M k (d + r))
-'Fluctuations.globalHaarOTOCMean_norm_le_one' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions' depends on axioms: [propext, Classical.choice, Quot.sound]
-'Fluctuations.globalHaarOTOCMean_norm_le_quarter_all_dimensions' depends on axioms: [propext,
- Classical.choice,
- Quot.sound]
-@Fluctuations.globalHaarOTOCMean_norm_le_all_dimensions : ∀ {N : Type u_1} [inst : Fintype N] [inst_1 : DecidableEq N]
-  [Nonempty N] (ρ B M : Matrix N N ℂ),
-  ρ.trace = 1 →
-    B.IsHermitian →
-      B * B = 1 →
-        B.trace = 0 →
-          M.IsHermitian →
-            M * M = 1 →
-              M.trace = 0 →
-                ∀ (k : ℕ),
-                  0 < k → ‖Fluctuations.globalHaarOTOCMean ρ B M k‖ ≤ 2 * ↑(2 * k).factorial ^ 3 / ↑(Fintype.card N) ^ 2
-Axiom audit passed for all 132 declarations: only propext, Classical.choice, and Quot.sound are allowed.
+9348d2fded15ea510b8f0fcf96e65e57a9760c908397ece92ec5146ce4c04845  scripts/Audit.lean
+88a1a3656afc955d22e55891d3bac71416a953624d33f92c74949f05ac245705  scripts/check-axioms.py
+26b6af68e04dab5043b4ab3bf9702cecde5688d747dbb1ec9c380718a5e663b5  scripts/check-local.sh
+04c9f7bda851aea33220a1b56f4ed41b5f3d6a2430c15f8ad692c503df6e2205  scripts/check.sh
+826a966242113992d990a15e8925861f4e513072ea87f8fc65f109ca914f6780  scripts/lean-local.sh
+b6609a49af8b17225cc70b5622b0401359838582773974bb0dc650cf0ddf9c40  scripts/module-order.py
+4f72de2de83c9783b9ee714d54041db0927664e5541535b1e1cac6dcdbdbdd06  .github/workflows/lean.yml
