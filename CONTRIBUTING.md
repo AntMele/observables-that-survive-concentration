@@ -1,7 +1,8 @@
 # Contributing
 
-Start with the [mathematical guide](docs/guide.md), [paper mapping](docs/paper-mapping.md),
+Start with the [OTOC(1) guide](docs/otoc1.md), [paper mapping](docs/paper-mapping.md),
 and [review notes](REVIEW.md). The main entry points are
+[OTOC1.lean](Fluctuations/OTOC1.lean) for the concrete endpoint theorem,
 [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean) for the spatial
 Haar model and
 [Main.lean](Fluctuations/Main.lean) for the general probability theorem.
@@ -24,7 +25,11 @@ transitive dependencies must use only `propext`, `Classical.choice`, and
 `Quot.sound`. Add new principal results explicitly to both
 `scripts/Audit.lean` and the expected declaration list in
 `scripts/check-axioms.py`. Update the library imports and offline build sequence
-when adding a module.
+when adding a module. The offline build orders local modules automatically.
+For the endpoint theorem, keep the actual U(4) product measure, chronological
+circuit, endpoint operators, trace normalization, and explicit front window
+visible. Its conditional-mean identity, propagation, positive local variance,
+and gate count are proved ingredients; do not replace them with assumptions.
 
 Follow the [reproduction guide](docs/reproduce.md). Before submitting proof
 changes, run from the repository root:
