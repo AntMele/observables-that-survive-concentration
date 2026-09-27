@@ -78,4 +78,41 @@ theorem transition_window_of_step_bounds (μseq : ℕ → ℂ) (v : ℕ → ℝ)
   window_of_step_bounds μseq v hη.le
     (div_nonneg hη.le (by linarith)) hΔ hstep hpersist hab hchange
 
+/-- The half-unit mean-gap version, with a common lower bound throughout a
+chosen forward window and an upper bound on the transition width. -/
+theorem theorem_VI_14_of_step_bounds (μseq : ℕ → ℂ) (v : ℕ → ℝ)
+    {η : ℝ} (hη : 0 < η)
+    (hstep : ∀ d, η * ‖μseq (d + 1) - μseq d‖ ^ 2 ≤ v (d + 1))
+    (hpersist : ∀ d, (η / (1 + η)) * v d ≤ v (d + 1))
+    {a b : ℕ} (hab : a < b) (hchange : (1 / 2 : ℝ) ≤ ‖μseq b - μseq a‖)
+    (R : ℕ) {P : ℝ} (hwidth : ((b - a : ℕ) : ℝ) ≤ P) :
+    ∃ d, a < d ∧ d ≤ b ∧ ∀ r : ℕ, r ≤ R →
+      η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤ v (d + r) := by
+  obtain ⟨d, had, hdb, hv⟩ := transition_window_of_step_bounds μseq v hη
+    (by norm_num : (0 : ℝ) ≤ 1 / 2) hstep hpersist hab hchange
+  refine ⟨d, had, hdb, ?_⟩
+  intro r hr
+  have hW : (0 : ℝ) < ((b - a : ℕ) : ℝ) := Nat.cast_pos.mpr (Nat.sub_pos_of_lt hab)
+  have hP : 0 < P := hW.trans_le hwidth
+  have hk : 0 ≤ η / (1 + η) := by positivity
+  have hk1 : η / (1 + η) ≤ 1 := by
+    apply (div_le_one (by linarith : 0 < 1 + η)).2
+    linarith
+  have hpow : (η / (1 + η)) ^ R ≤ (η / (1 + η)) ^ r :=
+    pow_le_pow_of_le_one hk hk1 hr
+  have hsquare : (((b - a : ℕ) : ℝ) ^ 2) ≤ P ^ 2 :=
+    (sq_le_sq₀ hW.le hP.le).2 hwidth
+  calc
+    η * (η / (1 + η)) ^ R / (4 * P ^ 2)
+      = (η * (η / (1 + η)) ^ R * (1 / 2 : ℝ) ^ 2) / P ^ 2 := by ring
+    _ ≤ (η * (η / (1 + η)) ^ R * (1 / 2 : ℝ) ^ 2) /
+        (((b - a : ℕ) : ℝ) ^ 2) :=
+      div_le_div_of_nonneg_left (by positivity) (by positivity) hsquare
+    _ ≤ (η * (η / (1 + η)) ^ r * (1 / 2 : ℝ) ^ 2) /
+        (((b - a : ℕ) : ℝ) ^ 2) := by
+      apply div_le_div_of_nonneg_right _ (sq_nonneg _)
+      exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hpow hη.le)
+        (sq_nonneg _)
+    _ ≤ v (d + r) := hv r
+
 end Fluctuations
