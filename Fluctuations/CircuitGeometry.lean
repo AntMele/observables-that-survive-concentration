@@ -57,6 +57,7 @@ lemma pullback_mono (L : LayerArchitecture Site) {S T : Finset Site} (hST : S �
   · obtain ⟨i, hi, hs⟩ := Finset.mem_biUnion.mp hs
     exact L.patch_subset_pullback T (L.active_mono hST hi) hs
 
+omit [Fintype Site] in
 /-- Every active patch contains a different site of `S`, so there are at most
 `|S|` active gates regardless of the total layer size. -/
 theorem card_active_le (L : LayerArchitecture Site) (S : Finset Site) :
@@ -74,6 +75,7 @@ theorem card_active_le (L : LayerArchitecture Site) (S : Finset Site) :
   exact Finset.disjoint_left.mp (L.disjoint hne)
     (hex i).choose_spec.1 (hsite ▸ (hex j).choose_spec.1)
 
+omit [Fintype Site] in
 theorem gateCount_le_of_all_active (L : LayerArchitecture Site) (S : Finset Site)
     (hactive : ∀ i, ¬Disjoint (L.patch i) S) : L.gateCount ≤ S.card := by
   have heq : L.active S = Finset.univ := by
@@ -81,6 +83,7 @@ theorem gateCount_le_of_all_active (L : LayerArchitecture Site) (S : Finset Site
     simp [hactive i]
   simpa only [heq, Finset.card_univ, Fintype.card_fin] using L.card_active_le S
 
+omit [Fintype Site] in
 lemma card_pullback_le (L : LayerArchitecture Site) (S : Finset Site)
     (r : ℕ) (hsize : ∀ i, (L.patch i).card ≤ r) :
     (L.pullback S).card ≤ (r + 1) * S.card := by
@@ -150,6 +153,7 @@ def backwardCone : List (LayerArchitecture Site) → Finset Site → Finset Site
   | [], S => S
   | L :: ls, S => backwardCone ls (L.pullback S)
 
+omit [Fintype Site] in
 theorem backwardCone_mono (ls : List (LayerArchitecture Site))
     {S T : Finset Site} (hST : S ⊆ T) : backwardCone ls S ⊆ backwardCone ls T := by
   induction ls generalizing S T with
@@ -187,6 +191,7 @@ theorem spatialCircuit_commute_of_disjoint (ls : List (SpatialLayer Site))
     Commute ((spatialCircuitMatrix ls).conjTranspose * B * spatialCircuitMatrix ls) M :=
   (supported_spatialCircuit ls hB).commute hM hseparated
 
+omit [Fintype Site] in
 /-- Explicit fixed-depth support bound independent of total qubit count. -/
 theorem card_backwardCone_le (ls : List (LayerArchitecture Site)) (S : Finset Site)
     (r : ℕ) (hsize : ∀ L ∈ ls, ∀ i, (L.patch i).card ≤ r) :
@@ -203,6 +208,7 @@ theorem card_backwardCone_le (ls : List (LayerArchitecture Site)) (S : Finset Si
       _ = (r + 1) ^ (L :: ls).length * S.card := by
         simp [pow_succ, Nat.mul_assoc]
 
+omit [Fintype Site] in
 /-- A constant-depth block has a bounded number of active gates, independently
 of all inactive gates and the total number of qubits. -/
 theorem backwardActiveGateCount_le (ls : List (LayerArchitecture Site)) (S : Finset Site)
