@@ -56,7 +56,7 @@ constructed gate set, not all potentially influential gates.
 ## Simulation correspondence and cost model
 
 The simulation target is the actual normalized matrix trace
-$F_\infty=2^{-n}\operatorname{Tr}[(U^\dagger Z_1UZ_n)^2]$, so it specializes
+$F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$, so it specializes
 to the maximally mixed state. Its probability guarantee averages over both
 the realized Haar circuit and the conditional algorithmic randomness. It is
 not a worst-case guarantee for every fixed gate realization.
