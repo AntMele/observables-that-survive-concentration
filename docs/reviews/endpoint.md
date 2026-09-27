@@ -1,6 +1,13 @@
-# Independent review of the endpoint OTOC(1) result
+# Independent review · Endpoint OTOC fluctuations
 
-The final declarations in `Fluctuations/OTOC1.lean` prove the manuscript’s macroscopic-origin variance statement for the actual one-dimensional Haar circuit. No correspondence defect or remaining conditional premise was found in these declarations.
+[Home](../../README.md) / [Reader guide](../README.md) / Endpoint review
+
+**Scope of this review:** endpoint fluctuations and the exact finite-circuit
+mean. It records the review completed before the classical-simulation extension.
+See the [separate simulation review](simulation.md) for that theorem and the
+[verification record](../verification/record.txt) for repository-wide checks.
+
+The final declarations in [OTOC1.lean](../../Fluctuations/OTOC1.lean) prove the manuscript’s macroscopic-origin variance statement for the actual one-dimensional Haar circuit. No correspondence defect or remaining conditional premise was found in these declarations.
 
 For fixed C ≥ 0, let n = 2(c+2), d = 2T, assume √n ≥ 12(C+2) and |d−5n/3| ≤ C√n. Every gate is independently Haar distributed in U(4), embedded on its stated neighboring qubits. For every matrix ρ with Tr ρ = 1, define X = Tr[ρ(U†Z₁UZₙ)²]. The proved conclusions are:
 
@@ -19,3 +26,7 @@ The chronological product U_old G_new matches the manuscript convention U_d = L�
 `BrickworkEndpointMean.lean` additionally proves the exact actual Haar mean as a finite reflecting-chain matrix element, an explicit binomial image sum, the pre-light-cone value 1, and the n=2 and depth-zero boundary cases. The literal regrouping into the manuscript’s Ψ_d expression and its Gaussian approximation with error 5/√n are not proved by the reviewed modules. The front-window lower estimates used for the variance theorem are proved independently and do not require that Gaussian approximation. The simulation algorithm and Gaussian influence-tail bounds are also outside these final declarations.
 
 Validation: the final variance, gate-influence, gate-count, conditional-mean, mean, and positive-constant declarations compile and their axiom audit reports only `propext`, `Classical.choice`, and `Quot.sound`. The lower bounds do not claim matching variance upper bounds or higher-order macroscopic gate influence.
+
+---
+
+**Related:** [Endpoint result guide](../results/endpoint-fluctuations.md) · [Simulation review](simulation.md) · [All assumptions](assumptions.md)
