@@ -19,6 +19,29 @@ identifies the actual quantum mean with the exact finite endpoint chain and
 its binomial-image formula. The literal $\Psi$ regrouping and Gaussian
 mean-front approximation are separate unproved statements.
 
+The [classical simulation guide](simulation.md) describes a second endpoint
+result: an accurate estimator of the infinite-temperature OTOC at
+$n=6(s+1)$ and $d=10(s+1)$. Its target is the normalized trace, whereas the
+fluctuation result above allows every trace-one input matrix.
+[Simulation.lean](../Fluctuations/Simulation.lean) gives the actual joint
+success probability at the paper's specified radius and sample count.
+The sampler's full-covariance invariant, the error from averaging outside
+the eye, and the arithmetic cost are proved. No mean-change, local
+reverse-variance, or supplied averaging-error assumption remains in that
+final theorem.
+
+The generated outside-first schedule has arithmetic cost at most
+$180002(N+1)n^2 4^{2\lceil2R\sqrt n+1\rceil+4}$. For
+$\varepsilon=n^{-a}$ and $\delta=n^{-b}$ with fixed positive natural
+exponents, `otoc1_subexponential_simulation_inversePolynomial` combines
+accuracy at every size with the actual subexponential limit
+$\log(\mathrm{work})/n\to0$. The count covers sampling and readout
+on real or complex scalars, including transfer-matrix construction, with exact draws from
+explicitly computed finite distributions. Indexing, stored-coefficient reads,
+and schedule and parameter preprocessing are excluded. This is a formal
+algorithm and arithmetic-cost analysis, without an extracted numerical
+executable, numerical-stability analysis, or bit-complexity bound.
+
 The remaining sections explain the general spatial variance-window theorem,
 which applies at every fixed positive OTOC order. It uses actual spatial Haar
 SU(4) circuits, concrete qubit support, and the numerical local constant
@@ -240,6 +263,8 @@ lower bound. This conclusion requires those uniformity conditions.
 
 | Declaration | Scope |
 | --- | --- |
+| `otoc1_subexponential_simulation` in [Simulation.lean](../Fluctuations/Simulation.lean) | Infinite-temperature endpoint simulation at critical depth, with actual joint success probability and the specified `R,N`. See [the simulation guide](simulation.md). |
+| `otoc1_subexponential_simulation_inversePolynomial` in [Simulation.lean](../Fluctuations/Simulation.lean) | Joint accuracy at every size and `log(work)/n -> 0` for the same physical sampler with fixed positive natural inverse-polynomial exponents. The explicit majorant is in [SimulationAsymptotics.lean](../Fluctuations/SimulationAsymptotics.lean). |
 | `otoc1_endpoint_variance_lower`, `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` in [OTOC1.lean](../Fluctuations/OTOC1.lean) | Actual 1D Haar U(4) endpoint fluctuations throughout the front window; all conditional, propagation and counting ingredients are proved. |
 | `brickworkEndpointOTOC_conditional_mean` in [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) | Exact actual one-gate conditional mean for every interior even gate. |
 | `brickworkEndpointOTOC_haar_mean` in [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) | Actual finite-circuit endpoint mean at every even depth and size. |
@@ -301,9 +326,10 @@ for that pipeline. Its circuit fixes active and inactive counts across depth,
 while the deterministic geometry permits variable counts. The endpoint
 pipeline uses U(4) directly and represents the actual alternating gate counts.
 
-The endpoint fluctuation and many-gate influence theorems are proved. The
-literal manuscript $\Psi$ regrouping, Gaussian mean-front approximation,
-full Gaussian influence envelope outside the central eye, and classical
-simulation runtime remain unproved. General graph-distance asymptotics,
-non-Haar ensemble criteria, and computational quantum advantage also remain
-separate claims.
+The endpoint fluctuation, many-gate influence, and infinite-temperature
+classical simulation theorems are proved. The literal manuscript $\Psi$
+regrouping, Gaussian mean-front approximation, and full Gaussian
+variance-influence envelope outside the central eye remain unproved.
+The simulation's endpoint touching-tail bound is a separate estimate.
+General graph-distance asymptotics, non-Haar ensemble criteria, and
+computational quantum advantage also remain separate claims.
