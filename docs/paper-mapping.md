@@ -8,7 +8,9 @@ variance statement is Theorem VI.14, label
 `thm:fixed-k-transition-window-fluctuation-bound`, on PDF pages 27–28.
 Match labels and mathematical statements if numbering changes. Start with
 the [OTOC(1) guide](otoc1.md) and [OTOC1.lean](../Fluctuations/OTOC1.lean)
-for the completed first-order macroscopic-origin result.
+for the first-order macroscopic-origin result, and the
+[simulation guide](simulation.md) and [Simulation.lean](../Fluctuations/Simulation.lean)
+for the infinite-temperature classical estimator.
 
 ## First-order endpoint OTOC
 
@@ -23,14 +25,46 @@ for the completed first-order macroscopic-origin result.
 | `eq:otoc1-total-variance-from-one-gate-conditional-means` | [GateInfluence.lean](../Fluctuations/GateInfluence.lean), [CoordinateAverages.lean](../Fluctuations/CoordinateAverages.lean) | Conditional projections and their variance sum derived from the genuine finite product measure |
 | Exact finite-depth quantum mean | `brickworkEndpointOTOC_haar_mean`, `brickworkEndpointOTOC_haar_mean_images`, [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) | Proved reflecting-chain and finite binomial-image formulas, including zero-depth and two-qubit cases |
 | Literal $\Psi_d$ display in `thm:endpoint-otoc1-exact-formula` | Separate regrouping of the exact image expression | Not formalized |
-| Gaussian mean-front estimate, full outer influence envelope, simulation runtime | Separate results | Not formalized |
+| Gaussian mean-front estimate and full outer variance-influence envelope | Separate results | Not formalized |
 
 For $n=2(c+2)$ and $d=2T$, the final endpoint theorem assumes
 $\sqrt n\ge12(C+2)$, $|d-5n/3|\le C\sqrt n$, and $\mathrm{Tr}\rho=1$.
 It has no design, conditional-mean, propagation, or gate-count premise.
 Only the selected central eye is counted; an upper bound on its cardinality
 does not establish an outer influence envelope. See the
-[independent scope review](otoc1-review.md).
+[earlier independent scope review](otoc1-review.md), which predates the
+simulation extension below.
+
+## Classical simulation of the infinite-temperature endpoint OTOC
+
+The simulation uses $F_\infty=2^{-n}\operatorname{Tr}[(U^\dagger Z_1UZ_n)^2]$
+at $n=6(s+1)$ and $d=10(s+1)$. The final accuracy theorem is about the
+joint law of the Haar circuit and the estimator's independent samples.
+It has no supplied bias, local perturbation, or mean-change assumption.
+The fluctuation theorem above has the broader trace-one-state scope.
+
+| Manuscript statement or ingredient | Lean declaration and source | Status |
+| --- | --- | --- |
+| `thm:endpoint-sim-otoc1-runtime`; algorithm in `tab:endpoint-otoc1-explicit-simulation` | `otoc1_subexponential_simulation`, [Simulation.lean](../Fluctuations/Simulation.lean) | Actual normalized trace, specified radius and sample count, joint success probability at least $1-\delta$ |
+| `eq:endpoint-sim-conditional-distribution` | [SimulationTrace.lean](../Fluctuations/SimulationTrace.lean), [SimulationMixedCircuitOTOC.lean](../Fluctuations/SimulationMixedCircuitOTOC.lean) | Normalized matrix trace equals the Pauli-sign mean, including the actual retained-gate conditional law |
+| `lem:endpoint-sim-local-gate` | [SimulationLocalInfluence.lean](../Fluctuations/SimulationLocalInfluence.lean), [SimulationLocalCoordinate.lean](../Fluctuations/SimulationLocalCoordinate.lean), [SimulationExpectedTouch.lean](../Fluctuations/SimulationExpectedTouch.lean) | Physical gate replacement controlled by forward/backward touching mass |
+| `lem:endpoint-sim-touching-tail` | [SimulationEndpointTail.lean](../Fluctuations/SimulationEndpointTail.lean), [SimulationTouchingTail.lean](../Fluctuations/SimulationTouchingTail.lean), [SimulationTailReflection.lean](../Fluctuations/SimulationTailReflection.lean) | Derived finite endpoint tails and reflected backward process |
+| `lem:endpoint-sim-eye-error` | [SimulationAveraging.lean](../Fluctuations/SimulationAveraging.lean), final physical assembly in [Simulation.lean](../Fluctuations/Simulation.lean) | Telescoping replacement under the actual product Haar law gives the enlarged-eye bias bound |
+| `lem:endpoint-sim-conditional-sampler`; full second-moment invariant | [SimulationSampler.lean](../Fluctuations/SimulationSampler.lean), [SimulationSamplerCovariance.lean](../Fluctuations/SimulationSamplerCovariance.lean), [SimulationMixedCircuit.lean](../Fluctuations/SimulationMixedCircuit.lean) | Exact finite branching law preserves full covariance and samples the required conditional Pauli distribution |
+| Same output law for the costed physical implementation | `simulationPhysicalSamplerKernel_eq`, [SimulationPhysicalLaw.lean](../Fluctuations/SimulationPhysicalLaw.lean) | Full covariance, output PMF and conditional probability kernel agree with the chronological mixed-circuit sampler for every realized input |
+| Outside-first ordering and $O(W_R)$ coherent sites | [SimulationGeometryReorder.lean](../Fluctuations/SimulationGeometryReorder.lean), [SimulationGeometrySampler.lean](../Fluctuations/SimulationGeometrySampler.lean), [SimulationWidth.lean](../Fluctuations/SimulationWidth.lean) | Actual matching permutation, compressed-vector invariant, physical eye width, and at most $2W_R+4$ coherent sites during updates |
+| Arithmetic-operation count | `simulationCritical_estimatorWork`, [SimulationGeometryCost.lean](../Fluctuations/SimulationGeometryCost.lean), [SimulationCost.lean](../Fluctuations/SimulationCost.lean) | Explicit $180002(N+1)n^2 4^{2\lceil2R\sqrt n+1\rceil+4}$ bound for generated local calls |
+| Choices of $R,N$ and success probability | [SimulationParameters.lean](../Fluctuations/SimulationParameters.lean), [SimulationConcentration.lean](../Fluctuations/SimulationConcentration.lean), [SimulationJointProbability.lean](../Fluctuations/SimulationJointProbability.lean) | Exact parameter arithmetic, Hoeffding and Markov, and the genuine circuit/sampler joint probability measure |
+| Inverse-polynomial subexponential specialization | `otoc1_subexponential_simulation_inversePolynomial`, [Simulation.lean](../Fluctuations/Simulation.lean); explicit majorant in [SimulationAsymptotics.lean](../Fluctuations/SimulationAsymptotics.lean) | Joint accuracy at every size and $\log(\mathrm{work})/n\to0$ for the same sampler, with $\varepsilon=n^{-a}$, $\delta=n^{-b}$ and fixed positive natural exponents |
+
+The operation model is exact scalar arithmetic (real or complex) with sampling from explicitly
+computed finite distributions, as assumed in the manuscript. The counter
+covers sampling and readout arithmetic, including transfer-matrix construction;
+it excludes indexing, stored-coefficient reads, and schedule and parameter
+preprocessing. No extracted numerical executable, bit-complexity bound, or
+finite-precision analysis is provided. These simulation tail estimates do not prove the separate Gaussian mean-front
+approximation or full variance-influence envelope. See the
+[simulation guide](simulation.md) for the precise parameter and cost scope.
 
 ## General variance argument
 
@@ -123,8 +157,8 @@ for the quarter-bound and does not require Hermiticity.
 The generic combinatorial transfer and intermediate spatial theorems remain
 available with explicit hypotheses; these are reusable lemmas, not the final
 assumption boundary. The one-dimensional front-window and central-eye
-influence results are proved separately above. Computational quantum
-advantage and the stated simulation runtime remain outside the formalization.
+influence and infinite-temperature simulation results are proved separately
+above. Computational quantum advantage remains outside the formalization.
 
 ## Manuscript provenance
 
@@ -143,6 +177,7 @@ SHA-256: 9f653514f023afd3ca37d2a05693fb8ca15749d7a870273852d772c4ea9f5a18
 When discussing the mathematics, cite the paper. For the machine-checked proof,
 also record the exact repository commit and declaration, such as
 `Fluctuations.otoc1_endpoint_variance_lower`,
+`Fluctuations.otoc1_subexponential_simulation`,
 `Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control`, or
 `Fluctuations.theorem_VI_14_family`. No publication identifier is inferred from
 the draft filename.
