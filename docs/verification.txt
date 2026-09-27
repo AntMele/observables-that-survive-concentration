@@ -1,18 +1,19 @@
-Verification completed: 2026-09-27
-Command: ./scripts/check-local.sh
+Verification completed: 2026-09-27T13:54:28+00:00
+Command: bash scripts/check-local.sh
 Exit status: 0
-Lean: 4.24.0, arm64-apple-darwin23.6.0
-Lean commit: 797c613eb9b6d4ec95db23e3e00af9ac6657f24b
+Lean: 4.24.0
 mathlib: v4.24.0
 mathlib commit: f897ebcf72cd16f89ab4577d0c826cd14afaafc7
-mathlib working tree: clean
 
-Each project module was compiled from source by Lean. This run used the existing
-read-only Lean/mathlib installation described in README.md. No custom axioms,
-proof holes, or native_decide were used in the project proof sources.
-The audit below prints the definitions, final statements, and axiom dependencies.
+All twelve library modules and the top-level import were compiled from source.
+The 24-declaration audit covers the original general-ensemble theorem and the
+new Haar SU(4) local variance, conditional variance, physical embeddings, and
+concrete independent-circuit result. Only the standard axioms propext,
+Classical.choice, and Quot.sound are allowed. No sorry or custom axioms.
 
-Updated packaging check: scripts/check-local.sh with enforced axiom allowlist also passed.
+This is a local verification record, not a new GitHub Actions result.
+The general spatial light-cone reduction, design convergence, and explicit
+numerical constant 4^(-8*k*m) are not established by this extension.
 
 def Fluctuations.complexVariance.{u_1} : {Ω : Type u_1} →
   {m₀ : MeasurableSpace Ω} → MeasureTheory.Measure Ω → (Ω → ℂ) → ℝ :=
@@ -89,6 +90,49 @@ fun {Ω} {m₀} μ m η F G => ∀ᵐ (ω : Ω) ∂μ, η * ‖μ[G|m] ω - F ω
                               d ≤ b n ∧
                                 ∀ r ≤ R,
                                   c / Polynomial.eval (↑n) p ^ 2 ≤ Fluctuations.complexVariance (μ n) (F n (d + r))
+@Fluctuations.haarLocalOTOC_reverseVariance_identity : ∀ {m : ℕ} {N : Type u_1} [inst : Fintype N]
+  [inst_1 : DecidableEq N] (E : Fin m → Matrix (Fin 4) (Fin 4) ℂ →ₗ[ℂ] Matrix N N ℂ),
+  (∀ (g : Fin m), (E g) 1 = 1) →
+    ∀ (ρ B V M : Matrix N N ℂ) (k : ℕ),
+      Fluctuations.haarLocalConstant m k *
+          ‖∫ (x : Fluctuations.SU4Block m), (Fluctuations.haarLocalOTOC E ρ B V M k) x ∂Fluctuations.su4Haar m -
+                (ρ * (V.conjTranspose * B * V * M) ^ (2 * k)).trace‖ ^
+            2 ≤
+        Fluctuations.complexVariance (Fluctuations.su4Haar m) ⇑(Fluctuations.haarLocalOTOC E ρ B V M k)
+@Fluctuations.haarLocalOTOC_conditional_reverseVariance : ∀ {X : Type u_1} [inst : TopologicalSpace X] [CompactSpace X]
+  [T2Space X] [SecondCountableTopology X] [mX : MeasurableSpace X] [BorelSpace X] {μ : MeasureTheory.Measure X}
+  [MeasureTheory.IsProbabilityMeasure μ] {m : ℕ} {N : Type u_2} [inst_6 : Fintype N] [inst_7 : DecidableEq N]
+  (E : Fin m → Matrix (Fin 4) (Fin 4) ℂ →ₗ[ℂ] Matrix N N ℂ),
+  (∀ (g : Fin m), (E g) 1 = 1) →
+    ∀ (ρ B M : Matrix N N ℂ) (V : X → Matrix N N ℂ),
+      Continuous V →
+        ∀ (k : ℕ),
+          Fluctuations.LocalReverseVariance (μ.prod (Fluctuations.su4Haar m)) (MeasurableSpace.comap Prod.fst mX)
+            (Fluctuations.haarLocalConstant m k)
+            (fun p => (ρ * ((V p.1).conjTranspose * B * V p.1 * M) ^ (2 * k)).trace) fun p =>
+            (Fluctuations.haarLocalOTOC E ρ B (V p.1) M k) p.2
+Fluctuations.haarCircuit_theorem_VI_14 : ∀ (m k : ℕ),
+  ∃ η,
+    0 < η ∧
+      ∀ (N : Type u_1) [inst : Fintype N] [inst_1 : DecidableEq N]
+        (E : ℕ → Fin m → Matrix (Fin 4) (Fin 4) ℂ →⋆ₐ[ℂ] Matrix N N ℂ) (ρ B M : Matrix N N ℂ) {a b : ℕ},
+        a < b →
+          1 / 2 ≤
+              ‖∫ (x : Fluctuations.GateHistory (Fluctuations.SU4Block m) b),
+                    (Fluctuations.unitaryHaarCircuitOTOC E ρ B M k b)
+                      x ∂Fluctuations.historyMeasure (Fluctuations.su4Haar m) b -
+                  ∫ (x : Fluctuations.GateHistory (Fluctuations.SU4Block m) a),
+                    (Fluctuations.unitaryHaarCircuitOTOC E ρ B M k a)
+                      x ∂Fluctuations.historyMeasure (Fluctuations.su4Haar m) a‖ →
+            ∀ (R : ℕ) {P : ℝ},
+              ↑(b - a) ≤ P →
+                ∃ d,
+                  a < d ∧
+                    d ≤ b ∧
+                      ∀ r ≤ R,
+                        η * (η / (1 + η)) ^ R / (4 * P ^ 2) ≤
+                          Fluctuations.complexVariance (Fluctuations.historyMeasure (Fluctuations.su4Haar m) (d + r))
+                            ⇑(Fluctuations.unitaryHaarCircuitOTOC E ρ B M k (d + r))
 'Fluctuations.complex_total_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.norm_mean_sq_le_secondMoment' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.slope_to_variance' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -98,4 +142,19 @@ fun {Ω} {m₀} μ m η F G => ∀ᵐ (ω : Ω) ∂μ, η * ‖μ[G|m] ω - F ω
 'Fluctuations.theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.theorem_VI_14_interval' depends on axioms: [propext, Classical.choice, Quot.sound]
 'Fluctuations.theorem_VI_14_family' depends on axioms: [propext, Classical.choice, Quot.sound]
-Axiom audit passed for all 9 declarations: only propext, Classical.choice, and Quot.sound are allowed.
+'Fluctuations.finiteDimensional_reverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.su4Haar_independent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.matrixBlockOTOC_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.matrixBlockOTOC_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.qubitEmbedding' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.qubitEmbedding_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.starAlgHom_su4_mem_unitary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.product_condExp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.product_localReverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.haarLocalConstant_pos' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.haarLocalOTOC_reverseVariance_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.haarLocalOTOC_conditional_reverseVariance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.history_transition_window' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.history_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Fluctuations.haarCircuit_theorem_VI_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+Axiom audit passed for all 24 declarations: only propext, Classical.choice, and Quot.sound are allowed.

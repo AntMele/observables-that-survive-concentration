@@ -1,145 +1,147 @@
 # Mathematical guide
 
-[Repository overview](../README.md) · [Paper-to-code map](paper-mapping.md) ·
-[Run the verification](reproduce.md)
+[Overview](../README.md) · [Paper map](paper-mapping.md) · [Reproduction](reproduce.md)
 
-This guide describes the formal statement and its proof without requiring Lean
-syntax. The entry point in the source is [Main.lean](../Fluctuations/Main.lean).
+The project separates the general fluctuation argument from a concrete Haar
+model that supplies its local reverse-variance input.
 
-## Objects and notation
+## The concrete circuit model
 
-The theorem concerns a process $F_d:\Omega\to\mathbb C$ on a probability space
-$(\Omega,\mu)$. Each $F_d$ is square-integrable. For each depth, $\mathcal G_d$
-is a sub-sigma-algebra of the ambient measurable space. Write
-
-```math
-m_d=\mathbb E[F_d],\qquad
-V_d=\mathbb E\lvert F_d-m_d\rvert^2,\qquad
-M_d=\mathbb E[F_{d+1}\mid\mathcal G_d].
-```
-
-| Mathematical object | Lean expression |
-| --- | --- |
-| Process at depth $d$ | `F d : Ω → ℂ` |
-| Conditioning information $\mathcal G_d$ | `G d : MeasurableSpace Ω` |
-| Square-integrability | `MemLp (F d) 2 μ` |
-| Complex variance $V_d$ | `complexVariance μ (F d)` |
-| Conditional expectation $M_d$ | `μ[F (d + 1) \| G d]` |
-| Local reverse-variance condition | `LocalReverseVariance μ (G d) η (F d) (F (d + 1))` |
-
-All declarations are in the namespace `Fluctuations`. The variance is a real,
-nonnegative mean squared complex norm; it is not $\mathbb E(F-\mathbb EF)^2$.
-
-## The two substantive inputs
-
-**Mean change.** For natural depths $a<b$ and a real $\Delta\geq0$,
+Let $h_d=(h_{d,1},\ldots,h_{d,m})$ be a fresh block of independent normalized
+Haar SU(4) gates at step $d$. Blocks at different steps are independent. For
+unital complex star-algebra embeddings $E_{d,i}$ into a finite global matrix
+space, define the ordered product $W_d$ of the $E_{d,i}(h_{d,i})$ and set
 
 ```math
-\lvert m_b-m_a\rvert\geq\Delta.
+U_0=I,\qquad U_{d+1}=W_dU_d,\qquad
+F_d=\mathrm{Tr}\!\left[\rho(U_d^\dagger B U_dM)^{2k}\right].
 ```
 
-**Local reverse variance.** A single real $\eta>0$ satisfies, at every depth
-and almost everywhere,
+[HaarSU4.lean](../Fluctuations/HaarSU4.lean) constructs the actual special
+unitary matrix group, proves compactness, and defines the normalized product
+Haar law. [HaarProcess.lean](../Fluctuations/HaarProcess.lean) constructs finite
+histories recursively, adjoining a new independent block at every step.
+[HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) defines the matrices and OTOC
+on those histories. Different depths have their own finite history spaces;
+product-measure identities relate consecutive depths.
+
+The embeddings preserve multiplication, identity, complex scalars, and adjoint,
+so they take SU(4) gates to global unitary matrices.
+[QubitEmbedding.lean](../Fluctuations/QubitEmbedding.lean) supplies the concrete
+example $A\mapsto A\otimes I_S$ for any finite spectator system $S$. The theorem
+allows arbitrary finite global dimensions and such embeddings; the matrices
+$\rho,B,M$ are unrestricted. Density matrices and Pauli observables are
+particular choices, rather than extra assumptions needed by the inequality.
+
+## Why local reverse variance follows
+
+Fix an earlier circuit $V$ and vary only the next block $W(h)$. Its local
+observable is
 
 ```math
-\mathbb E\!\left[\lvert F_{d+1}-M_d\rvert^2\mid\mathcal G_d\right]
-\;\geq\;\eta\lvert M_d-F_d\rvert^2.
+f_V(h)=\mathrm{Tr}\!\left[
+\rho\bigl(V^\dagger W(h)^\dagger B W(h)VM\bigr)^{2k}\right].
 ```
 
-The condition uses mathlib's conditional expectation. It is an argument of the
-theorem, not a new global axiom. Square-integrability, probability normalization,
-and the inclusion of each $\mathcal G_d$ in the ambient sigma-algebra are also
-explicit assumptions.
+There are $32m$ raw continuous features: every entry of each $4\times4$ gate
+and its complex conjugate. An embedded gate entry is a linear combination of
+these features. The ordered block has degree $m$; $W^\dagger BW$ has degree
+$2m$; the trace above has total degree $4mk$.
+[LocalPolynomial.lean](../Fluctuations/LocalPolynomial.lean) proves this
+membership for the actual matrix expression, including arbitrary embedding
+coefficients and arbitrary spectator dimension. Its finite-dimensional span
+$\mathcal S_{m,k}$ depends only on $m,k$. In particular, $B,\rho,V,M$ and the
+global dimension affect coefficients, not the chosen function space.
 
-The final theorem assumes the local inequality at all natural depths. It does
-not additionally require the process to be adapted or the sigma-algebras to be
-nested. For a circuit application, establishing the stated inputs for the actual
-process remains a mathematical obligation.
+For any finite-dimensional space of continuous functions on a compact space,
+a full-support probability law gives a common constant $\eta>0$ with
 
-## How the proof works
-
-```mermaid
-flowchart TD
-    A[Endpoint mean gap] --> B[One large mean increment]
-    C[Local reverse variance] --> D[Slope-to-variance]
-    B --> E[Variance at one depth]
-    D --> E
-    C --> F[Forward persistence]
-    E --> H[Iterate over later depths]
-    F --> H
-    H --> I[Consecutive interval and polynomial bound]
+```math
+\mathrm{Var}(f)\geq\eta\,|\mathbb Ef-f(e)|^2.
 ```
 
-1. **Find a large increment.** Telescoping and the triangle inequality imply
-   that some $a<d_*\leq b$ has
-   $\lvert m_{d_*}-m_{d_*-1}\rvert\geq\Delta/(b-a)$.
-   See `exists_large_increment` in [Window.lean](../Fluctuations/Window.lean#L15).
+[FiniteDimensionalVariance.lean](../Fluctuations/FiniteDimensionalVariance.lean)
+proves this by centering the functions. Full support makes the embedding of
+continuous centered functions into $L^2$ injective. Finite-dimensional norm
+comparison then bounds evaluation at $e$ by the $L^2$ norm. This proves an
+existence result, without computing its constant.
 
-2. **Convert the increment into variance.** Total variance and the
-   squared-mean bound give
-   $V_{d+1}\geq\eta\lvert m_{d+1}-m_d\rvert^2$.
-   Thus $V_{d_*}\geq\eta\Delta^2/(b-a)^2$.
-   See `slope_to_variance` in [Probability.lean](../Fluctuations/Probability.lean#L130).
+Applying it to $\mathcal S_{m,k}$ gives a positive $\eta(m,k)$ for every local
+OTOC simultaneously. At the identity block, $f_V(e)$ is the previous OTOC,
+because the embeddings preserve identity.
+[HaarLocalVariance.lean](../Fluctuations/HaarLocalVariance.lean) proves both the
+local integral inequality and its genuine conditional-expectation version
+under the independent product law. [ProductVariance.lean](../Fluctuations/ProductVariance.lean)
+identifies conditioning on the first factor with averaging the fresh block.
+Thus the concrete Haar theorem does not assume the local inequality,
+square-integrability, continuity, or polynomial membership as additional premises.
 
-3. **Prove persistence.** A weighted square inequality and the local condition
-   imply $V_{d+1}\geq\kappa V_d$, where $\kappa=\eta/(1+\eta)\in(0,1)$.
-   See `forward_persistence` in
-   [WeightedVariance.lean](../Fluctuations/WeightedVariance.lean#L63).
+The space used here is a larger total-degree space than the paper's more refined
+representation. This proves uniform existence of $\eta(m,k)$, not the explicit
+value $4^{-8km}$.
 
-4. **Iterate.** The same selected depth works for every $r\in\mathbb N$:
+## From a mean change to a variance window
+
+Write $m_d=\mathbb EF_d$ and $V_d=\mathbb E|F_d-m_d|^2$. For a general process,
+the local assumption says that with $M_d=\mathbb E[F_{d+1}\mid\mathcal G_d]$,
+
+```math
+\mathbb E[|F_{d+1}-M_d|^2\mid\mathcal G_d]
+\geq\eta|M_d-F_d|^2
+```
+
+almost everywhere, with one common $\eta>0$.
+
+The remaining argument is the same for both routes:
+
+1. An endpoint gap $|m_b-m_a|\geq\Delta$ with $a<b$ forces one increment of
+   size at least $\Delta/(b-a)$.
+2. Total variance and the squared-mean inequality imply
+   $V_{d+1}\geq\eta|m_{d+1}-m_d|^2$.
+3. A weighted square inequality proves persistence:
+   $V_{d+1}\geq\kappa V_d$, where $\kappa=\eta/(1+\eta)\in(0,1)$.
+4. At one selected $a<d_*\leq b$, iteration gives
 
    ```math
    V_{d_*+r}\geq\eta\kappa^r\frac{\Delta^2}{(b-a)^2}.
    ```
 
-5. **Obtain the paper's bound.** Set $\Delta=1/2$, fix $R\in\mathbb N$, and
-   use $b-a\leq P$. Because $\kappa^r\geq\kappa^R$ for $r\leq R$,
-
-   ```math
-   V_{d_*+r}\geq\frac{\eta\kappa^R}{4P^2}\qquad(0\leq r\leq R).
-   ```
-
-   The interval $\{d_*,\ldots,d_*+R\}$ contains exactly $R+1$ depths and
-   is contained in $\{a+1,\ldots,b+R\}$.
-
-Slope-to-variance and persistence are **proved**, not assumed in the final
-probabilistic theorems. The deterministic lemmas in `Window.lean` take these
-two intermediate bounds as inputs; `Main.lean` supplies their proofs.
-
-## Choose the theorem you need
-
-| Declaration | Use it for |
-| --- | --- |
-| [`transition_window`](../Fluctuations/Main.lean#L18) | Any nonnegative mean gap $\Delta$; the bound for every later offset |
-| [`theorem_VI_14`](../Fluctuations/Main.lean#L39) | Mean gap $1/2$, a width bound $P$, and one lower bound for all $r\leq R$ |
-| [`theorem_VI_14_interval`](../Fluctuations/Main.lean#L78) | The explicit finite interval, its cardinality and location |
-| [`theorem_VI_14_family`](../Fluctuations/Main.lean#L107) | A polynomial width bound and a constant uniform in system size |
-
-In the family result, the probability space may depend on $n$. For a fixed
-$R$ and an $n$-independent $\eta>0$, the proof chooses
+For $\Delta=1/2$, $b-a\leq P$, and $0\leq r\leq R$, this yields
 
 ```math
-c(\eta,R)=\frac{\eta}{4}\left(\frac{\eta}{1+\eta}\right)^R
+V_{d_*+r}\geq\frac{\eta\kappa^R}{4P^2}.
 ```
 
-**before** quantifying over $n\geq n_0$. It then obtains a suitable depth for
-each $n$. The polynomial is an actual `Polynomial ℝ`, with evaluation
-`p.eval (n : ℝ)`. Its positivity on the relevant sizes follows from the
-positive transition width and the assumed width bound.
+The consecutive interval has $R+1$ depths and lies between $a+1$ and $b+R$.
+Slope-to-variance and persistence are proved lemmas, not assumptions of the
+final probabilistic results.
 
-This is an inverse-polynomial bound for fixed $R$. Letting $R$ grow with $n$
-changes the prefactor, and the theorem does not claim a positive lower bound
-uniform over arbitrarily many later depths.
+## Which theorem to read
 
-## What this says about the paper
+| Declaration | Scope |
+| --- | --- |
+| `haarCircuit_theorem_VI_14` in [HaarCircuit.lean](../Fluctuations/HaarCircuit.lean) | Actual independent Haar SU(4) circuit blocks; local reverse variance is proved. |
+| `haarLocalOTOC_conditional_reverseVariance` in [HaarLocalVariance.lean](../Fluctuations/HaarLocalVariance.lean) | The conditional local inequality for a continuous earlier circuit and an independent Haar block. |
+| `history_transition_window` in [HaarProcess.lean](../Fluctuations/HaarProcess.lean) | Arbitrary nonnegative mean gap for continuous history observables in one fixed local feature space. |
+| `transition_window` in [Main.lean](../Fluctuations/Main.lean) | General complex square-integrable processes with mean change and local reverse variance supplied. |
+| `theorem_VI_14`, `theorem_VI_14_interval`, `theorem_VI_14_family` in [Main.lean](../Fluctuations/Main.lean) | The uniform bound, explicit finite interval, and polynomial-family quantifiers for the general theorem. |
 
-For the intended application, substitute the paper's OTOC for $F_d$, set
-$a=d_{\rm lc}$ and $b=d_{\rm mc}$, and provide the endpoint gap and local
-condition. The circuit construction, OTOC matrix formula, and arguments using
-light cones, Haar averages, or moment control to establish these inputs are
-outside this formalization. So are the paper's other results and any
-computational quantum-advantage claim.
+The Haar-circuit theorem chooses $\eta$ before the global matrix index type,
+embeddings, and observable matrices. The same constant therefore applies as
+system size varies while $m,k$ stay fixed. With $P=p(n)$ and fixed $R$, the
+prefactor $c=\eta\kappa^R/4$ is positive and independent of $n$. Allowing $m$ or
+$R$ to grow with $n$ does not give that uniform conclusion automatically.
 
-To review that boundary, use the [paper-to-code map](paper-mapping.md) and
-[review checklist](../REVIEW.md). To inspect the fully elaborated theorem
-types and their dependencies, follow the [verification instructions](reproduce.md).
+## What still connects this model to the paper
+
+The model adds exactly $m$ independent gates per step. Reducing a general
+spatial architecture or a layer containing a growing number of gates to a
+fixed-size active block requires light-cone and inactive-gate cancellation
+arguments that are not formalized here. The mean gap and width bound are also
+inputs: this project does not prove design convergence, mixing depths, or the
+paper's Haar-average estimates that establish them.
+
+The full stabilizing-element/open-support criteria for other ensembles, the
+sharper numerical Haar constant, the paper's other results, and computational
+quantum advantage remain outside the proved claims. The general theorem is
+available for those ensembles once its stated hypotheses are supplied.

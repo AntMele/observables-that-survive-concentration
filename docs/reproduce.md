@@ -4,10 +4,11 @@
 [Paper-to-code map](paper-mapping.md)
 
 This guide checks the formal statements in the repository, including the
-variance lower bound corresponding to Theorem VI.14. The mean change and local
-reverse-variance condition remain explicit hypotheses. A successful build
-certifies the Lean statements under their stated assumptions; the
-[paper mapping](paper-mapping.md) explains their correspondence with the paper.
+variance lower bound corresponding to Theorem VI.14 and its concrete Haar SU(4)
+extension. The general theorem assumes mean change and local reverse variance.
+The Haar-circuit theorem proves the local condition for its fixed-size independent
+gate blocks and retains the endpoint-gap and width assumptions. The
+[paper mapping](paper-mapping.md) records the precise scope of each route.
 
 ## First-time setup
 
@@ -39,7 +40,7 @@ dependencies. It exits with an error if a build or audit step fails.
 A successful run reports a completed build and ends with:
 
 ```text
-Axiom audit passed for all 9 declarations: only propext, Classical.choice, and Quot.sound are allowed.
+Axiom audit passed for all 24 declarations: only propext, Classical.choice, and Quot.sound are allowed.
 ```
 
 To read the statements and axiom reports again after a successful build:
@@ -65,46 +66,41 @@ dependencies is a separate change that requires a fresh verification run.
 
 ## What the axiom audit checks
 
-[`scripts/Audit.lean`](../scripts/Audit.lean) displays the variance definition,
-the local reverse-variance condition, and the four final theorem types. It
-also uses `#print axioms` on nine public declarations, all in the
-`Fluctuations` namespace:
-
-1. `complex_total_variance`
-2. `norm_mean_sq_le_secondMoment`
-3. `slope_to_variance`
-4. `forward_persistence`
-5. `exists_large_increment`
-6. `transition_window`
-7. `theorem_VI_14`
-8. `theorem_VI_14_interval`
-9. `theorem_VI_14_family`
+[`scripts/Audit.lean`](../scripts/Audit.lean) displays definitions and theorem
+types, then uses `#print axioms` on all listed public declarations. The current
+24-declaration audit covers the original probability/window results and the new
+finite-dimensional bound, actual Haar sampling, matrix polynomial membership,
+physical embeddings, product conditioning, local Haar inequalities, history
+processes, and concrete circuit theorem.
 
 Each report includes the declaration's transitive axiom dependencies, including
 those reached through supporting lemmas. The
-[audit checker](../scripts/check-axioms.py) requires exactly these nine reports
-and permits only Lean's standard `propext`, `Classical.choice`, and
-`Quot.sound`. It rejects `sorryAx`, any additional axiom, and missing or
-duplicate reports. The two scientific inputs are theorem parameters, so they
-are visible in the theorem statements rather than appearing as extra axioms.
+[audit checker](../scripts/check-axioms.py) requires exactly the declared set of
+reports and permits only Lean's standard `propext`, `Classical.choice`, and
+`Quot.sound`. It rejects `sorryAx`, any additional axiom, and missing or duplicate
+reports. Explicit mathematical assumptions appear in the theorem statements;
+they are not new global axioms.
 
-The build checks the library modules; the axiom audit specifically covers the
-nine selected declarations and their dependencies. It does not automatically
-add future, unrelated declarations to the audited set. Reviewing the formal
-assumptions against the paper remains a separate mathematical check.
+The build checks all imported library modules. The axiom audit covers the
+listed declarations and their dependencies; it does not automatically add
+future, unrelated declarations. Reviewing the assumptions and model against
+the paper remains a separate mathematical check.
 
 ## Recorded verification and current status
 
-The [recorded GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
-passed for commit `4d4a4d4a1ec88d9c3618e887b54ca2be8c10e175` in
-3 minutes 28 seconds. This is evidence for that revision. The
-[verification workflow](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
-shows later runs; check the result for the revision you are reviewing, or run
-the commands above locally.
+The current [local verification record](verification.txt) reports a successful
+full source rebuild on **2026-09-27**, using `bash scripts/check-local.sh`, with
+no warnings or errors. All twelve library modules and the top-level import
+compiled, and the enforced 24-declaration axiom audit passed. This record covers
+the Haar extension, including `haarCircuit_theorem_VI_14`.
 
-The original local theorem statements and audit output are preserved in
-[`verification.txt`](verification.txt). That file is a historical record,
-not a live report of the current checkout.
+The earlier [GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
+passed for commit `4d4a4d4a1ec88d9c3618e887b54ca2be8c10e175` in
+3 minutes 28 seconds. **That CI run covers the earlier abstract-only version,
+not the new Haar extension.** Check the
+[workflow results](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
+for the revision you are reviewing, or run the commands above. A saved report
+or an earlier green badge is not evidence for later source changes.
 
 ## Optional developer shortcut: reuse an existing installation
 
@@ -119,7 +115,7 @@ SHARED_LEAN_PROJECT=/absolute/path/to/existing/lean-project \
 The existing project must contain the Lean binary at
 `.elan/toolchains/leanprover--lean4---v4.24.0/bin/lean` and compatible compiled
 packages under `.lake/packages/`. The helper reads those files and writes only
-this project's compiled modules. It finishes with the same nine-declaration
+this project's compiled modules. It finishes with the same enforced
 axiom check.
 
 If `SHARED_LEAN_PROJECT` is unset, the helper looks for a neighboring directory
