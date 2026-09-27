@@ -3,13 +3,11 @@
 [Home](../../README.md) / [Reader guide](../README.md) / Verification
 
 This guide builds the library and checks the transitive axiom dependencies
-of the listed principal results. Start with the [OTOC(1) guide](../results/endpoint-fluctuations.md)
-and [OTOC1.lean](../../Fluctuations/OTOC1.lean) for the endpoint variance theorem.
-For classical simulation, start with the [simulation guide](../results/classical-simulation.md)
-and [Simulation.lean](../../Fluctuations/Simulation.lean).
-The [paper mapping](../reference/paper-map.md) distinguishes this unconditional
-brickwork result from the general spatial theorem, whose design-convergence
-and transition-width bounds remain external inputs.
+of the listed principal results. For the mathematics, follow the
+[reader guide](../README.md): general OTOC⁽ᵏ⁾ variance first,
+one-dimensional OTOC₁ second, and classical simulation third.
+The [paper-to-proof map](../reference/paper-map.md) and
+[assumption audit](../reviews/assumptions.md) record the scope of each result.
 
 ## First-time setup
 
@@ -156,5 +154,7 @@ The record is preserved verbatim, so document paths inside it refer to that
 verified revision. Use the [reader guide](../README.md) to find current result
 guides, the [reviewer guide](../../REVIEW.md) for review notes, and the
 [paper-to-code map](../reference/paper-map.md) for manuscript correspondence.
-The reorganization changes documentation only; Lean sources, build scripts,
+The numbered result guides follow the manuscript: general OTOC⁽ᵏ⁾ variance,
+one-dimensional OTOC₁, then simulation. The global Haar mean guide is a
+supporting reference. These reorganizations change documentation only; Lean sources, build scripts,
 and pinned dependencies retain the recorded hashes.
