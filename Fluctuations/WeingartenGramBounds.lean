@@ -206,8 +206,8 @@ lemma normalizedPermutationGram_inverse_entry_scaled {D : ℝ} (hD : 0 < D) (r :
   field_simp
 
 /-- The actual inverse-Gram coefficients satisfy the full finite inversion
-identity. This is an algebraic theorem; the missing Haar theorem must identify
-the averaged tensor projection with these coefficients. -/
+identity. `HaarWeingartenProjection.lean` identifies the actual averaged tensor
+projection with these coefficients. -/
 theorem gramWeingarten_inverse_identity {D : ℝ} (hD : 1 ≤ D) (r : ℕ)
     (hlarge : 2 * (r.factorial : ℝ) ≤ D) (σ η : Equiv.Perm (Fin r)) :
     (∑ τ : Equiv.Perm (Fin r),
