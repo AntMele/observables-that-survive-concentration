@@ -7,7 +7,7 @@ This review compares the statements in [`Simulation.lean`](../Fluctuations/Simul
 For every integer `s ≥ 0`, set `n = 6(s+1)` and `d = 10(s+1) = 5n/3`. Thus every positive multiple of six is included. Draw each actual two-qubit gate independently from normalized Haar measure on U(4), and form the circuit in the manuscript's chronological convention. For this realized circuit, the target is the literal normalized quantum trace
 
 ```math
-F_\infty(U)=2^{-n}\operatorname{Tr}[(U^\dagger Z_1 U Z_n)^2].
+F_\infty(U)=2^{-n}\mathrm{Tr}[(U^\dagger Z_1 U Z_n)^2].
 ```
 
 For any real `0 < ε < 1` and `0 < δ < 1`, choose exactly
