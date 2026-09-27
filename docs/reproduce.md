@@ -109,8 +109,10 @@ audit** passed with no warnings or errors. The
 theorem statements, and axiom reports, including
 `activeHaarCircuit_theorem_of_moment_control`.
 
-The new extension's publication CI result is pending; the successful local
-check and the older GitHub run are separate pieces of evidence.
+GitHub also checks each published revision. Use the
+[workflow results](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
+to inspect the status and log for the exact commit under review; the recorded
+local check and the historical GitHub run above are separate evidence.
 
 For historical reference, the earlier [GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
 passed for commit `4d4a4d4a1ec88d9c3618e887b54ca2be8c10e175` in
