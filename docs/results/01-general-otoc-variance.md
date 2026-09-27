@@ -23,7 +23,7 @@ F_d=\mathrm{Tr}\!\left[\rho(U_d^\dagger B U_dM)^{2k}\right],
 
 Suppose a common local reverse-variance constant $\eta>0$ applies at all
 depths, and the mean changes by at least $1/2$ between $a<b$, with
-$b-a\le P$. Lean proves that, for every chosen $R\ge0$, there exists
+$b-a\le P$. Lean proves that, for every chosen integer $R\ge0$, there exists
 $a<d_*\le b$ such that
 
 ```math
@@ -188,7 +188,7 @@ f_V(h)=\mathrm{Tr}\!\left[
 the degree separately in every gate. A word contributing to an entry of $W$
 chooses one of $16$ matrix entries from each gate, giving $16^m$ word indices.
 Pairing a word with a conjugated word gives $16^{2m}$ balanced feature indices.
-The actual OTOC lies in their degree-$2k$ span, whose dimension is at most
+The actual OTOC lies in their span of degree $2k$, whose dimension is at most
 
 ```math
 (16^{2m})^{2k}=4^{8km}.
@@ -196,7 +196,7 @@ The actual OTOC lies in their degree-$2k$ span, whose dimension is at most
 
 All observable matrices, embedding coefficients, and spectator dimensions
 affect coefficients in this span, rather than its dimension bound. The space
-is invariant under left translation on the product group SU(4)$^m$.
+is invariant under left translation on the product group $\mathrm{SU}(4)^m$.
 
 [HaarEvaluationBound.lean](../../Fluctuations/HaarEvaluationBound.lean) proves
 that a finite-dimensional translation-invariant space $\mathcal S$ of
