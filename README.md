@@ -4,45 +4,62 @@
 
 **Lean 4 companion to the variance lower bound in Theorem VI.14.**
 
-The project has two results. The general theorem converts a mean change and a
-local reverse-variance condition into persistent fluctuations. The Haar-circuit
-extension constructs actual matrix out-of-time-order correlators (OTOCs) from
-independent SU(4) gates and
-**proves the local reverse-variance condition** for that model. Its final
-variance theorem retains the mean-gap and transition-width assumptions.
+The strongest result treats full Haar-gate layers with a fixed number of active
+gates and arbitrarily many inactive gates. It proves the local reverse-variance
+bound, cancels inactive gates under explicit commutation certificates, and
+derives the required half-unit mean gap from early-time commutation and two
+quarter-unit mean estimates. The observable is the actual matrix
+out-of-time-order correlator (OTOC).
+
+The general probability theorem remains available for other ensembles, with
+mean change and local reverse variance supplied as hypotheses.
 
 ## Start here
 
 For a first reading alongside the paper, follow the
 [paper-to-code map](docs/paper-mapping.md), the
 [local reverse-variance argument](docs/guide.md#why-local-reverse-variance-follows),
-and the [Haar-circuit theorem](Fluctuations/HaarCircuit.lean).
+and the [full-layer circuit theorem](Fluctuations/ActiveHaarCircuit.lean).
 Then check the [scope limits](docs/guide.md#what-still-connects-this-model-to-the-paper)
 and [reproduce the verification](docs/reproduce.md).
 
 | If you want to… | Read |
 | --- | --- |
 | Understand the mathematics | [Guide](docs/guide.md) |
-| Inspect the concrete Haar-circuit theorem | [HaarCircuit.lean](Fluctuations/HaarCircuit.lean) |
+| Inspect the strongest circuit theorem | [ActiveHaarCircuit.lean](Fluctuations/ActiveHaarCircuit.lean) |
 | Use the theorem for another ensemble | [Main.lean](Fluctuations/Main.lean) |
 | Compare with the manuscript | [Paper-to-code map](docs/paper-mapping.md) and [review checklist](REVIEW.md) |
 | Check or extend the proof | [Reproduction](docs/reproduce.md) and [contributing](CONTRIBUTING.md) |
 
-## The Haar-circuit result
+## The full-layer result
 
-Fix the OTOC order $k$ and a number $m$ of new gates per step. Each step samples
-$m$ independent normalized Haar SU(4) gates, embeds them by unital complex
-star-algebra homomorphisms, and multiplies their ordered block onto the previous
-circuit. The observable is the actual matrix trace
+Fix the OTOC order $k$ and $m$ active gates per layer. Each layer also contains
+$q$ inactive gates, where $q$ may grow with system size. All new gates are
+independent normalized Haar SU(4) gates inserted by unital complex star-algebra
+homomorphisms. Write the layer as $W_d=J_dA_d$, with inactive block $J_d$ and
+active block $A_d$, and set $U_{d+1}=W_dU_d$.
+The counts $m,q$ are fixed across depths of a given process; the embeddings
+may change with depth.
+
+Every inactive gate must commute with $B$. This explicit certificate gives
+$J_d^\dagger BJ_d=B$, so only the fresh active gates enter the local OTOC.
+Inactive gates remain in the full circuit history and may matter at later depths.
+The observable is
 
 ```math
 F_d=\mathrm{Tr}\!\left[\rho\left(U_d^\dagger B U_d M\right)^{2k}\right].
 ```
 
-`haarCircuit_theorem_VI_14` chooses **one $\eta(m,k)>0$ before the global matrix
-dimension, gate embeddings, state/observable matrices, and depth interval**.
-If $a<b$, the endpoint means differ by at least $1/2$, and $b-a\leq P$, then
-for any chosen $R\in\mathbb N$, some $a<d_*\leq b$ satisfies
+`activeHaarCircuit_theorem_of_moment_control` uses **one $\eta(m,k)>0$,
+independent of $q$, global dimension, embeddings, and observable matrices**. Its inputs
+are the inactive-gate certificate, $a<b$, a width bound $b-a\leq P$, and:
+
+- $\mathrm{Tr}(\rho)=1$, $B^2=M^2=I$;
+- at depth $a$, $U_a^\dagger BU_a$ commutes with $M$ for every history;
+- a reference mean $h$ satisfies $|\mathbb EF_b-h|\leq1/4$ and $|h|\leq1/4$.
+
+Lean derives $\mathbb EF_a=1$ and $|\mathbb EF_b-\mathbb EF_a|\geq1/2$.
+For any chosen $R\in\mathbb N$, some $a<d_*\leq b$ then satisfies
 
 ```math
 \mathrm{Var}(F_{d_*+r})\geq
@@ -50,29 +67,27 @@ for any chosen $R\in\mathbb N$, some $a<d_*\leq b$ satisfies
 \qquad(0\leq r\leq R).
 ```
 
-Variance means $\mathbb E|F-\mathbb EF|^2$. Taking $P=p(n)$ gives an
-inverse-polynomial bound with a common prefactor when **$m,k,R$ are fixed**.
-The proof establishes the existence of $\eta$; it does not establish the
-paper's numerical choice $4^{-8km}$.
-
-The general results in [Main.lean](Fluctuations/Main.lean) also cover arbitrary
-complex square-integrable processes, arbitrary mean gaps, explicit interval
-cardinality and location, and polynomial families. For those general ensembles,
-local reverse variance remains a hypothesis.
+Variance means $\mathbb E|F-\mathbb EF|^2$. With $P=p(n)$ and fixed **$m,k,R$**,
+the prefactor is independent of system size and the number of inactive gates.
+The theorem `activeHaarCircuit_theorem_VI_14` gives the same conclusion when the
+half-unit gap is supplied directly. [HaarCircuit.lean](Fluctuations/HaarCircuit.lean)
+contains the earlier model with only active gates; [Main.lean](Fluctuations/Main.lean)
+contains the general probability, interval, and polynomial-family results.
 
 ## Scope
 
-| Formalized | Inputs or remaining work |
+| Proved in Lean | Inputs or remaining work |
 | --- | --- |
-| Actual compact SU(4), normalized Haar measure, and independent gate sampling | The endpoint mean gap and a transition-width bound |
-| Raw gate-entry polynomial space containing the matrix OTOC, uniformly in system dimension | Deriving the gap from designs, mixing, or Haar-average convergence |
-| A positive uniform local constant, including the conditional inequality | The sharper explicit constant $4^{-8km}$ |
-| Independent circuit histories and the final Haar-circuit variance bound | Reducing a general spatial architecture to a fixed-size active block by light-cone cancellation |
-| A genuine two-qubit tensor-with-identity embedding | Computational quantum advantage and other claims in the paper |
+| Actual SU(4), normalized product Haar sampling, matrix OTOCs, and a uniform local variance constant | The embeddings and the active/inactive decomposition |
+| Inactive-unitary cancellation; regrouping interleaved lists under cross-commutation; commutation on separate tensor factors | Graph-based support propagation, a light-cone construction, and a bound on the active-gate count |
+| Early OTOC equals one for commuting involutions; a half-gap follows from the two mean estimates | The early commutation certificate, moment-control error, reference-mean estimate, and width bound |
+| Full-layer variance bound with a constant independent of $q$ and global dimension | The sharper numerical Haar constant $4^{-8km}$ and computational quantum advantage |
 
-The concrete theorem models **exactly $m$ independent gates per step**. It does
-not by itself identify those steps with layers of an arbitrary growing spatial
-circuit. See the [guide](docs/guide.md) for this boundary and the proof route.
+The reference mean can be chosen to be a Haar mean, but the theorem does not
+calculate that mean or prove convergence to it. The [guide](docs/guide.md)
+explains exactly how the algebraic certificates and statistical inputs enter.
+Identifying an arbitrary architecture's gate coordinates with the grouped
+product sampling law also remains an application step.
 
 ## Run the verification
 
@@ -87,14 +102,20 @@ bash scripts/check.sh
 
 Lean **4.24.0** and mathlib **v4.24.0** are pinned. The check builds the library
 and audits all listed declarations and their transitive dependencies against
-`propext`, `Classical.choice`, and `Quot.sound`. The
-[Haar-extension CI run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
+`propext`, `Classical.choice`, and `Quot.sound`. The full local check passed for
+the new extension: all 15 library modules and the top-level import compiled,
+and all 42 audited declarations passed with no warnings or errors. The
+[earlier Haar-model CI run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
 passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`.
-See the [reproduction guide](docs/reproduce.md) for that verification record
-and instructions to check another revision.
+That run predates the active/inactive-layer and mean-change extensions. See the
+[reproduction guide](docs/reproduce.md) for verification status and instructions
+to check the current source.
 
 ## Source route
 
+- [ActiveHaarCircuit.lean](Fluctuations/ActiveHaarCircuit.lean): full-layer theorem, with either a supplied gap or the moment-control inputs.
+- [SpatialSupport.lean](Fluctuations/SpatialSupport.lean): cancellation, interleaved products, and tensor-factor commutation.
+- [MeanChange.lean](Fluctuations/MeanChange.lean): commuting-involution OTOCs and the quantitative mean-gap argument.
 - [HaarSU4.lean](Fluctuations/HaarSU4.lean): the actual gate group, measure, independence, and coordinates.
 - [LocalPolynomial.lean](Fluctuations/LocalPolynomial.lean): finite feature spaces and matrix OTOC membership.
 - [FiniteDimensionalVariance.lean](Fluctuations/FiniteDimensionalVariance.lean): reverse variance on a finite-dimensional continuous-function space under a full-support probability law.
