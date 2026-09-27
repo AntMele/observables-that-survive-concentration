@@ -3,14 +3,10 @@
 [Repository overview](../README.md) · [Mathematical guide](guide.md) ·
 [Paper-to-code map](paper-mapping.md)
 
-This guide checks the formal statements in the repository, including the
-variance lower bound corresponding to Theorem VI.14 and its full-layer Haar
-SU(4) extension. The strongest circuit theorem proves the local variance
-condition and derives the half-unit mean gap from commutation certificates,
-trace normalization, involutions, and two supplied scalar mean estimates. The
-width bound is also an input. The general theorem instead assumes mean change
-and local reverse variance. The [paper mapping](paper-mapping.md) records the
-precise scope of each route.
+This guide builds the entire imported library and checks the transitive axiom
+dependencies of the listed principal results. Read the [paper mapping](paper-mapping.md)
+for the distinction between proved ingredients, model assumptions, and the
+external design-convergence input.
 
 ## First-time setup
 
@@ -42,10 +38,10 @@ dependencies. It exits with an error if a build or audit step fails.
 A successful run reports a completed build and ends with:
 
 ```text
-Axiom audit passed for all 42 declarations: only propext, Classical.choice, and Quot.sound are allowed.
+Axiom audit passed for all N declarations: only propext, Classical.choice, and Quot.sound are allowed.
 ```
 
-The declaration count is determined by the committed audit list.
+Here `N` is the declaration count in the committed audit list; the verification record gives the count for the checked source.
 
 To read the statements and axiom reports again after a successful build:
 
@@ -91,36 +87,18 @@ listed declarations and their dependencies; it does not automatically add
 future, unrelated declarations. Reviewing the assumptions and model against
 the paper remains a separate mathematical check.
 
-## Recorded verification and current status
+## Verification evidence
 
-The [earlier Haar-model GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36327000675)
-passed for revision `949e8226e28dd3c87b98cd9b123d5aa1c2ab95a3`, including the
-concrete fixed-block circuit theorem and its enforced axiom audit. Its
-verification job took **4 minutes 55 seconds**; the full run took
-**5 minutes 14 seconds**. This is evidence for that exact source revision,
-which predates `SpatialSupport.lean`, `MeanChange.lean`, and
-`ActiveHaarCircuit.lean`.
+The [verification record](verification.txt) records the latest complete local
+build, enforced axiom audit, and source fingerprints. Local development uses
+the same pinned Lean and Mathlib versions through `scripts/check-local.sh`.
+The standard `scripts/check.sh` route uses Lake and is run independently by
+GitHub Actions.
 
-The combined local check of the full-layer and mean-change extensions passed
-on **2026-09-27** with `bash scripts/check-local.sh`: all **15 library modules**
-and the top-level import compiled, and the enforced **42-declaration axiom
-audit** passed with no warnings or errors. The
-[verification record](verification.txt) contains the command, timestamp,
-theorem statements, and axiom reports, including
-`activeHaarCircuit_theorem_of_moment_control`.
-
-GitHub also checks each published revision. Use the
-[workflow results](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
-to inspect the status and log for the exact commit under review; the recorded
-local check and the historical GitHub run above are separate evidence.
-
-For historical reference, the earlier [GitHub Actions run](https://github.com/AntMele/observables-that-survive-concentration/actions/runs/36316565231)
-passed for commit `4d4a4d4a1ec88d9c3618e887b54ca2be8c10e175` in
-3 minutes 28 seconds. That earlier run covers the abstract-only version.
-Check the
-[workflow results](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
-for the revision you are reviewing, or run the commands above. A saved report
-or an earlier green badge is not evidence for later source changes.
+Inspect the [workflow results](https://github.com/AntMele/observables-that-survive-concentration/actions/workflows/lean.yml)
+for the exact commit under review. A saved report or an older green run does
+not certify later source changes. The source fingerprint list makes it possible
+to distinguish mathematical source revisions from later documentation edits.
 
 ## Optional developer shortcut: reuse an existing installation
 
