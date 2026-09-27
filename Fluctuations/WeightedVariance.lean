@@ -18,11 +18,13 @@ lemma weighted_norm_sq {η : ℝ} (hη : 0 < η) (x y : ℂ) :
 lemma complexVariance_sub_const [IsProbabilityMeasure μ] {F : Ω → ℂ}
     (hF : MemLp F 2 μ) (c : ℂ) :
     complexVariance μ (fun ω => F ω - c) = complexVariance μ F := by
-  rw [complexVariance_eq_re_add_im (hF.sub (memLp_const c)),
-    complexVariance_eq_re_add_im hF]
+  have hc : MemLp (fun ω => F ω - c) 2 μ := hF.sub (memLp_const c)
+  rw [complexVariance_eq_re_add_im hc, complexVariance_eq_re_add_im hF]
   simp only [Complex.sub_re, Complex.sub_im]
-  rw [variance_sub_const hF.re.aestronglyMeasurable,
-    variance_sub_const hF.im.aestronglyMeasurable]
+  have hFre : MemLp (fun ω => (F ω).re) 2 μ := hF.re
+  have hFim : MemLp (fun ω => (F ω).im) 2 μ := hF.im
+  rw [variance_sub_const hFre.aestronglyMeasurable,
+    variance_sub_const hFim.aestronglyMeasurable]
 
 /-- The mean minimizes the mean squared complex distance. -/
 lemma complexVariance_le_sq_distance [IsProbabilityMeasure μ] {F : Ω → ℂ}
@@ -49,6 +51,7 @@ theorem weighted_variance_comparison [IsProbabilityMeasure μ] {η : ℝ} (hη :
     (fun ω => by
       have h := weighted_norm_sq hη (F ω - c) (M ω - c)
       simpa only [sub_sub_sub_cancel_right] using h)
+  simp only [Pi.add_apply] at hint
   rw [integral_const_mul, integral_add
     ((hMF.integrable_norm_pow (by norm_num)).const_mul η)
     (hMc.integrable_norm_pow (by norm_num)), integral_const_mul] at hint
