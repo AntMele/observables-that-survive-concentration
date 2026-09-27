@@ -2,32 +2,35 @@
 
 [← Repository overview](../README.md) · [Paper reader’s guide](../docs/README.md)
 
-The **129 proof modules** below are grouped by the part of the argument they support. Start with a final theorem, then follow its imports for the supporting lemmas. For English statements, assumptions, and the correspondence with the paper, begin with the [reader’s guide](../docs/README.md).
+Follow the manuscript in three chapters: **general fixed-order OTOC variance → one-dimensional OTOC₁ → classical simulation**. The global Haar mean, local reverse variance, and spatial support results are ingredients of the first chapter. All **129 proof modules** are indexed below.
 
-## Start with the result you are reading
+## Start in manuscript order
 
-| Paper topic | Formal entry point | Suggested next step |
+| Chapter | English guide | Formal entry points |
 | :--- | :--- | :--- |
-| General variance lower bound (Theorem VI.14) | [SpatialHaarFinal.lean](SpatialHaarFinal.lean) | [SpatialHaarTheorem.lean](SpatialHaarTheorem.lean) connects the physical circuit to the abstract [Main.lean](Main.lean) theorem. |
-| First-order endpoint OTOC fluctuations | [OTOC1.lean](OTOC1.lean) | [BrickworkEndpointOTOC.lean](BrickworkEndpointOTOC.lean) gives the quantum observable and conditional-mean identities. |
-| Global Haar mean estimates | [GlobalHaarMeanAllDimensions.lean](GlobalHaarMeanAllDimensions.lean) | [GlobalHaarMeanBound.lean](GlobalHaarMeanBound.lean) proves the all-order estimate; [GlobalHaarFirstOrderValue.lean](GlobalHaarFirstOrderValue.lean) gives the exact first-order value. |
-| Exact first-order endpoint mean | [BrickworkEndpointMean.lean](BrickworkEndpointMean.lean) | [EndpointMean.lean](EndpointMean.lean) provides the endpoint-walk formulas. |
-| Subexponential classical simulation | [Simulation.lean](Simulation.lean) | Read [SimulationEyeError.lean](SimulationEyeError.lean) for bias, [SimulationPhysicalLaw.lean](SimulationPhysicalLaw.lean) for sampler correctness, and [SimulationAsymptotics.lean](SimulationAsymptotics.lean) for the runtime limit. |
+| **I. General OTOC(k) variance** | [Variance window · Theorem VI.14](../docs/results/01-general-otoc-variance.md) | [SpatialHaarFinal.lean](SpatialHaarFinal.lean) assembles the physical Haar circuit theorem; [Main.lean](Main.lean) gives the abstract variance-window theorem. |
+| **II. One-dimensional OTOC₁** | [Exact mean, fluctuations, and influential gates](../docs/results/02-otoc1-fluctuations.md) | [BrickworkEndpointMean.lean](BrickworkEndpointMean.lean) gives the exact mean; [OTOC1.lean](OTOC1.lean) proves the variance and many-gate influence bounds. |
+| **III. Classical simulation** | [Estimator, accuracy, and subexponential work](../docs/results/03-classical-simulation.md) | [Simulation.lean](Simulation.lean) assembles the infinite-temperature simulation theorem. |
 
-The declarations in these entry points specify the precise hypotheses and quantifiers. Intermediate lemmas may take inputs that the final circuit theorem subsequently proves.
+For Chapter I, [SpatialHaarTheorem.lean](SpatialHaarTheorem.lean) connects physical geometry to the variance argument. [ExplicitHaarVariance.lean](ExplicitHaarVariance.lean) proves the local coefficient, and [GlobalHaarMeanAllDimensions.lean](GlobalHaarMeanAllDimensions.lean) proves the Haar mean bound. The [Haar mean guide](../docs/reference/haar-mean.md) explains this supporting result and its exact first-order specialization.
 
-## Browse the proof families
+For Chapter II, [BrickworkEndpointOTOC.lean](BrickworkEndpointOTOC.lean) supplies the quantum observable and conditional-mean identities. For Chapter III, follow [SimulationEyeError.lean](SimulationEyeError.lean) for bias, [SimulationPhysicalLaw.lean](SimulationPhysicalLaw.lean) for sampler correctness, and [SimulationAsymptotics.lean](SimulationAsymptotics.lean) for the work limit.
 
-- [Variance bounds and local Haar estimates](#variance) · 19 modules
-- [Physical support and spatial circuit geometry](#geometry) · 9 modules
-- [Global Haar means and tensor integration](#global-haar) · 19 modules
-- [Pauli representation and physical brickwork circuits](#pauli) · 22 modules
-- [Endpoint walk, exact means, and OTOC₁ fluctuations](#endpoint) · 18 modules
-- [Simulation · exact sampler and compressed operations](#simulation-sampler) · 12 modules
-- [Simulation · influence, tails, and approximation error](#simulation-error) · 18 modules
-- [Simulation · success probability and subexponential work](#simulation-probability) · 12 modules
+Read each final declaration’s hypotheses and quantifiers before following its imports. Intermediate lemmas may take inputs that the final circuit theorem subsequently proves. The [paper-to-proof map](../docs/reference/paper-map.md) gives exact manuscript labels.
 
-Each module appears once in the expandable catalog below. The catalog groups related arguments; it is not a required linear reading order.
+## Complete module catalog
+
+[**I. General variance**](#chapter-i) · [**II. One-dimensional OTOC₁**](#chapter-ii) · [**III. Simulation**](#chapter-iii)
+
+Each module appears once in the expandable catalog below. Chapters follow the manuscript; the families within each chapter organize its supporting arguments.
+
+<a id="chapter-i"></a>
+
+## I. General OTOC(k) variance
+
+47 modules · [Read the theorem and assumptions](../docs/results/01-general-otoc-variance.md). The mean estimate, local Haar coefficient, and physical geometry support the same variance-window theorem.
+
+[Variance bounds and local Haar estimates](#variance) · [Physical support and spatial circuit geometry](#geometry) · [Global Haar means and tensor integration](#global-haar)
 
 <a id="variance"></a>
 
@@ -106,6 +109,42 @@ Each module appears once in the expandable catalog below. The catalog groups rel
 
 </details>
 
+<a id="chapter-ii"></a>
+
+## II. One-dimensional OTOC₁
+
+40 modules · [Read the exact mean and fluctuation results](../docs/results/02-otoc1-fluctuations.md). The Pauli and brickwork modules connect the physical circuit to the endpoint process.
+
+[Endpoint walk, exact means, and OTOC₁ fluctuations](#endpoint) · [Pauli representation and physical brickwork circuits](#pauli)
+
+<a id="endpoint"></a>
+
+<details>
+<summary><strong>Endpoint walk, exact means, and OTOC₁ fluctuations</strong> · 18 modules</summary>
+
+| Module | Role in the proof |
+| :--- | :--- |
+| [BrickworkEndpointMean.lean](BrickworkEndpointMean.lean) | Exact physical-circuit Haar mean, image formulas, and light cone. |
+| [OTOC1.lean](OTOC1.lean) | Final physical endpoint OTOC variance and gate-influence theorems. |
+| [BrickworkEndpointOTOC.lean](BrickworkEndpointOTOC.lean) | Actual endpoint OTOC, conditional means, and gate variance. |
+| [EndpointVarianceAssembly.lean](EndpointVarianceAssembly.lean) | Assembly of front estimates into a variance lower bound. |
+| [EndpointPhysicalEye.lean](EndpointPhysicalEye.lean) | Diffusive eye as a set of actual finite gate coordinates. |
+| [EndpointEye.lean](EndpointEye.lean) | Lattice eye and its quantitative gate count. |
+| [EndpointFrontLower.lean](EndpointFrontLower.lean) | Lower bounds for past and future factors inside the eye. |
+| [EndpointFrontMass.lean](EndpointFrontMass.lean) | Front-mass estimates from binomial probabilities. |
+| [BinomialLocalBounds.lean](BinomialLocalBounds.lean) | Local binomial lower bounds from Stirling estimates. |
+| [EndpointPropagation.lean](EndpointPropagation.lean) | Ballot and front-profile formulas for endpoint propagation. |
+| [EndpointBinomial.lean](EndpointBinomial.lean) | Biased-binomial identities used by the endpoint walk. |
+| [EndpointImages.lean](EndpointImages.lean) | Method-of-images formula for the killed endpoint kernel. |
+| [EndpointMean.lean](EndpointMean.lean) | Exact endpoint-chain means, including boundary cases. |
+| [EndpointMarkov.lean](EndpointMarkov.lean) | Endpoint transition matrices and intertwining identities. |
+| [EndpointLumpability.lean](EndpointLumpability.lean) | Projection from Pauli-string evolution to the endpoint walk. |
+| [EndpointPerturbation.lean](EndpointPerturbation.lean) | Propagation of endpoint perturbations through untouched bonds. |
+| [UniversalEndpointObservable.lean](UniversalEndpointObservable.lean) | Endpoint Pauli-sign readout after the final odd Haar layer. |
+| [BrickworkEvenRemainder.lean](BrickworkEvenRemainder.lean) | Even matching with a selected bond removed. |
+
+</details>
+
 <a id="pauli"></a>
 
 <details>
@@ -138,33 +177,13 @@ Each module appears once in the expandable catalog below. The catalog groups rel
 
 </details>
 
-<a id="endpoint"></a>
+<a id="chapter-iii"></a>
 
-<details>
-<summary><strong>Endpoint walk, exact means, and OTOC₁ fluctuations</strong> · 18 modules</summary>
+## III. Classical simulation
 
-| Module | Role in the proof |
-| :--- | :--- |
-| [OTOC1.lean](OTOC1.lean) | Final physical endpoint OTOC variance and gate-influence theorems. |
-| [BrickworkEndpointOTOC.lean](BrickworkEndpointOTOC.lean) | Actual endpoint OTOC, conditional means, and gate variance. |
-| [BrickworkEndpointMean.lean](BrickworkEndpointMean.lean) | Exact physical-circuit Haar mean, image formulas, and light cone. |
-| [EndpointVarianceAssembly.lean](EndpointVarianceAssembly.lean) | Assembly of front estimates into a variance lower bound. |
-| [EndpointPhysicalEye.lean](EndpointPhysicalEye.lean) | Diffusive eye as a set of actual finite gate coordinates. |
-| [EndpointEye.lean](EndpointEye.lean) | Lattice eye and its quantitative gate count. |
-| [EndpointFrontLower.lean](EndpointFrontLower.lean) | Lower bounds for past and future factors inside the eye. |
-| [EndpointFrontMass.lean](EndpointFrontMass.lean) | Front-mass estimates from binomial probabilities. |
-| [BinomialLocalBounds.lean](BinomialLocalBounds.lean) | Local binomial lower bounds from Stirling estimates. |
-| [EndpointPropagation.lean](EndpointPropagation.lean) | Ballot and front-profile formulas for endpoint propagation. |
-| [EndpointBinomial.lean](EndpointBinomial.lean) | Biased-binomial identities used by the endpoint walk. |
-| [EndpointImages.lean](EndpointImages.lean) | Method-of-images formula for the killed endpoint kernel. |
-| [EndpointMean.lean](EndpointMean.lean) | Exact endpoint-chain means, including boundary cases. |
-| [EndpointMarkov.lean](EndpointMarkov.lean) | Endpoint transition matrices and intertwining identities. |
-| [EndpointLumpability.lean](EndpointLumpability.lean) | Projection from Pauli-string evolution to the endpoint walk. |
-| [EndpointPerturbation.lean](EndpointPerturbation.lean) | Propagation of endpoint perturbations through untouched bonds. |
-| [UniversalEndpointObservable.lean](UniversalEndpointObservable.lean) | Endpoint Pauli-sign readout after the final odd Haar layer. |
-| [BrickworkEvenRemainder.lean](BrickworkEvenRemainder.lean) | Even matching with a selected bond removed. |
+42 modules · [Read the simulation theorem and cost model](../docs/results/03-classical-simulation.md). The sampler, error estimates, and coherent-support bounds are assembled for the same physical circuit.
 
-</details>
+[Exact sampler and compressed operations](#simulation-sampler) · [Influence, tails, and approximation error](#simulation-error) · [Success probability and subexponential work](#simulation-probability)
 
 <a id="simulation-sampler"></a>
 
