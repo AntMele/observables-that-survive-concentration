@@ -4,7 +4,10 @@
 
 Start with the [OTOC(1) guide](docs/otoc1.md),
 [OTOC1.lean](Fluctuations/OTOC1.lean), and its
-[independent scope review](docs/otoc1-review.md). The general spatial result
+[earlier independent scope review](docs/otoc1-review.md). That review covers
+the fluctuation and mean results and predates the simulation extension.
+For the latter, start with [Simulation.lean](Fluctuations/Simulation.lean)
+and the [simulation guide](docs/simulation.md). The general spatial result
 remains in [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean).
 Review mathematical assumptions separately from successful compilation.
 
@@ -12,6 +15,8 @@ Review mathematical assumptions separately from successful compilation.
 
 | Declaration | Assumptions that remain |
 | --- | --- |
+| `otoc1_subexponential_simulation` | Actual open Haar U(4) brickwork, `n = 6(s+1)`, `d = 10(s+1)`, infinite-temperature normalized trace, and `epsilon, delta` in `(0,1)`. The bias, sampler law and joint success bound are proved. |
+| `otoc1_subexponential_simulation_inversePolynomial` | Fixed positive natural exponents `a,b`, with `epsilon = n^-a`, `delta = n^-b`: joint accuracy at every size and `log(work)/n -> 0` for the same physical sampler. Exact arithmetic and finite-distribution sampling are the operation model. |
 | `otoc1_endpoint_variance_lower` | Concrete open 1D brickwork circuit, fixed front width `C ≥ 0`, explicit largeness and front-window inequalities, and `trace ρ = 1` |
 | `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` | Same hypotheses; the first theorem specifies a gate in the actual central eye. Conditional means, eye count and influence bounds are proved. |
 | `brickworkEndpointOTOC_conditional_mean` | Trace normalization and an interior even gate with a later odd layer; the exact actual Haar conditional formula is proved. |
@@ -47,6 +52,57 @@ variance-sum inequality from the product law. No conditional-mean,
 independence, propagation, gate-count, or design-convergence premise remains
 in the final endpoint theorem. The cardinality upper bound concerns the
 constructed gate set, not all potentially influential gates.
+
+## Simulation correspondence and cost model
+
+The simulation target is the actual normalized matrix trace
+$F_\infty=2^{-n}\operatorname{Tr}[(U^\dagger Z_1UZ_n)^2]$, so it specializes
+to the maximally mixed state. Its probability guarantee averages over both
+the realized Haar circuit and the conditional algorithmic randomness. It is
+not a worst-case guarantee for every fixed gate realization.
+
+The local replacement proof uses the squared Pauli mass touching a gate,
+from either the forward butterfly or the backward probe. The proved endpoint
+tail bound controls the enlarged eye's discarded gates. A telescoping
+product-average argument gives the bias estimate, and the exact choices of
+`R,N` allocate at most `delta/2` to each error. The final probability is
+measured under the actual composition-product law `mu ⊗ₘ kappa`; it is not
+an informal sum of conditional failure probabilities.
+
+Inspect the full-covariance sampler invariant. Averaged gates sample an
+input pair and an output pair from the Haar Pauli kernel, while retaining
+the conditional coherent vector on the spectator sites. Subsequent retained
+gates therefore receive the necessary off-diagonal moments. Zero-probability
+branches have a normalized fallback; support statements concern branches
+with nonzero weight. The exponentially large finite ensemble is a semantic
+law, not an array that the implementation constructs.
+
+[SimulationPhysicalLaw.lean](Fluctuations/SimulationPhysicalLaw.lean) identifies
+the output PMF of the outside-first implementation with the chronological
+mixed-circuit law for every realized input. Its `simulationPhysicalSamplerKernel`
+is the actual Markov kernel used in the final joint probability statement.
+This connects correctness and resource bounds for the same sampler.
+
+The physical outside-first ordering is justified by disjoint gate
+commutation. The support and cost modules track those same gate lists:
+there are at most `2W+2` coherent sites at a layer end and `2W+4` during a
+local update. Each actual call has at least two sites, and
+`16 * 4^(m-2) = 4^m` is proved. Costs count local matrix multiplication,
+marginals, branch normalization, and the final finite draw on this dense
+vector, including transfer-matrix construction.
+
+`otoc1_subexponential_simulation_inversePolynomial` combines the accuracy
+guarantee at every size with the limit `log(work)/n -> 0` for the same
+physical sampler, using fixed positive natural exponents.
+`SimulationAsymptotics.lean` supplies the explicit majorant and limit;
+the parameter-dependent bound in `R,N` is available separately.
+
+The counter covers sampling and readout arithmetic, including local
+transfer-matrix construction. Indexing, reads of stored coefficients, and
+preprocessing to construct the schedule or compute its parameters are not
+counted. Exact scalar arithmetic (real or complex) and exact finite sampling are assumed as in the
+paper. The formalization does not supply an extracted numerical executable,
+a finite-precision analysis, or a bit-complexity bound.
 
 ## General spatial geometry and physical meaning
 
@@ -120,15 +176,17 @@ Design convergence and the width bound remain external inputs of the general
 spatial theorem. They are absent from the proved endpoint fluctuation theorem.
 The exact endpoint mean is proved in matrix-power and finite binomial-image
 forms. Literal manuscript $\Psi$ regrouping, its Gaussian mean-front error
-estimate, the full outer influence envelope, and the simulation-runtime and
-quantum-advantage claims remain outside the formalized results.
+estimate and the full outer variance-influence envelope remain outside the
+formalized results. The simulation uses separate endpoint touching-tail and
+local-replacement bounds; these do not prove those omitted Gaussian
+statements. Computational quantum advantage is also a separate claim.
 
 ## Verification
 
 Run `bash scripts/check.sh` after obtaining the pinned dependencies. The audit
-checks the listed endpoint variance, influence, conditional-mean and actual
-mean results, the general spatial/Haar results, and their transitive
-dependencies; only
+checks the listed endpoint variance, influence, conditional-mean, actual
+mean and simulation results, the general spatial/Haar results, and their
+transitive dependencies; only
 `propext`, `Classical.choice`, and `Quot.sound` are allowed. It rejects missing
 reports and additional axioms. See [the reproduction guide](docs/reproduce.md).
 Match the checked revision to the source being reviewed.
