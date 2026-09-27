@@ -6,9 +6,33 @@ Companion to *Towards verifiable quantum advantage with random circuits:
 Observables that survive concentration*. The inspected draft's main general
 variance statement is Theorem VI.14, label
 `thm:fixed-k-transition-window-fluctuation-bound`, on PDF pages 27–28.
-Match labels and mathematical statements if numbering changes.
+Match labels and mathematical statements if numbering changes. Start with
+the [OTOC(1) guide](otoc1.md) and [OTOC1.lean](../Fluctuations/OTOC1.lean)
+for the completed first-order macroscopic-origin result.
 
-## Variance argument
+## First-order endpoint OTOC
+
+| Manuscript statement or ingredient | Lean declaration and source | Status |
+| --- | --- | --- |
+| Main theorem `thm:main-otoc1-variance-front-window`; SM `thm:endpoint-otoc1-variance-front-window` | `otoc1_endpoint_variance_lower`, [OTOC1.lean](../Fluctuations/OTOC1.lean) | Proved for actual Haar U(4) brickwork, every fixed `C ≥ 0`, and explicit sufficiently-large-size threshold |
+| Macroscopic gate contributions and `eq:otoc1-size-S-front-window` | `otoc1_many_influential_gates`, `otoc1_endpoint_gate_influence`, [OTOC1.lean](../Fluctuations/OTOC1.lean) | Actual eye has $\Theta(n^{3/2})$ gates, each with conditional variance $\Omega(n^{-2})$ |
+| Physical Haar-to-Pauli reduction | [PauliCircuitBridge.lean](../Fluctuations/PauliCircuitBridge.lean), [PauliFrozenCircuit.lean](../Fluctuations/PauliFrozenCircuit.lean) | Actual embedded U(4) matrices, product Haar integrals, and proved covariance reset after a fixed gate |
+| `lem:otoc1-conditional-mean-even-gate` | `brickworkEndpointOTOC_conditional_mean`, [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) | Exact deviation $-(16/15)PF(A-4/5)$ for all physical interior even gates |
+| `lem:otoc1-conditional-mean-variance` | `brickworkEndpointOTOC_gate_variance`, [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) | Exact coefficient $256/225$ and strictly positive actual local Haar variance |
+| `lem:otoc1-PF-exact-front-window` | `endpointEye_factors_lower`, [EndpointFrontLower.lean](../Fluctuations/EndpointFrontLower.lean) | Actual Q-power factors bounded below through proved binomial estimates and eye geometry |
+| `eq:otoc1-total-variance-from-one-gate-conditional-means` | [GateInfluence.lean](../Fluctuations/GateInfluence.lean), [CoordinateAverages.lean](../Fluctuations/CoordinateAverages.lean) | Conditional projections and their variance sum derived from the genuine finite product measure |
+| Exact finite-depth quantum mean | `brickworkEndpointOTOC_haar_mean`, `brickworkEndpointOTOC_haar_mean_images`, [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) | Proved reflecting-chain and finite binomial-image formulas, including zero-depth and two-qubit cases |
+| Literal $\Psi_d$ display in `thm:endpoint-otoc1-exact-formula` | Separate regrouping of the exact image expression | Not formalized |
+| Gaussian mean-front estimate, full outer influence envelope, simulation runtime | Separate results | Not formalized |
+
+For $n=2(c+2)$ and $d=2T$, the final endpoint theorem assumes
+$\sqrt n\ge12(C+2)$, $|d-5n/3|\le C\sqrt n$, and $\mathrm{Tr}\rho=1$.
+It has no design, conditional-mean, propagation, or gate-count premise.
+Only the selected central eye is counted; an upper bound on its cardinality
+does not establish an outer influence envelope. See the
+[independent scope review](otoc1-review.md).
+
+## General variance argument
 
 | Manuscript ingredient | Lean declaration and source | Status |
 | --- | --- | --- |
@@ -50,11 +74,12 @@ word; taking degree $2k$ gives $4^{8km}$ possible coefficient indices.
 | Certificates for sampled Haar circuit | [SpatialHaarGeometry.lean](../Fluctuations/SpatialHaarGeometry.lean) | Actual circuit support, inactive/early commutation, and early mean one |
 | VI.14 with a supplied mean change | `spatialHaarCircuit_variance_window`, [SpatialHaarTheorem.lean](../Fluctuations/SpatialHaarTheorem.lean) | Canonical patch embeddings and numerical coefficient $4^{-8k|S|}$; no separate local variance or commutation premise |
 
-The probabilistic assembly currently uses fixed active and inactive counts
+The general spatial probabilistic assembly uses fixed active and inactive counts
 across depths. General varying-count Haar histories and their reindexing law
 are not yet assembled. Graph-distance propagation speeds and architecture-
 specific last-light-cone asymptotics are separate from the proved site-set
-cone. The local SU(4)-to-U(4) phase/Haar-law bridge also remains to be proved.
+cone. The local SU(4)-to-U(4) phase/Haar-law bridge remains to be proved for
+this general pipeline. The endpoint pipeline above samples U(4) directly.
 
 ## Global Haar mean and mean change
 
@@ -97,8 +122,9 @@ for the quarter-bound and does not require Hermiticity.
 
 The generic combinatorial transfer and intermediate spatial theorems remain
 available with explicit hypotheses; these are reusable lemmas, not the final
-assumption boundary. The stronger one-dimensional front-window/gate-influence
-results and computational quantum advantage remain outside this formalization.
+assumption boundary. The one-dimensional front-window and central-eye
+influence results are proved separately above. Computational quantum
+advantage and the stated simulation runtime remain outside the formalization.
 
 ## Manuscript provenance
 
@@ -116,7 +142,8 @@ SHA-256: 9f653514f023afd3ca37d2a05693fb8ca15749d7a870273852d772c4ea9f5a18
 
 When discussing the mathematics, cite the paper. For the machine-checked proof,
 also record the exact repository commit and declaration, such as
-`Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control` or
+`Fluctuations.otoc1_endpoint_variance_lower`,
+`Fluctuations.spatialHaarCircuit_allOrders_of_globalHaar_control`, or
 `Fluctuations.theorem_VI_14_family`. No publication identifier is inferred from
 the draft filename.
 
