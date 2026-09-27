@@ -1,30 +1,31 @@
-# Review the formalization
+# Review the formalization in manuscript order
 
 [Home](README.md) / [Reader guide](docs/README.md) / Review
 
-Review the mathematical statement and its hypotheses alongside the Lean proof.
-The [paper-to-code map](docs/reference/paper-map.md) connects manuscript labels
-to the corresponding declarations; the
-[assumption review](docs/reviews/assumptions.md) explains exactly what remains
-an input to each final theorem.
+Begin with the general fixed-order variance theorem, then review the
+one-dimensional OTOC₁ refinement and its simulation application. The
+[paper-to-proof map](docs/reference/paper-map.md) connects main-text and
+Supplementary Material labels to Lean declarations.
 
-| Review task | Where to start |
-| --- | --- |
-| Check the endpoint variance theorem and influential gates | [Result guide](docs/results/endpoint-fluctuations.md) · [Independent review](docs/reviews/endpoint.md) |
-| Check the classical estimator and subexponential arithmetic cost | [Result guide](docs/results/classical-simulation.md) · [Independent review](docs/reviews/simulation.md) |
-| Check the general variance-window theorem VI.14 | [Result guide](docs/results/spatial-variance.md) · [Assumptions and correspondence](docs/reviews/assumptions.md#general-spatial-geometry-and-physical-meaning) |
-| Check the global Haar mean estimates | [Result guide](docs/results/haar-mean.md) · [Mean assumption boundary](docs/reviews/assumptions.md#the-mean-assumption-boundary) |
-| Independently compile and audit the proofs | [Reproduction instructions](docs/verification/README.md) · [Verification record](docs/verification/record.txt) |
+| Order | Review task | Where to start |
+| :--- | :--- | :--- |
+| **1. General OTOC⁽ᵏ⁾ fluctuations** | Check the mean-change argument, local reverse variance, and consecutive-depth conclusion of VI.14. | [General guide](docs/results/01-general-otoc-variance.md) · [Main.lean](Fluctuations/Main.lean) · [SpatialHaarFinal.lean](Fluctuations/SpatialHaarFinal.lean) |
+| Supporting ingredients | Check physical support, the numerical Haar coefficient, and the actual global Haar mean. | [Assumptions and correspondence](docs/reviews/assumptions.md#general-spatial-geometry-and-physical-meaning) · [Haar mean guide](docs/reference/haar-mean.md) |
+| **2. One-dimensional OTOC₁** | Check the exact mean, variance lower bound, and constructed influential gates. | [OTOC₁ guide](docs/results/02-otoc1-fluctuations.md) · [Independent review](docs/reviews/endpoint.md) |
+| **3. Classical simulation** | Check estimator accuracy, the sampler law, and subexponential arithmetic work. | [Simulation guide](docs/results/03-classical-simulation.md) · [Independent review](docs/reviews/simulation.md) |
+| Verification | Independently compile the proofs and inspect their axioms. | [Instructions](docs/verification/README.md) · [Recorded evidence](docs/verification/record.txt) |
 
-The endpoint review is a historical, scope-specific review of the fluctuation
-and mean results. The simulation extension has its own review. Both distinguish
-proved ingredients from the hypotheses appearing in the final theorem.
+The [assumption audit](docs/reviews/assumptions.md) distinguishes the generic
+probability theorem from the concrete Haar realization. It also records the
+remaining mean-control and width inputs, the model restrictions, and claims
+in the manuscript that are not yet formalized.
 
-A successful build checks the formal proof. Review also establishes that its
-statement matches the intended claim in the paper. The enforced axiom audit
-permits only `propext`, `Classical.choice`, and `Quot.sound` for the listed
-declarations and their transitive dependencies.
+The independent endpoint review covers the fluctuation and exact-mean results
+and predates the simulation extension. Simulation has its own review. A Lean
+build checks the formal proof; mathematical review additionally checks that
+the statement corresponds to the intended claim in the paper.
 
-When reporting a finding, identify the manuscript label, Lean declaration,
-and exact repository revision. For changes to the proof or documentation,
-see [Contributing](CONTRIBUTING.md).
+The axiom audit permits only `propext`, `Classical.choice`, and `Quot.sound`
+for the listed declarations and their dependencies. When reporting a finding,
+identify the paper label, Lean declaration, and exact repository revision.
+See [Contributing](CONTRIBUTING.md) for the proof-development workflow.
