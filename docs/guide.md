@@ -2,14 +2,31 @@
 
 [Overview](../README.md) · [Paper map](paper-mapping.md) · [Reproduction](reproduce.md)
 
-The strongest integrated result is a variance window for actual spatial Haar
-SU(4) circuits, with concrete qubit support and the numerical local constant
-$4^{-8km}$. Geometry proves the required commutation statements. The endpoint
-comparison uses the actual global-Haar OTOC mean. Its smallness is proved
-under explicit dimension threshold; the late-time approximation remains
-the analytic input supplied by design convergence.
+Start with the [OTOC(1) guide](otoc1.md) and
+[OTOC1.lean](../Fluctuations/OTOC1.lean) for the completed one-dimensional
+endpoint theorem. It proves an $\Omega(n^{-1/2})$ variance lower bound for
+actual independent Haar U(4) gates throughout $|d-5n/3|\le C\sqrt n$, and
+constructs $\Theta(n^{3/2})$ physical gates with individual conditional
+variance $\Omega(n^{-2})$. The constants are uniform over every trace-one
+input matrix and depend only on the fixed window width `C`.
 
-## The spatial circuit and its observable
+The proof derives the actual quantum-to-Pauli correspondence, full mixed
+Haar covariances, one-gate conditional mean, arbitrary-distribution endpoint
+propagation, and summation of independent gate influences. It requires no
+design-convergence or supplied mean-change hypothesis.
+[BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean)
+identifies the actual quantum mean with the exact finite endpoint chain and
+its binomial-image formula. The literal $\Psi$ regrouping and Gaussian
+mean-front approximation are separate unproved statements.
+
+The remaining sections explain the general spatial variance-window theorem,
+which applies at every fixed positive OTOC order. It uses actual spatial Haar
+SU(4) circuits, concrete qubit support, and the numerical local constant
+$4^{-8km}$. Geometry proves commutation, and actual global-Haar smallness is
+proved under an explicit dimension threshold. Its late-time design control
+and transition-width bound remain inputs. These are distinct theorem scopes.
+
+## The general spatial circuit and its observable
 
 For a finite set of sites, the computational basis is `Site → Fin 2`, so the
 global matrix dimension is $2^{|\mathrm{Site}|}$.
@@ -43,7 +60,7 @@ circuit and observable are
 
 ```math
 U_0=I,\qquad U_{d+1}=(J_dA_d)U_d,\qquad
-F_d=\operatorname{Tr}\!\left[\rho(U_d^\dagger B U_dM)^{2k}\right].
+F_d=\mathrm{Tr}\!\left[\rho(U_d^\dagger B U_dM)^{2k}\right].
 ```
 
 [ActiveHaarCircuit.lean](../Fluctuations/ActiveHaarCircuit.lean) retains both
@@ -51,7 +68,7 @@ products in the circuit and its independent product history. Different depths
 have their own finite history spaces; [HaarProcess.lean](../Fluctuations/HaarProcess.lean)
 relates successive spaces by product-measure identities.
 
-The integrated Haar theorem fixes $m,q$ within a circuit model. They may vary
+The general spatial Haar theorem fixes $m,q$ within a circuit model. They may vary
 between system sizes. The more general finite-layer geometry below also allows
 the number of gates to vary between layers; this generality should not be
 confused with a depth-dependent sampling model in the integrated theorem.
@@ -108,9 +125,9 @@ ordering above. These cones are monotone in support and depth. If
 $\mathsf{LC}_a(S)$ is disjoint from a support $T$ of $M$, the evolved $B$
 commutes with $M$ for every sampled history.
 
-The cone is a proved support bound. The project does not prove that it is the
-smallest possible cone, identify a last pre-light-cone depth, or derive graph
-distance and particular lattice asymptotics.
+The general cone is a proved support bound, without a minimality or universal
+graph-distance claim. Separately, the specialized endpoint pipeline proves
+its finite one-dimensional walk and the exact pre-light-cone mean.
 
 ## Why the constant is exactly $4^{-8km}$
 
@@ -118,7 +135,7 @@ Fix the earlier full circuit $V$, and let $W(h)$ be the ordered product of the
 $m$ fresh active gates. The local function is
 
 ```math
-f_V(h)=\operatorname{Tr}\!\left[
+f_V(h)=\mathrm{Tr}\!\left[
 \rho\bigl(V^\dagger W(h)^\dagger B W(h)VM\bigr)^{2k}\right].
 ```
 
@@ -146,12 +163,12 @@ continuous functions under normalized Haar measure satisfies
 
 The proof uses the constant diagonal of the evaluation kernel. Applying it to
 the centered image of $\mathcal S$, whose dimension cannot increase, bounds
-$|\mathbb Ef-f(e)|^2$ by $\dim(\mathcal S)\operatorname{Var}(f)$.
+$|\mathbb Ef-f(e)|^2$ by $\dim(\mathcal S)\mathrm{Var}(f)$.
 [ExplicitHaarVariance.lean](../Fluctuations/ExplicitHaarVariance.lean) therefore
 proves
 
 ```math
-\operatorname{Var}(f_V)\geq
+\mathrm{Var}(f_V)\geq
 \underbrace{4^{-8km}}_{\eta(m,k)}
 \left|\mathbb Ef_V-f_V(e)\right|^2.
 ```
@@ -170,7 +187,7 @@ remains useful for more general full-support measures.
 
 ## From mean control to a variance window
 
-Assume $\operatorname{Tr}\rho=1$, $B^2=M^2=I$, and spatial separation of the
+Assume $\mathrm{Tr}\rho=1$, $B^2=M^2=I$, and spatial separation of the
 cone and probe at depth $a$. Unitary conjugation preserves the involution
 relation. The product of the two commuting involutions has every even power
 equal to $I$, so $F_a=1$ pointwise and $\mathbb EF_a=1$.
@@ -180,10 +197,10 @@ normalized Haar law on the full global unitary group and the reference
 
 ```math
 h_{\rho,B,M,k}=\int_{U(2^{|\mathrm{Site}|})}
-\operatorname{Tr}\!\left[\rho(U^\dagger BUM)^{2k}\right]\,dU.
+\mathrm{Tr}\!\left[\rho(U^\dagger BUM)^{2k}\right]\,dU.
 ```
 
-The final theorem assumes the first bound below and proves the second:
+The general spatial wrapper assumes the first bound below and proves the second:
 
 ```math
 |\mathbb EF_b-h_{\rho,B,M,k}|\leq\frac14,\qquad
@@ -197,7 +214,7 @@ No Haar-smallness hypothesis remains in the final wrapper.
 
 [ExplicitHaarCircuit.lean](../Fluctuations/ExplicitHaarCircuit.lean) combines
 the local result with total variance and the weighted-square inequality. For
-$\mu_d=\mathbb EF_d$ and $V_d=\operatorname{Var}(F_d)$, it proves
+$\mu_d=\mathbb EF_d$ and $V_d=\mathrm{Var}(F_d)$, it proves
 
 ```math
 V_{d+1}\geq\eta|\mu_{d+1}-\mu_d|^2,\qquad
@@ -223,6 +240,9 @@ lower bound. This conclusion requires those uniformity conditions.
 
 | Declaration | Scope |
 | --- | --- |
+| `otoc1_endpoint_variance_lower`, `otoc1_endpoint_gate_influence`, `otoc1_many_influential_gates` in [OTOC1.lean](../Fluctuations/OTOC1.lean) | Actual 1D Haar U(4) endpoint fluctuations throughout the front window; all conditional, propagation and counting ingredients are proved. |
+| `brickworkEndpointOTOC_conditional_mean` in [BrickworkEndpointOTOC.lean](../Fluctuations/BrickworkEndpointOTOC.lean) | Exact actual one-gate conditional mean for every interior even gate. |
+| `brickworkEndpointOTOC_haar_mean` in [BrickworkEndpointMean.lean](../Fluctuations/BrickworkEndpointMean.lean) | Actual finite-circuit endpoint mean at every even depth and size. |
 | `spatialHaarCircuit_allOrders_of_globalHaar_control` in [SpatialHaarFinal.lean](../Fluctuations/SpatialHaarFinal.lean) | Final theorem: geometry, explicit local coefficient, and actual Haar smallness are proved; design control and width remain inputs. |
 | `spatialHaarCircuit_firstOrder_of_globalHaar_control` in [SpatialHaarFirstOrder.lean](../Fluctuations/SpatialHaarFirstOrder.lean) | First-order refinement using the exact Haar mean, for at least two qubits. |
 | `spatialHaarCircuit_of_globalHaar_control` in [SpatialHaarTheorem.lean](../Fluctuations/SpatialHaarTheorem.lean) | Intermediate theorem retaining both quarter-unit estimates as inputs. |
@@ -234,7 +254,7 @@ lower bound. This conclusion requires those uniformity conditions.
 
 ## The actual global-Haar calculation
 
-For $B,M$ Hermitian traceless involutions and $\operatorname{Tr}\rho=1$,
+For $B,M$ Hermitian traceless involutions and $\mathrm{Tr}\rho=1$,
 [GlobalHaarMeanAllDimensions.lean](../Fluctuations/GlobalHaarMeanAllDimensions.lean) proves
 
 ```math
@@ -275,9 +295,15 @@ external inputs. Its physical, support, and separation assumptions are visible
 in the statement. The Haar estimate is uniform in both the state and the
 dimension, with a constant depending only on the fixed order.
 
-The local law is SU(4); equivalence with the manuscript's U(4) sampling for
-phase-insensitive OTOCs has not been separately formalized. The integrated
-circuit fixes active and inactive counts across depth, while the deterministic
-geometry permits variable counts. Graph-distance/lattice light-cone
-asymptotics, the stronger one-dimensional theorem, general non-Haar ensemble
-criteria, and computational quantum advantage remain separate claims.
+The general spatial local law is SU(4); equivalence with the manuscript's
+U(4) sampling for phase-insensitive OTOCs has not been separately formalized
+for that pipeline. Its circuit fixes active and inactive counts across depth,
+while the deterministic geometry permits variable counts. The endpoint
+pipeline uses U(4) directly and represents the actual alternating gate counts.
+
+The endpoint fluctuation and many-gate influence theorems are proved. The
+literal manuscript $\Psi$ regrouping, Gaussian mean-front approximation,
+full Gaussian influence envelope outside the central eye, and classical
+simulation runtime remain unproved. General graph-distance asymptotics,
+non-Haar ensemble criteria, and computational quantum advantage also remain
+separate claims.
