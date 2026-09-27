@@ -133,7 +133,7 @@ manuscript's compressed $\Psi_d$ display is not formalized.
 [Simulation.lean](../Fluctuations/Simulation.lean) additionally formalizes
 the paper's classical estimator at $n=6(s+1)$ and $d=10(s+1)=5n/3$.
 Here the state is fixed to $I/2^n$, giving the normalized trace
-$F_\infty=2^{-n}\operatorname{Tr}[(U^\dagger Z_1UZ_n)^2]$.
+$F_\infty=2^{-n}\mathrm{Tr}[(U^\dagger Z_1UZ_n)^2]$.
 The algorithm retains an enlarged eye of realized gates and samples the
 conditional Pauli distribution while storing a single compressed coherent
 vector. Its success probability is at least $1-\delta$ at additive error
